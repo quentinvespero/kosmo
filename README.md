@@ -1,3 +1,7 @@
+## this project is a revamp of my app Kosmo, in NextJs
+- It aims to improve many aspects of the initial project
+- initial repots project : [kosmo front](https://github.com/quentinvespero/kosmo_front_web), [kosmo back](https://github.com/quentinvespero/kosmo_backend)
+
 ## Getting Started
 
 First, run the dev server:
