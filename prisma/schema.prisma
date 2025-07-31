@@ -1,0 +1,152 @@
+generator client {
+    provider = "prisma-client-js"
+    output   = "../app/generated/prisma"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id          String   @id @default(cuid())
+    username    String   @unique
+    email       String   @unique
+    displayName String?
+    bio         String?
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    // Relations
+    posts       Post[]
+    comments    Comment[]
+    votes       Vote[]
+    ownedSpaces Space[]
+    ownedFeeds  Feed[]
+    feedMembers FeedUser[]
+
+    @@map("users")
+}
+
+model Space {
+    id          String   @id @default(cuid())
+    name        String   @unique
+    slug        String   @unique
+    description String?
+    isPublic    Boolean  @default(true)
+    ownerId     String
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    // Relations
+    owner      User        @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+    postSpaces PostSpace[]
+
+    @@map("spaces")
+}
+
+model Post {
+    id        String   @id @default(cuid())
+    title     String
+    content   String
+    language  String   @default("en")
+    isGlobal  Boolean  @default(false)
+    isEdited  Boolean  @default(false)
+    authorId  String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // Relations
+    author     User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
+    comments   Comment[]
+    votes      Vote[]
+    postSpaces PostSpace[]
+
+    @@map("posts")
+}
+
+model Comment {
+    id              String   @id @default(cuid())
+    content         String
+    postId          String
+    authorId        String
+    parentCommentId String?
+    isEdited        Boolean  @default(false)
+    createdAt       DateTime @default(now())
+    updatedAt       DateTime @updatedAt
+
+    // Relations
+    post          Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+    author        User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+    parentComment Comment?  @relation("CommentReplies", fields: [parentCommentId], references: [id])
+    replies       Comment[] @relation("CommentReplies")
+    votes         Vote[]
+
+    @@map("comments")
+}
+
+model Vote {
+    id        String   @id @default(cuid())
+    type      VoteType
+    userId    String
+    postId    String?
+    commentId String?
+    createdAt DateTime @default(now())
+
+    // Relations
+    user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    post    Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+    comment Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+    // Constraints
+    @@unique([userId, postId])
+    @@unique([userId, commentId])
+    @@map("votes")
+}
+
+model Feed {
+    id          String   @id @default(cuid())
+    name        String
+    description String?
+    isPublic    Boolean  @default(false)
+    ownerId     String
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    // Relations
+    owner     User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+    feedUsers FeedUser[]
+
+    @@map("feeds")
+}
+
+// Junction Tables
+model PostSpace {
+    postId  String
+    spaceId String
+
+    // Relations
+    post  Post  @relation(fields: [postId], references: [id], onDelete: Cascade)
+    space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+
+    @@id([postId, spaceId])
+    @@map("post_spaces")
+}
+
+model FeedUser {
+    feedId  String
+    userId  String
+    addedAt DateTime @default(now())
+
+    // Relations
+    feed Feed @relation(fields: [feedId], references: [id], onDelete: Cascade)
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@id([feedId, userId])
+    @@map("feed_users")
+}
+
+enum VoteType {
+    UP
+    DOWN
+}
