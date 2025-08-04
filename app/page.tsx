@@ -1,13 +1,18 @@
-'use client'
 import { PrismaClient } from './generated/prisma'
 
+const prisma = new PrismaClient()
+
 const Home = () => {
-    
-    const prisma = new PrismaClient()
+
+    // ---- testing out ----
+    const user1 = {username:"quentin4", email:"quentinvespero4@gmail.com"}
 
     const createUser = async () => {
+        'use server'
         try {
-            prisma.user.create({data: {username:"quentin", email:"quentinvespero@gmail.com"}})
+            // const user = await prisma.user.create({data: user1})
+            const userList = await prisma.user.findMany()
+            console.log(userList)
         }
         catch (error) {
             console.log('marche po', error)
@@ -16,7 +21,7 @@ const Home = () => {
 
     return (
         <div className="home">
-            <button onClick={() => createUser()}>TURLUTUTU</button>
+            <button onClick={createUser}>TURLUTUTU</button>
         </div>
     )
 }
