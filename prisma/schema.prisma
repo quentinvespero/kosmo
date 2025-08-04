@@ -16,6 +16,7 @@ model User {
     bio         String?
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
+    userPreferences UserPreferences?
 
     // Relations
     posts       Post[]
@@ -28,18 +29,25 @@ model User {
     @@map("users")
 }
 
+model UserPreferences {
+    id String @id @default(cuid())
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId String @unique
+    language Language @default(ENGLISH)
+}
+
 model Space {
     id          String   @id @default(cuid())
     name        String   @unique
     slug        String   @unique
     description String?
     isPublic    Boolean  @default(true)
-    ownerId     String
+    ownerId     String?
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
 
     // Relations
-    owner      User        @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+    owner      User?       @relation(fields: [ownerId], references: [id], onDelete: SetNull)
     postSpaces PostSpace[]
 
     @@map("spaces")
@@ -61,6 +69,7 @@ model Post {
     comments   Comment[]
     votes      Vote[]
     postSpaces PostSpace[]
+    tags Tag[]
 
     @@map("posts")
 }
@@ -104,6 +113,29 @@ model Vote {
     @@map("votes")
 }
 
+model Tag {
+    id String @id @default(cuid())
+    name String @unique
+    createdAt DateTime @default(now())
+
+    // relations
+    posts Post[]
+
+    @@map("tags")
+}
+
+// model PostTag {
+//     postId String
+//     tagId String
+
+//     //relations
+//     post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+//     tag Tag @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+//     @@id([postId,tagId])
+//     @@map("post_tags")
+// }
+
 model Feed {
     id          String   @id @default(cuid())
     name        String
@@ -124,6 +156,7 @@ model Feed {
 model PostSpace {
     postId  String
     spaceId String
+    isPinned Boolean @default(false) // if the post is pinned in the space or not
 
     // Relations
     post  Post  @relation(fields: [postId], references: [id], onDelete: Cascade)
@@ -149,4 +182,11 @@ model FeedUser {
 enum VoteType {
     UP
     DOWN
+}
+
+enum Language {
+    ENGLISH
+    FRENCH
+    JAPANESE
+    GERMAN
 }
