@@ -26,6 +26,7 @@ model User {
     ownedFeeds  Feed[]
     feedMembers FeedUser[]
     communityMemberships CommunityMember[]
+    drafts Draft[]
 
     @@map("users")
 }
@@ -58,7 +59,7 @@ model Community {
 
 model Post {
     id        String   @id @default(cuid())
-    title     String
+    title     String?
     content   String
     language  Language      @default(ENGLISH)
     privacy   PostPrivacy @default(GLOBAL)
@@ -125,6 +126,21 @@ model Tag {
     posts Post[]
 
     @@map("tags")
+}
+
+model Draft {
+    id String @id @default(cuid())
+    title String?
+    content String?
+    language Language @default(ENGLISH)
+    authorId String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // relations
+    author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+    @@map("drafts")
 }
 
 // model PostTag {

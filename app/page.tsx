@@ -33,7 +33,7 @@ const Home = () => {
     const listUsers = async () => {
         'use server'
         try {
-            const userList = await prisma.user.findMany()
+            const userList = await prisma.user.findMany({include:{userPreferences:true,posts:true, drafts:true}})
             console.log(userList)
         }
         catch (error) {
