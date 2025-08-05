@@ -22,9 +22,10 @@ model User {
     posts       Post[]
     comments    Comment[]
     votes       Vote[]
-    ownedSpaces Space[]
+    ownedCommunities Community[]
     ownedFeeds  Feed[]
     feedMembers FeedUser[]
+    communityMemberships CommunityMember[]
 
     @@map("users")
 }
@@ -36,30 +37,32 @@ model UserPreferences {
     language Language @default(ENGLISH)
 }
 
-model Space {
+model Community {
     id          String   @id @default(cuid())
     name        String   @unique
     slug        String   @unique
     description String?
     isPublic    Boolean  @default(true)
     ownerId     String?
+    isOrphan    Boolean  @default(false)
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
 
     // Relations
-    owner      User?       @relation(fields: [ownerId], references: [id], onDelete: SetNull)
-    postSpaces PostSpace[]
+    owner           User?               @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+    postCommunities PostCommunity[]
+    members         CommunityMember[]
 
-    @@map("spaces")
+    @@map("communities")
 }
 
 model Post {
     id        String   @id @default(cuid())
     title     String
     content   String
-    language  String   @default("en")
-    isGlobal  Boolean  @default(false)
-    isEdited  Boolean  @default(false)
+    language  Language      @default(ENGLISH)
+    privacy   PostPrivacy @default(GLOBAL)
+    isEdited  Boolean     @default(false)
     authorId  String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -68,7 +71,7 @@ model Post {
     author     User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
     comments   Comment[]
     votes      Vote[]
-    postSpaces PostSpace[]
+    postCommunities PostCommunity[]
     tags Tag[]
 
     @@map("posts")
@@ -153,17 +156,17 @@ model Feed {
 }
 
 // Junction Tables
-model PostSpace {
-    postId  String
-    spaceId String
-    isPinned Boolean @default(false) // if the post is pinned in the space or not
+model PostCommunity {
+    postId      String
+    communityId String
+    isPinned    Boolean @default(false) // if the post is pinned in the community or not
 
     // Relations
-    post  Post  @relation(fields: [postId], references: [id], onDelete: Cascade)
-    space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+    post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+    community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
 
-    @@id([postId, spaceId])
-    @@map("post_spaces")
+    @@id([postId, communityId])
+    @@map("post_communities")
 }
 
 model FeedUser {
@@ -179,6 +182,20 @@ model FeedUser {
     @@map("feed_users")
 }
 
+model CommunityMember {
+    communityId String
+    userId      String
+    joinedAt    DateTime @default(now())
+    role        CommunityRole @default(MEMBER)
+
+    // Relations
+    community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+    user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@id([communityId, userId])
+    @@map("community_members")
+}
+
 enum VoteType {
     UP
     DOWN
@@ -189,4 +206,16 @@ enum Language {
     FRENCH
     JAPANESE
     GERMAN
+}
+
+enum PostPrivacy {
+    GLOBAL      // Public post visible to everyone
+    COMMUNITY   // Post shared within specific communities only
+    PRIVATE     // Private post (draft or personal)
+}
+
+enum CommunityRole {
+    MEMBER
+    MODERATOR
+    ADMIN
 }
