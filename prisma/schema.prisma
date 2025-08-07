@@ -1,146 +1,149 @@
 generator client {
-    provider = "prisma-client-js"
-    output   = "../app/generated/prisma"
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-    id          String   @id @default(cuid())
-    username    String   @unique
-    email       String   @unique
-    displayName String?
-    bio         String?
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
-    userPreferences UserPreferences?
+  id              String           @id @default(cuid())
+  username        String           @unique
+  email           String           @unique
+  displayName     String?
+  bio             String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  userPreferences UserPreferences?
 
-    // Relations
-    posts       Post[]
-    comments    Comment[]
-    votes       Vote[]
-    ownedCommunities Community[]
-    ownedFeeds  Feed[]
-    feedMembers FeedUser[]
-    communityMemberships CommunityMember[]
-    drafts Draft[]
+  // Relations
+  posts                Post[]
+  comments             Comment[]
+  votes                Vote[]
+  ownedCommunities     Community[]
+  ownedFeeds           Feed[]
+  feedMembers          FeedUser[]
+  communityMemberships CommunityMember[]
+  drafts               Draft[]
 
-    @@map("users")
+  @@map("users")
 }
 
 model UserPreferences {
-    id String @id @default(cuid())
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId String @unique
-    language Language @default(ENGLISH)
+  id       String   @id @default(cuid())
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   String   @unique
+  language Language @default(ENGLISH)
 }
 
 model Community {
-    id          String   @id @default(cuid())
-    name        String   @unique
-    slug        String   @unique
-    description String?
-    isPublic    Boolean  @default(true)
-    ownerId     String?
-    isOrphan    Boolean  @default(false)
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  isPublic    Boolean  @default(true)
+  ownerId     String?
+  isOrphan    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-    // Relations
-    owner           User?               @relation(fields: [ownerId], references: [id], onDelete: SetNull)
-    postCommunities PostCommunity[]
-    members         CommunityMember[]
+  // Relations
+  owner           User?             @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  postCommunities PostCommunity[]
+  members         CommunityMember[]
+  FeedCommunity   FeedCommunity[]
 
-    @@map("communities")
+  @@map("communities")
 }
 
 model Post {
-    id        String   @id @default(cuid())
-    title     String?
-    content   String
-    language  Language      @default(ENGLISH)
-    privacy   PostPrivacy @default(GLOBAL)
-    isEdited  Boolean     @default(false)
-    authorId  String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id        String      @id @default(cuid())
+  title     String?
+  content   String
+  source    String?
+  language  Language    @default(ENGLISH)
+  privacy   PostPrivacy @default(GLOBAL)
+  isEdited  Boolean     @default(false)
+  authorId  String
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
 
-    // Relations
-    author     User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
-    comments   Comment[]
-    votes      Vote[]
-    postCommunities PostCommunity[]
-    tags Tag[]
+  // Relations
+  author          User            @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  comments        Comment[]
+  votes           Vote[]
+  postCommunities PostCommunity[]
+  tags            Tag[]
 
-    @@map("posts")
+  @@map("posts")
 }
 
 model Comment {
-    id              String   @id @default(cuid())
-    content         String
-    postId          String
-    authorId        String
-    parentCommentId String?
-    isEdited        Boolean  @default(false)
-    createdAt       DateTime @default(now())
-    updatedAt       DateTime @updatedAt
+  id              String   @id @default(cuid())
+  content         String
+  source          String?
+  postId          String
+  authorId        String
+  parentCommentId String?
+  isEdited        Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
-    // Relations
-    post          Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
-    author        User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
-    parentComment Comment?  @relation("CommentReplies", fields: [parentCommentId], references: [id])
-    replies       Comment[] @relation("CommentReplies")
-    votes         Vote[]
+  // Relations
+  post          Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author        User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  parentComment Comment?  @relation("CommentReplies", fields: [parentCommentId], references: [id])
+  replies       Comment[] @relation("CommentReplies")
+  votes         Vote[]
 
-    @@map("comments")
+  @@map("comments")
 }
 
 model Vote {
-    id        String   @id @default(cuid())
-    type      VoteType
-    userId    String
-    postId    String?
-    commentId String?
-    createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  type      VoteType
+  userId    String
+  postId    String?
+  commentId String?
+  createdAt DateTime @default(now())
 
-    // Relations
-    user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-    post    Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
-    comment Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  // Relations
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post    Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  comment Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
 
-    // Constraints
-    @@unique([userId, postId])
-    @@unique([userId, commentId])
-    @@map("votes")
+  // Constraints
+  @@unique([userId, postId])
+  @@unique([userId, commentId])
+  @@map("votes")
 }
 
 model Tag {
-    id String @id @default(cuid())
-    name String @unique
-    createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
 
-    // relations
-    posts Post[]
+  // relations
+  posts Post[]
 
-    @@map("tags")
+  @@map("tags")
 }
 
 model Draft {
-    id String @id @default(cuid())
-    title String?
-    content String?
-    language Language @default(ENGLISH)
-    authorId String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id        String   @id @default(cuid())
+  title     String?
+  content   String?
+  language  Language @default(ENGLISH)
+  authorId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-    // relations
-    author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  // relations
+  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
-    @@map("drafts")
+  @@map("drafts")
 }
 
 // model PostTag {
@@ -156,82 +159,96 @@ model Draft {
 // }
 
 model Feed {
-    id          String   @id @default(cuid())
-    name        String
-    description String?
-    isPublic    Boolean  @default(false)
-    ownerId     String
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  isPublic    Boolean  @default(false)
+  ownerId     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-    // Relations
-    owner     User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-    feedUsers FeedUser[]
+  // Relations
+  owner         User            @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  feedUsers     FeedUser[]
+  feedCommunity FeedCommunity[]
 
-    @@map("feeds")
+  @@map("feeds")
 }
 
 // Junction Tables
 model PostCommunity {
-    postId      String
-    communityId String
-    isPinned    Boolean @default(false) // if the post is pinned in the community or not
+  postId      String
+  communityId String
+  isPinned    Boolean @default(false) // if the post is pinned in the community or not
 
-    // Relations
-    post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
-    community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  // Relations
+  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
 
-    @@id([postId, communityId])
-    @@map("post_communities")
+  @@id([postId, communityId])
+  @@map("post_communities")
+}
+
+model FeedCommunity {
+  feedId      String
+  communityId String
+  addedAt     DateTime @default(now())
+
+  // relations
+  feed      Feed      @relation(fields: [feedId], references: [id], onDelete: Cascade)
+  community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+
+  @@id([feedId, communityId])
+  @@map("feed_communities")
 }
 
 model FeedUser {
-    feedId  String
-    userId  String
-    addedAt DateTime @default(now())
+  feedId  String
+  userId  String
+  addedAt DateTime @default(now())
 
-    // Relations
-    feed Feed @relation(fields: [feedId], references: [id], onDelete: Cascade)
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // Relations
+  feed Feed @relation(fields: [feedId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@id([feedId, userId])
-    @@map("feed_users")
+  @@id([feedId, userId])
+  @@map("feed_users")
 }
 
 model CommunityMember {
-    communityId String
-    userId      String
-    joinedAt    DateTime @default(now())
-    role        CommunityRole @default(MEMBER)
+  communityId String
+  userId      String
+  joinedAt    DateTime      @default(now())
+  role        CommunityRole @default(MEMBER)
 
-    // Relations
-    community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
-    user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // Relations
+  community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@id([communityId, userId])
-    @@map("community_members")
+  @@id([communityId, userId])
+  @@map("community_members")
 }
 
 enum VoteType {
-    UP
-    DOWN
+  UP
+  DOWN
 }
 
 enum Language {
-    ENGLISH
-    FRENCH
-    JAPANESE
-    GERMAN
+  ENGLISH
+  FRENCH
+  JAPANESE
+  GERMAN
 }
 
 enum PostPrivacy {
-    GLOBAL      // Public post visible to everyone
-    COMMUNITY   // Post shared within specific communities only
-    PRIVATE     // Private post (draft or personal)
+  GLOBAL // Public post visible to everyone
+  COMMUNITY // Post shared within specific communities only
+  PRIVATE // Private post (draft or personal)
 }
 
 enum CommunityRole {
-    MEMBER
-    MODERATOR
-    ADMIN
+  MEMBER
+  MODERATOR
+  ADMIN
 }
