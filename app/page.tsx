@@ -1,3 +1,5 @@
+
+import Link from 'next/link'
 import { PrismaClient, Language } from './generated/prisma'
 
 const prisma = new PrismaClient()
@@ -125,6 +127,8 @@ const Home = () => {
         }
     }
 
+    // ------------------- real code
+
     return (
         <div className="home">
             <button style={{ cursor: 'pointer' }} onClick={createUser}>create user</button>
@@ -138,6 +142,11 @@ const Home = () => {
             <button style={{ cursor: 'pointer' }} onClick={deleteUser}>delete user</button>
             <p>•</p>
             <button style={{ cursor: 'pointer' }} onClick={updateUser}>update user</button>
+            
+            <br />
+            <Link href='/login'>Login</Link>
+            <br />
+            <Link href='/register'>Register</Link>
         </div>
     )
 }

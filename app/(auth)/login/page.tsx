@@ -1,9 +1,16 @@
+import { LoginButton } from '@/components/auth/loginButton'
+import { LoginForm } from '@/components/auth/loginForm'
 import React from 'react'
 
-const Login = () => {
+const LoginPage = () => {
     return (
-        <div>Login</div>
+        <div className='loginPage'>
+            {/* <LoginButton>
+                <button>LOGIN</button>
+            </LoginButton> */}
+            <LoginForm/>
+        </div>
     )
 }
 
-export default Login
+export default LoginPage
