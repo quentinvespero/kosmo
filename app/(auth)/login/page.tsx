@@ -5,10 +5,7 @@ import React from 'react'
 const LoginPage = () => {
     return (
         <div className='loginPage'>
-            {/* <LoginButton>
-                <button>LOGIN</button>
-            </LoginButton> */}
-            <LoginForm/>
+            <LoginForm mode='login'/>
         </div>
     )
 }

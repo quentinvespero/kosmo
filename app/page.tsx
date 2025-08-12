@@ -143,10 +143,13 @@ const Home = () => {
             <p>•</p>
             <button style={{ cursor: 'pointer' }} onClick={updateUser}>update user</button>
             
+            <p>-------------------------------------------</p>
+            
             <br />
-            <Link href='/login'>Login</Link>
-            <br />
-            <Link href='/register'>Register</Link>
+            <div className="authenticationButtons flex flex-col">
+                <Link href='/login'>Login</Link>
+                <Link href='/register'>Register</Link>
+            </div>
         </div>
     )
 }

@@ -1,9 +1,13 @@
-import React from 'react'
+import { LoginButton } from "@/components/auth/loginButton"
+import { RegisterForm } from "@/components/auth/registerForm"
 
 const RegisterPage = () => {
     return (
         <div className='register'>
-            <p>REGISTER</p>
+            <RegisterForm/>
+            <LoginButton>
+                <button>sign in</button>
+            </LoginButton>
         </div>
     )
 }
