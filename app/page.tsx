@@ -6,10 +6,11 @@ const prisma = new PrismaClient()
 
 const Home = () => {
 
-    // ---- testing out ----
+    // ---- testing out prisma ----
+    // ----------------------------------------------------------------
     const user1 = { username: "quentin7", email: "quentin7@gmail.com" }
     const user1Preferences = { userPreferences: { create: { language: Language.GERMAN } } }
-
+    
     const createUser = async () => {
         'use server'
         try {
@@ -31,7 +32,7 @@ const Home = () => {
             console.log('marche po', error)
         }
     }
-
+    
     const listUsers = async () => {
         'use server'
         try {
@@ -42,7 +43,7 @@ const Home = () => {
             console.log('marche po', error)
         }
     }
-
+    
     const findUser1 = async () => {
         'use server'
         try {
@@ -53,7 +54,7 @@ const Home = () => {
             console.log('marche po', error)
         }
     }
-
+    
     const deleteUser = async () => {
         'use server'
         try {
@@ -64,7 +65,7 @@ const Home = () => {
             console.log('######### marche po #########', error)
         }
     }
-
+    
     // update the email address of the user with the email quentinvespero@gmail.com to quentinvespera@gmail.com
     const updateUser = async () => {
         'use server'
@@ -101,7 +102,7 @@ const Home = () => {
             console.log('######### marche po #########', error)
         }
     }
-
+    
     // function with missing id for user preference.
     // But basically, connect or disconnect, is for connecting / disconnecting object to a user
     // Here with the object userPreference, but it could have been post or any object related to user (or other) here
@@ -126,8 +127,9 @@ const Home = () => {
             console.log('######### marche po #########', error)
         }
     }
-
-    // ------------------- real code
+    
+    // ----------------------------------------------------------------
+    // ------------------- end testing prisma -------------------
 
     return (
         <div className="home">

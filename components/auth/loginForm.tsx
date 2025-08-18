@@ -6,7 +6,7 @@ export const LoginForm = () => {
     }
 
     return (
-        <div className='loginForm flex'>
+        <div className='loginForm flex flex-col'>
             <div>
                 <label htmlFor="email">Email</label>
                 <input 
@@ -28,6 +28,7 @@ export const LoginForm = () => {
                     required
                 />
             </div>
+            <button>login</button>
         </div>
     )
 }
