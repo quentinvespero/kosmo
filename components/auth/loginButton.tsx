@@ -10,7 +10,6 @@ export const LoginButton = ({children}:LoginButtonProps) => {
         console.log('login button clicked')
     }
 
-
     return (
         <div className='cursor-pointer' onClick={logFunction}>
             {children}

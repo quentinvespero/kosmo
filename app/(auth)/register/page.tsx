@@ -5,9 +5,9 @@ const RegisterPage = () => {
     return (
         <div className='register'>
             <RegisterForm/>
-            <LoginButton>
+            {/* <LoginButton>
                 <button>sign in</button>
-            </LoginButton>
+            </LoginButton> */}
         </div>
     )
 }
