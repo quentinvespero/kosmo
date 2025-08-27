@@ -1,6 +1,4 @@
 import { FaApple, FaGithub, FaGoogle, FaMicrosoft } from "react-icons/fa"
-import { FcGoogle } from "react-icons/fc"
-
 
 export const OauthSection = () => {
     
