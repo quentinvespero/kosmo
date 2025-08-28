@@ -1,9 +1,11 @@
 'use client'
-import { useForm } from "react-hook-form"
+import { Form, useForm } from "react-hook-form"
 import { OauthSection } from "./oauthSection"
 import z from "zod"
 import { LoginSchema } from "@/schemas/AuthSchemas"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { FormControl, FormField, FormItem, FormLabel } from "../ui/form"
+import { Input } from "../ui/input"
 
 export const LoginForm = () => {
 
@@ -17,10 +19,29 @@ export const LoginForm = () => {
 
     return (
         <div className='loginForm flex flex-col'>
-            <form onSubmit={form.handleSubmit(() => {})}>
-                
-            </form>
-            <label htmlFor="email">Email</label>
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(() => {})}>
+                    <div className="inputs">
+                        <FormField 
+                            control={form.control}
+                            name="email"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel>Email</FormLabel>
+                                    <FormControl>
+                                        <Input 
+                                            {...field}
+                                            placeholder="tyler.durden@example.com"
+                                            type="email"
+                                        />
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                </form>
+            </Form>
+            {/* <label htmlFor="email">Email</label>
             <input 
                 id="email"
                 name="email"
@@ -36,7 +57,7 @@ export const LoginForm = () => {
                 type="password"
                 autoComplete="current-password"
                 required
-            />
+            /> */}
             <div className="loginButtonsSection flex flex-col items-center gap-4">
                 <button>login</button>
                 <OauthSection/>
