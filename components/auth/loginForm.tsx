@@ -9,12 +9,18 @@ import { Input } from "../ui/input"
 
 export const LoginForm = () => {
 
-    const form = useForm<z.infer<typeof LoginSchema>>({
-        resolver: zodResolver(LoginSchema),
-        defaultValues: {
-            email: '',
-            password: ''
-        }
+    // const form = useForm<z.infer<typeof LoginSchema>>({
+    //     resolver: zodResolver(LoginSchema),
+    //     defaultValues: {
+    //         email: '',
+    //         password: ''
+    //     }
+    // })
+
+    const form = z.object({
+        username: z.string().min(2, {
+            message: "Username must be at least 2 characters.",
+        }),
     })
 
     return (
@@ -29,11 +35,11 @@ export const LoginForm = () => {
                                 <FormItem>
                                     <FormLabel>Email</FormLabel>
                                     <FormControl>
-                                        <Input
+                                        {/* <Input
                                             placeholder="tyler.durden@example.com"
                                             {...field}
                                             type="email"
-                                        />
+                                        /> */}
                                     </FormControl>
                                 </FormItem>
                             )}
