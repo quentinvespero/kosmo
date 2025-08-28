@@ -10,28 +10,28 @@ import { Input } from "../ui/input"
 export const LoginForm = () => {
 
     const form = useForm<z.infer<typeof LoginSchema>>({
-        resolver:zodResolver(LoginSchema),
-        defaultValues:{
-            email:'',
-            password:''
+        resolver: zodResolver(LoginSchema),
+        defaultValues: {
+            email: '',
+            password: ''
         }
     })
 
     return (
         <div className='loginForm flex flex-col'>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(() => {})}>
+                <form onSubmit={form.handleSubmit(() => { })}>
                     <div className="inputs">
-                        <FormField 
+                        <FormField
                             control={form.control}
                             name="email"
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Email</FormLabel>
                                     <FormControl>
-                                        <Input 
-                                            {...field}
+                                        <Input
                                             placeholder="tyler.durden@example.com"
+                                            {...field}
                                             type="email"
                                         />
                                     </FormControl>
@@ -60,7 +60,7 @@ export const LoginForm = () => {
             /> */}
             <div className="loginButtonsSection flex flex-col items-center gap-4">
                 <button>login</button>
-                <OauthSection/>
+                <OauthSection />
             </div>
         </div>
     )
