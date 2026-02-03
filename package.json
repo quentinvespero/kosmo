@@ -7,9 +7,10 @@
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
-        "db_studio": "prisma studio",
-        "db_format": "prisma format",
-        "db_dev_migration": "prisma format && prisma migrate dev && prisma generate"
+        "db:studio": "prisma studio",
+        "db:format": "prisma format",
+        "db:dev_migration": "prisma format && prisma migrate dev && prisma generate",
+        "ui:add": "pnpm dlx shadcn@latest add"
     },
     "dependencies": {
         "@hookform/resolvers": "^5.2.2",
