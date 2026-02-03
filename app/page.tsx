@@ -157,7 +157,7 @@ const Home = async () => {
             <p>-------------------------------------------</p>
 
             <br />
-            <div className="authenticationButtons flex flex-col">
+            <div className="authenticationButtons">
                 <Link href='/login'>Login</Link>
                 <Link href='/register'>Register</Link>
             </div>
