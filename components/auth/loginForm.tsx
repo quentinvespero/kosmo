@@ -2,7 +2,6 @@
 import { Form, useForm } from "react-hook-form"
 import { OauthSection } from "./oauthSection"
 import z from "zod"
-import { LoginSchema } from "@/schemas/AuthSchemas"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { FormControl, FormField, FormItem, FormLabel } from "../ui/form"
 import { Input } from "../ui/input"
