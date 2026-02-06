@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button"
 import { FieldGroup } from "@/components/ui/field"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { signUp } from "@/lib/authClient"
 import { signUpSchema } from "@/lib/schemas/AuthSchemas"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
+import { toast } from "sonner"
 import z from "zod"
 
 type SignUpForm = z.infer<typeof signUpSchema>
@@ -21,8 +23,26 @@ export const SignUpTab = () => {
         }
     })
 
-    const handleSignUp = async (data: SignUpForm) => {
-        await new Promise(resolve => setTimeout(resolve, 1000))
+    const handleSignUp = async (authData: SignUpForm) => {
+
+        // here the purpose of toastId is to replace a possible previous toast with the new one, instead of stacking them
+        const toastId = toast.loading('signing up...')
+
+        // provide the data to signup.email, as well as the url to which we want the user to be redirected
+        const { data, error } = await signUp.email(
+            { ...authData, callbackURL: "/" },
+            {
+                onRequest: (ctx) => {
+                    toast.loading('signin up...')
+                },
+                onSuccess: (ctx) => {
+                    toast.success('account created', { id: toastId })
+                },
+                onError: (ctx) => {
+                    toast.error(ctx.error.message || "something went wrong while signing up...", { id: toastId })
+                }
+            }
+        )
         console.log('signin up.........')
     }
 

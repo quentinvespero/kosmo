@@ -13,25 +13,27 @@ const LoginPage = () => {
                     <TabsTrigger value='signin'>Sign In</TabsTrigger>
                     <TabsTrigger value='signup'>Sign Up</TabsTrigger>
                 </TabsList>
-                <Card>
-                    <TabsContent value='signin'>
+                <TabsContent value='signin'>
+                    <Card>
                         <CardHeader className='text-xl'>
                             <CardTitle>Sign In</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <SignInTab />
                         </CardContent>
-                    </TabsContent>
+                    </Card>
+                </TabsContent>
 
-                    <TabsContent value='signup'>
+                <TabsContent value='signup'>
+                    <Card>
                         <CardHeader className='text-xl'>
                             <CardTitle>Sign Up</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <SignUpTab />
                         </CardContent>
-                    </TabsContent>
-                </Card>
+                    </Card>
+                </TabsContent>
             </Tabs>
         </div>
     )

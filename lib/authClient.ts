@@ -4,4 +4,5 @@ import { createAuthClient } from "better-auth/react"
 //     baseURL: "http://localhost:3000" // not necessary
 // })
 
+// getting the methods instead of the whole authClient
 export const { signIn, signUp, useSession } = createAuthClient()
