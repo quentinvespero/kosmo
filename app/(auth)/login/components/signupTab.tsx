@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { signUp } from "@/lib/authClient"
 import { signUpSchema } from "@/lib/schemas/AuthSchemas"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import z from "zod"
@@ -14,6 +15,9 @@ import z from "zod"
 type SignUpForm = z.infer<typeof signUpSchema>
 
 export const SignUpTab = () => {
+
+    const router = useRouter()
+
     const form = useForm<SignUpForm>({
         resolver: zodResolver(signUpSchema),
         defaultValues: {
@@ -36,6 +40,7 @@ export const SignUpTab = () => {
                     toast.loading('signin up...')
                 },
                 onSuccess: (ctx) => {
+                    router.push('/')
                     toast.success('account created', { id: toastId })
                 },
                 onError: (ctx) => {
