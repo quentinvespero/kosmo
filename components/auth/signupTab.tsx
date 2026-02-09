@@ -34,6 +34,7 @@ export const SignUpTab = () => {
 
         // provide the data to signup.email, as well as the url to which we want the user to be redirected
         const { data, error } = await signUp.email(
+            // the callback below is used for email verification, it's where the user is redirected after clicking on the email's link
             { ...authData, callbackURL: "/" },
             {
                 onRequest: (ctx) => {

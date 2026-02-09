@@ -1,8 +1,7 @@
-import { LoginForm } from '@/components/auth/loginForm'
+import { SignInTab } from '@/components/auth/signinTab'
+import { SignUpTab } from '@/components/auth/signupTab'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { SignUpTab } from './components/signupTab'
-import { SignInTab } from './components/signinTab'
 
 const LoginPage = () => {
     return (

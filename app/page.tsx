@@ -147,8 +147,8 @@ const Home = async () => {
             <p>•</p>
             <button style={{ cursor: 'pointer' }} onClick={updateUser}>update user</button> */}
 
-            <p>020226</p>
-            <ol>
+            <h4 className='size'>user's list in db:</h4>
+            <ol className='flex flex-col pl-5'>
                 {users.map((user) => (
                     <li key={user.id} className='mb-2'>1 : {user.name}</li>
                 ))}
@@ -159,7 +159,7 @@ const Home = async () => {
             <br />
             <div className="authenticationButtons">
                 <Link href='/login'>Login</Link>
-                <Link href='/register'>Register</Link>
+                {/* <Link href='/register'>Register</Link> */}
             </div>
         </div>
     )
