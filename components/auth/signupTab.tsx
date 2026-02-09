@@ -28,28 +28,23 @@ export const SignUpTab = () => {
     })
 
     const handleSignUp = async (authData: SignUpForm) => {
-
-        // here the purpose of toastId is to replace a possible previous toast with the new one, instead of stacking them
-        const toastId = toast.loading('signing up...')
-
         // provide the data to signup.email, as well as the url to which we want the user to be redirected
         const { data, error } = await signUp.email(
             // the callback below is used for email verification, it's where the user is redirected after clicking on the email's link
             { ...authData, callbackURL: "/" },
             {
                 onRequest: (ctx) => {
-                    toast.loading('signin up...')
+                    toast.loading('creating account...', { id: 'signup' })
                 },
                 onSuccess: (ctx) => {
                     router.push('/')
-                    toast.success('account created', { id: toastId })
+                    toast.success('account created', { id: 'signup' })
                 },
                 onError: (ctx) => {
-                    toast.error(ctx.error.message || "something went wrong while signing up...", { id: toastId })
+                    toast.error(ctx.error.message || "something went wrong while signing up...", { id: 'signup' })
                 }
             }
         )
-        console.log('signin up.........')
     }
 
     return <Form {...form}>
