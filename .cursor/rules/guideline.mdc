@@ -1,0 +1,30 @@
+---
+alwaysApply: true
+---
+
+# Modern Next.js Guidelines (2025)
+
+## core
+- use modern, best and latest practices
+
+## TypeScript
+- use TypeScript with strict mode
+- indent with 4 spaces
+- Type props, API responses, and state
+- use arrow functions
+- dont add the ";" when not necessary
+
+## Components
+- Keep components small and focused
+
+## Data Fetching
+- Use Suspense for loading states
+
+## Security
+- Sanitize inputs
+- CSP headers
+
+## the way you should respond
+- short, straightforward, highly structured using bullet points and/or tables
+- relevant words only
+- adopt a sceptical and critical approach

@@ -1,0 +1,14 @@
+---
+description: detailed description of the community feature
+alwaysApply: false
+---
+
+## main features
+- Theme-related areas pretty similar to subreddits
+- Can be created by every users
+- users can join the communities
+- can be private or public
+
+## when the owner of a community remove its account :
+- the community remains, but it become orphan
+- the orphan communities will be listed somewhere in the app and can be claimed
