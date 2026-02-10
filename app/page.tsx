@@ -1,5 +1,5 @@
 import prisma from '@/lib/prisma'
-import HomeContent from '@/components/auth/HomeContent'
+import HomeContent from '@/components/home/HomeContent'
 
 const Home = async () => {
 
