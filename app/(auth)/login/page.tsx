@@ -5,9 +5,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 const LoginPage = () => {
     return (
-        <div className='loginPage'>
+        <div className='loginPage w-full'>
             {/* <LoginForm /> */}
-            <Tabs defaultValue='signing' className='max-auto w-full py-6 px-4'>
+            <Tabs defaultValue='signin' className='mx-auto w-full py-6 px-4'>
                 <TabsList>
                     <TabsTrigger value='signin'>Sign In</TabsTrigger>
                     <TabsTrigger value='signup'>Sign Up</TabsTrigger>
