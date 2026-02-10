@@ -8,7 +8,7 @@ const LoginPage = () => {
         <div className='loginPage'>
             {/* <LoginForm /> */}
             <Tabs defaultValue='signing' className='max-auto w-full py-6 px-4'>
-                <TabsList className='bg-gray-600'>
+                <TabsList>
                     <TabsTrigger value='signin'>Sign In</TabsTrigger>
                     <TabsTrigger value='signup'>Sign Up</TabsTrigger>
                 </TabsList>

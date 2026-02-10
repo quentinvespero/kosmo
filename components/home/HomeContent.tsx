@@ -22,9 +22,9 @@ const HomeContent = ({ users }: { users: User[] }) => {
                 ? (
                     <div className="flex flex-col gap-5 items-center">
                         <p>Not connected</p>
-                        <div className="authenticationButtons flex">
-                            <Link href='/login' className='font-bold p-5 bg-gray-500 rounded-md'>Login / Register</Link>
-                        </div>
+                        <Button className="authenticationButtons flex">
+                            <Link href='/login' className='font-bold p-5 rounded-md'>Login / Register</Link>
+                        </Button>
                     </div>
 
                 )
