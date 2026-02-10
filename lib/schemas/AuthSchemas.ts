@@ -1,16 +1,23 @@
 import z from "zod"
 
-// deprecated
-export const LoginSchema = z.object({
-    email: z.email({ error: 'email is required' }),
-
-    // password should be at least 1 character
-    password: z.string().min(1, { error: 'password is required' })
+// signin schema
+export const signInSchema = z.object({
+    email: z
+        .email({ error: 'email is required' }),
+    password: z
+        .string()
+        .min(1, { error: 'password is required' })
 })
 
-// new auth schema
+// signup schema
 export const signUpSchema = z.object({
-    name: z.string().min(3),
-    email: z.email().min(1),
-    password: z.string().min(8)
+    name: z
+        .string()
+        .min(3),
+    email: z
+        .email()
+        .min(3),
+    password: z
+        .string()
+        .min(8)
 })

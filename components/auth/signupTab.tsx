@@ -38,6 +38,7 @@ export const SignUpTab = () => {
                     toast.loading('creating account...', { id: 'signup' })
                 },
                 onSuccess: (ctx) => {
+                    // redirect user to "/" right after signup
                     router.push('/')
                     toast.success('account created', { id: 'signup' })
                 },
@@ -93,7 +94,9 @@ export const SignUpTab = () => {
                     )}
                 />
 
-                <Button type='submit' >Sign Up</Button>
+                <Button type='submit' disabled={form.formState.isSubmitting} >
+                    {form.formState.isSubmitting ? 'Signing up...' : 'Sign Up'}
+                </Button>
             </FieldGroup>
         </form>
     </Form>
