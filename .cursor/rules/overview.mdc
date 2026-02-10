@@ -8,8 +8,9 @@ alwaysApply: false
 Building a social network that combines features from X/Twitter and Reddit.
 
 ## stack
-- NextJs
+- Next.js
 - PostgreSQL + Prisma
+- better-auth (authentication)
 
 ## Core Features
 - User account system
