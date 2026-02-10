@@ -1,8 +1,10 @@
 'use client'
 
-import { useSession } from "@/lib/authClient"
-import ShowUsers from "../ShowUsers"
+import { signOut, useSession } from "@/lib/authClient"
+import ShowUsers from "../testingComponents/ShowUsers"
 import Link from "next/link"
+import ShowUserDetails from "../testingComponents/ShowUserDetails"
+import { Button } from "../ui/button"
 
 type User = { id: string; name: string | null }
 
@@ -28,14 +30,14 @@ const HomeContent = ({ users }: { users: User[] }) => {
                 )
                 : (
                     <>
-                        <div>
-                            <p className="font-bold">id session : </p>
-                            <p>{data?.session.id}</p>
-                        </div>
-                        <div>
-                            <p className="font-bold">userId : </p>
-                            <p>{data?.session.userId}</p>
-                        </div>
+                        <Button
+                            size='sm'
+                            variant='destructive'
+                            onClick={() => signOut()}
+                        >
+                            sign out
+                        </Button>
+                        <ShowUserDetails data={data} />
                         <p>-----------------------------------</p>
                         <ShowUsers users={users} />
                     </>

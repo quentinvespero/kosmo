@@ -5,4 +5,4 @@ import { createAuthClient } from "better-auth/react"
 // })
 
 // getting the methods instead of the whole authClient
-export const { signIn, signUp, useSession } = createAuthClient()
+export const { signIn, signUp, useSession, signOut } = createAuthClient()
