@@ -28,13 +28,13 @@ export const SignInTab = () => {
 
     const handleSignIn = async (authData: SignInForm) => {
         await signIn.email(
-            { ...authData, callbackURL: '/', rememberMe: true },
+            { ...authData, callbackURL: '/home', rememberMe: true },
             {
                 onRequest: () => {
                     toast.loading('signing in...', { id: 'signin' })
                 },
                 onSuccess: () => {
-                    router.push('/')
+                    router.push('/home')
                     toast.success('signed in', { id: 'signin' })
                 },
                 onError: (ctx) => {

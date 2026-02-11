@@ -1,17 +1,11 @@
-import prisma from '@/lib/prisma'
-import HomeContent from '@/components/home/HomeContent'
-
-const Home = async () => {
-
-    // tests 020226
-    const users = await prisma.user.findMany()
+const LandingPage = async () => {
 
     return (
-        <div className="home flex flex-col items-center gap-10">
+        <div className="flex flex-col items-center gap-10">
             <h1 className='text-3xl font-bold italic'>Kosmo</h1>
-            <HomeContent users={users} />
+            <p>Landing page</p>
         </div>
     )
 }
 
-export default Home
+export default LandingPage
