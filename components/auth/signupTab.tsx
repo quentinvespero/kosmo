@@ -32,14 +32,14 @@ export const SignUpTab = () => {
         // const { data, error } = await signUp.email(
         await signUp.email(
             // the callback below is used for email verification, it's where the user is redirected after clicking on the email's link
-            { ...authData, callbackURL: "/" },
+            { ...authData, callbackURL: "/home" },
             {
-                onRequest: (ctx) => {
+                onRequest: () => {
                     toast.loading('creating account...', { id: 'signup' })
                 },
-                onSuccess: (ctx) => {
+                onSuccess: () => {
                     // redirect user to "/" right after signup
-                    router.push('/')
+                    router.push('/home')
                     toast.success('account created', { id: 'signup' })
                 },
                 onError: (ctx) => {
