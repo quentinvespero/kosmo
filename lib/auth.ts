@@ -11,7 +11,7 @@ export const auth = betterAuth({
             maxAge: 120 // caches (2min)
         }
     },
-    rateLimit: { // limit requests
+    rateLimit: { // limit requests (feature disabled in dev mode by default)
         storage: 'database', // location to store the info of users making the requests
         window: 30, // time window in seconds
         max: 10, // max request
