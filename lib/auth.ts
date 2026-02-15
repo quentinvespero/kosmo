@@ -15,6 +15,16 @@ export const auth = betterAuth({
         storage: 'database', // location to store the info of users making the requests
         window: 30, // time window in seconds
         max: 10, // max request
+        customRules: {
+            '/sign-in/email': {
+                window: 10,
+                max: 3
+            },
+            '/sign-up/email': {
+                window: 10,
+                max: 3
+            }
+        }
     },
     plugins: [nextCookies()],
     database: prismaAdapter(prisma, { provider: "postgresql" })
