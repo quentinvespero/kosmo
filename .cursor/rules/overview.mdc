@@ -11,6 +11,7 @@ Building a social network that combines features from X/Twitter and Reddit.
 - Next.js
 - PostgreSQL + Prisma
 - better-auth (authentication)
+- pnpm to manage the packages
 
 ## Core Features
 - User account system
