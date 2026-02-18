@@ -50,7 +50,12 @@ export const SignUpTab = () => {
     }
 
     return <Form {...form}>
-        <form className="space-y-4" onSubmit={form.handleSubmit(handleSignUp)}>
+        <form
+            className="space-y-4"
+            onSubmit={form.handleSubmit(handleSignUp)}
+            toolname="signup"
+            tooldescription="Create a new Kosmo account"
+        >
             <FieldGroup>
                 <FormField
                     control={form.control}
@@ -59,7 +64,7 @@ export const SignUpTab = () => {
                         <FormItem>
                             <FormLabel>Name</FormLabel>
                             <FormControl>
-                                <Input type='text' {...field} />
+                                <Input type='text' {...field} toolparamdescription="User's display name" />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -73,7 +78,7 @@ export const SignUpTab = () => {
                         <FormItem>
                             <FormLabel>Email</FormLabel>
                             <FormControl>
-                                <Input type='email' {...field} />
+                                <Input type='email' {...field} toolparamdescription="User's email address" />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -87,7 +92,7 @@ export const SignUpTab = () => {
                         <FormItem>
                             <FormLabel>Password</FormLabel>
                             <FormControl>
-                                <Input type='password' {...field} />
+                                <Input type='password' {...field} toolparamdescription="User's chosen password" />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
