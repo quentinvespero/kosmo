@@ -1,5 +1,5 @@
 import SignoutButton from "@/components/auth/signoutButton"
-import HomeContent from "@/components/home/homeContent"
+import HomeContent from "@/components/home/HomeContent"
 import prisma from "@/lib/prisma"
 
 const Home = async () => {
