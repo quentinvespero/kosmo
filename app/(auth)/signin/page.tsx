@@ -1,15 +1,16 @@
-import { SignInTab } from '@/components/auth/signinTab'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { MagicLinkForm } from '@/components/auth/MagicLinkForm'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 const SigninPage = () => {
     return (
         <div className='w-full'>
             <Card>
-                <CardHeader className='text-xl'>
-                    <CardTitle>Sign In</CardTitle>
+                <CardHeader>
+                    <CardTitle>Sign in</CardTitle>
+                    <CardDescription>Enter your email to receive a magic link</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <SignInTab />
+                    <MagicLinkForm />
                 </CardContent>
             </Card>
         </div>

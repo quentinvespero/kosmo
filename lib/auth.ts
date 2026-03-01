@@ -1,10 +1,10 @@
 import { betterAuth } from "better-auth"
 import { prismaAdapter } from "better-auth/adapters/prisma"
 import { nextCookies } from "better-auth/next-js"
+import { magicLink } from "better-auth/plugins"
 import prisma from "./prisma"
 
 export const auth = betterAuth({
-    emailAndPassword: { enabled: true },
     session: {
         cookieCache: {
             enabled: true,
@@ -17,15 +17,28 @@ export const auth = betterAuth({
         max: 10, // max request
         customRules: {
             '/sign-in/email': {
-                window: 10,
+                window: 20,
                 max: 3
             },
             '/sign-up/email': {
-                window: 10,
+                window: 20,
                 max: 3
             }
         }
     },
-    plugins: [nextCookies()],
+    plugins: [
+        nextCookies(),
+        magicLink({
+            sendMagicLink: async ({ email, url }) => {
+                if (process.env.NODE_ENV === "development") {
+                    console.log(`[Magic Link] To: ${email}\n${url}`)
+                    return
+                }
+                // TODO: add production email provider (e.g. Resend, Nodemailer)
+                throw new Error("Email sending not configured for production")
+            },
+            expiresIn: 300,
+        })
+    ],
     database: prismaAdapter(prisma, { provider: "postgresql" })
 })
