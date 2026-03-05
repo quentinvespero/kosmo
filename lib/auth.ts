@@ -16,12 +16,8 @@ export const auth = betterAuth({
         window: 30, // time window in seconds
         max: 10, // max request
         customRules: {
-            '/sign-in/email': {
-                window: 20,
-                max: 3
-            },
-            '/sign-up/email': {
-                window: 20,
+            '/sign-in/magic-link': {
+                window: 60,
                 max: 3
             }
         }
