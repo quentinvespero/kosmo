@@ -9,10 +9,11 @@ const errorMessages: Record<string, string> = {
     test: 'testing stuff'
 }
 
-const SigninPage = async ({ searchParams }: { searchParams: Promise<{ error?: string }> }) => {
+const SigninPage = async ({ searchParams }: { searchParams: Promise<{ error?: string, intent?: string }> }) => {
 
     // searchParams promise capture the params in the url
-    const { error } = await searchParams
+    const { error, intent } = await searchParams
+    const isSignup = intent === 'signup'
 
     return (
         <div className='w-full space-y-4'>
@@ -27,7 +28,7 @@ const SigninPage = async ({ searchParams }: { searchParams: Promise<{ error?: st
             )}
             <Card>
                 <CardHeader>
-                    <CardTitle>Sign in</CardTitle>
+                    <CardTitle>{isSignup ? 'Create your account' : 'Sign in'}</CardTitle>
                     <CardDescription>Enter your email to receive a magic link</CardDescription>
                 </CardHeader>
                 <CardContent>

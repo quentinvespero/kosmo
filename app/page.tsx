@@ -13,14 +13,11 @@ const LandingPage = async () => {
             <h1 className='text-3xl font-bold italic'>Kosmo</h1>
             <p>Landing page</p>
             <div className="flex gap-5">
-                {/* <Button className="flex">
-                    <Link href='/signin' className='font-bold p-5 rounded-md'>Sign In</Link>
+                <Button className="flex">
+                    <Link href='/signin' className='font-bold p-5 rounded-md'>Login</Link>
                 </Button>
                 <Button className="flex">
-                    <Link href='/signup' className='font-bold p-5 rounded-md'>Sign Up</Link>
-                </Button> */}
-                <Button className="flex">
-                    <Link href='/signin' className='font-bold p-5 rounded-md'>Get started</Link>
+                    <Link href='/signin?intent=signup' className='font-bold p-5 rounded-md'>Get started</Link>
                 </Button>
             </div>
         </div>
