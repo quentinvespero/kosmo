@@ -2,7 +2,10 @@ import { betterAuth } from "better-auth"
 import { prismaAdapter } from "better-auth/adapters/prisma"
 import { nextCookies } from "better-auth/next-js"
 import { magicLink } from "better-auth/plugins"
+import { Resend } from "resend"
 import prisma from "./prisma"
+
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 export const auth = betterAuth({
     session: {
@@ -26,12 +29,20 @@ export const auth = betterAuth({
         nextCookies(),
         magicLink({
             sendMagicLink: async ({ email, url }) => {
+                // in dev, print the link to the console instead of sending an email
                 if (process.env.NODE_ENV === "development") {
                     console.log(`[Magic Link] To: ${email}\n${url}`)
                     return
                 }
-                // TODO: add production email provider (e.g. Resend, Nodemailer)
-                throw new Error("Email sending not configured for production")
+
+                const { error } = await resend.emails.send({
+                    from: "Kosmo <noreply@yourdomain.com>", // to update when I'll have the domain
+                    to: email,
+                    subject: "Your Kosmo sign-in link",
+                    html: `<p>Click the link below to sign in to Kosmo. It expires in 5 minutes.</p><a href="${url}">${url}</a>`
+                })
+
+                if (error) throw new Error(`Failed to send magic link: ${error.message}`)
             },
             expiresIn: 300,
         })
