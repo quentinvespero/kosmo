@@ -1,19 +1,5 @@
-import { SignUpTab } from "@/components/auth/signupTab"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { redirect } from "next/navigation"
 
-const SignupPage = () => {
-    return (
-        <div className="w-full">
-            <Card>
-                <CardHeader className='text-xl'>
-                    <CardTitle>Sign Up</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <SignUpTab />
-                </CardContent>
-            </Card>
-        </div>
-    )
+export default function SignupPage() {
+    redirect('/signin')
 }
-
-export default SignupPage

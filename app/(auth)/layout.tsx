@@ -1,24 +1,19 @@
-'use client'
+import { auth } from "@/lib/auth"
+import { headers } from "next/headers"
+import { redirect } from "next/navigation"
 
-import Link from "next/link"
-import { usePathname } from "next/navigation"
+const AuthLayout = async ({ children }: { children: React.ReactNode }) => {
+    const session = await auth.api.getSession({
+        headers: await headers()
+    })
 
-const AuthLayout = ({ children }: { children: React.ReactNode }) => {
-
-    const pathname = usePathname()
-    const showNav = pathname !== "/verify"
+    if (session) {
+        redirect('/home')
+    }
 
     return (
-        <div className="flex flex-col items-center mx-auto max-w-lg py-6 px-4 gap-5">
+        <div className="flex flex-col items-center mx-auto max-w-lg py-6 px-4">
             {children}
-            {showNav && (
-                <nav className="flex gap-2 self-start text-sm text-muted-foreground">
-                    {pathname === "/signin"
-                        ? (<>Don&apos;t have an account? <Link href="/signup" className="text-primary font-medium hover:underline">Sign Up</Link></>)
-                        : (<>Already have an account? <Link href="/signin" className="text-primary font-medium hover:underline">Sign In</Link></>)
-                    }
-                </nav>
-            )}
         </div>
     )
 }

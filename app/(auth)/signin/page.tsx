@@ -1,15 +1,37 @@
-import { SignInTab } from '@/components/auth/signinTab'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { MagicLinkForm } from '@/components/auth/MagicLinkForm'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { ArrowLeft } from 'lucide-react'
+import Link from 'next/link'
 
-const SigninPage = () => {
+// it will uses the error message that matches the property name
+const errorMessages: Record<string, string> = {
+    link_invalid: 'Your magic link has expired or has already been used. Please request a new one.',
+    test: 'testing stuff'
+}
+
+const SigninPage = async ({ searchParams }: { searchParams: Promise<{ error?: string }> }) => {
+
+    // searchParams promise capture the params in the url
+    const { error } = await searchParams
+
     return (
-        <div className='w-full'>
+        <div className='w-full space-y-4'>
+            <Link href='/' className='flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors w-fit'>
+                <ArrowLeft size={14} />
+                Back
+            </Link>
+            {error && (
+                <p className='text-sm text-destructive'>
+                    {errorMessages[error] ?? 'Something went wrong. Please try again.'}
+                </p>
+            )}
             <Card>
-                <CardHeader className='text-xl'>
-                    <CardTitle>Sign In</CardTitle>
+                <CardHeader>
+                    <CardTitle>Sign in</CardTitle>
+                    <CardDescription>Enter your email to receive a magic link</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <SignInTab />
+                    <MagicLinkForm />
                 </CardContent>
             </Card>
         </div>
