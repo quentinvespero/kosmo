@@ -1,5 +1,7 @@
 import { MagicLinkForm } from '@/components/auth/MagicLinkForm'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { ArrowLeft } from 'lucide-react'
+import Link from 'next/link'
 
 // it will uses the error message that matches the property name
 const errorMessages: Record<string, string> = {
@@ -14,6 +16,10 @@ const SigninPage = async ({ searchParams }: { searchParams: Promise<{ error?: st
 
     return (
         <div className='w-full space-y-4'>
+            <Link href='/' className='flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors w-fit'>
+                <ArrowLeft size={14} />
+                Back
+            </Link>
             {error && (
                 <p className='text-sm text-destructive'>
                     {errorMessages[error] ?? 'Something went wrong. Please try again.'}
