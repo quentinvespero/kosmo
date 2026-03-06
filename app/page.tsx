@@ -1,7 +1,12 @@
 import { Button } from "@/components/ui/button"
+import { auth } from "@/lib/auth"
+import { headers } from "next/headers"
+import { redirect } from "next/navigation"
 import Link from "next/link"
 
 const LandingPage = async () => {
+    const session = await auth.api.getSession({ headers: await headers() })
+    if (session) redirect('/home')
 
     return (
         <div className="flex flex-col items-center gap-10">

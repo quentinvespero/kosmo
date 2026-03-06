@@ -15,7 +15,7 @@ const ShowUserDetails = ({ data }: { data: Session }) => {
             </div>
             <div>
                 <div>
-                    <p className="font-black">userName : </p>
+                    <p className="font-black">name : </p>
                     <p>{data?.user.name}</p>
                 </div>
                 <div>

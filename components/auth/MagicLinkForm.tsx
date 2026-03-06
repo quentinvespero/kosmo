@@ -25,7 +25,7 @@ export const MagicLinkForm = () => {
 
     const handleSubmit = async ({ email }: MagicLinkForm) => {
         await signIn.magicLink(
-            { email, callbackURL: '/home' },
+            { email, callbackURL: '/home', newUserCallbackURL: '/onboarding', errorCallbackURL: '/signin?error=link_invalid' },
             {
                 onRequest: () => {
                     toast.loading('sending magic link...', { id: 'magiclink' })
