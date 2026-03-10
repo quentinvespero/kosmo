@@ -29,6 +29,8 @@ model User {
   feedMembers          FeedUser[]
   communityMemberships CommunityMember[]
   drafts               Draft[]
+  followers            Follow[]          @relation("UserFollowing") // people following this user
+  following            Follow[]          @relation("UserFollowers") // people this user follows
 
   @@unique([email])
   @@map("user")
@@ -83,10 +85,13 @@ model Verification {
 }
 
 model UserPreferences {
-  id       String   @id @default(cuid())
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId   String   @unique
-  language Language @default(ENGLISH)
+  id                               String   @id @default(cuid())
+  user                             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                           String   @unique
+  language                         Language @default(ENGLISH)
+  isPrivate                        Boolean  @default(false)
+  // when true, subscribers-only posts on a private profile bypass follow approval
+  allowSubscribersOnPrivateProfile Boolean  @default(false)
 }
 
 model Community {
@@ -110,16 +115,16 @@ model Community {
 }
 
 model Post {
-  id        String      @id @default(cuid())
-  title     String?
-  content   String
-  source    String?
-  language  Language    @default(ENGLISH)
-  privacy   PostPrivacy @default(GLOBAL)
-  isEdited  Boolean     @default(false)
-  authorId  String
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
+  id                String   @id @default(cuid())
+  title             String?
+  content           String
+  source            String?
+  language          Language @default(ENGLISH)
+  isSubscribersOnly Boolean  @default(false)
+  isEdited          Boolean  @default(false)
+  authorId          String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
   // Relations
   author          User            @relation(fields: [authorId], references: [id], onDelete: Cascade)
@@ -280,6 +285,20 @@ model CommunityMember {
   @@map("community_members")
 }
 
+model Follow {
+  followerId  String
+  followingId String
+  status      FollowStatus @default(PENDING)
+  createdAt   DateTime     @default(now())
+
+  // Relations
+  follower  User @relation("UserFollowers", fields: [followerId], references: [id], onDelete: Cascade)
+  following User @relation("UserFollowing", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@id([followerId, followingId])
+  @@map("follows")
+}
+
 model RateLimit {
   id          String @id
   key         String
@@ -302,10 +321,9 @@ enum Language {
   GERMAN
 }
 
-enum PostPrivacy {
-  GLOBAL // Public post visible to everyone
-  COMMUNITY // Post shared within specific communities only
-  PRIVATE // Private post (draft or personal)
+enum FollowStatus {
+  PENDING // awaiting approval (private profiles)
+  ACCEPTED
 }
 
 enum CommunityRole {

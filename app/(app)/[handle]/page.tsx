@@ -43,15 +43,15 @@ const ProfilePage = async ({ params }: Props) => {
     const posts = await prisma.post.findMany({
         where: {
             authorId: profileUser.id,
-            // non-owners only see public posts
-            ...(!isOwnProfile && { privacy: 'GLOBAL' })
+            // non-owners never see subscribers-only posts (full gating logic comes later)
+            ...(!isOwnProfile && { isSubscribersOnly: false })
         },
         select: {
             id: true,
             title: true,
             content: true,
             createdAt: true,
-            privacy: true,
+            isSubscribersOnly: true,
             isEdited: true,
             _count: { select: { comments: true, votes: true } },
             tags: { select: { name: true } }

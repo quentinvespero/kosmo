@@ -5,7 +5,7 @@ type Post = {
     title: string | null
     content: string
     createdAt: Date
-    privacy: 'GLOBAL' | 'COMMUNITY' | 'PRIVATE'
+    isSubscribersOnly: boolean
     isEdited: boolean
     _count: { comments: number; votes: number }
     tags: { name: string }[]

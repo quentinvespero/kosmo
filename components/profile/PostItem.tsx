@@ -6,7 +6,7 @@ type Post = {
     title: string | null
     content: string
     createdAt: Date
-    privacy: 'GLOBAL' | 'COMMUNITY' | 'PRIVATE'
+    isSubscribersOnly: boolean
     isEdited: boolean
     _count: { comments: number; votes: number }
     tags: { name: string }[]
@@ -20,15 +20,7 @@ type Props = {
 const formatDate = (date: Date) =>
     date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 
-const privacyBadgeVariant = {
-    GLOBAL: null,
-    COMMUNITY: 'secondary',
-    PRIVATE: 'outline',
-} as const
-
 export const PostItem = ({ post, isOwnProfile }: Props) => {
-    const badgeVariant = privacyBadgeVariant[post.privacy]
-
     // Truncate long posts
     const contentPreview = post.content.length > 280
         ? post.content.slice(0, 280) + '…'
@@ -36,13 +28,13 @@ export const PostItem = ({ post, isOwnProfile }: Props) => {
 
     return (
         <article className="py-4 space-y-2">
-            {/* Header: date + privacy badge (only on own profile) */}
+            {/* Header: date + subscribers-only badge (only on own profile) */}
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <span>{formatDate(post.createdAt)}</span>
                 {post.isEdited && <span className="text-xs">(edited)</span>}
-                {isOwnProfile && badgeVariant && (
-                    <Badge variant={badgeVariant} className="text-xs py-0">
-                        {post.privacy === 'COMMUNITY' ? 'Community' : 'Private'}
+                {isOwnProfile && post.isSubscribersOnly && (
+                    <Badge variant="secondary" className="text-xs py-0">
+                        Subscribers only
                     </Badge>
                 )}
             </div>
