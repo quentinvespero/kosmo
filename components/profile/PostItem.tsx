@@ -1,0 +1,80 @@
+import { Badge } from "@/components/ui/badge"
+import { MessageSquare, ThumbsUp } from "lucide-react"
+
+type Post = {
+    id: string
+    title: string | null
+    content: string
+    createdAt: Date
+    privacy: 'GLOBAL' | 'COMMUNITY' | 'PRIVATE'
+    isEdited: boolean
+    _count: { comments: number; votes: number }
+    tags: { name: string }[]
+}
+
+type Props = {
+    post: Post
+    isOwnProfile: boolean
+}
+
+const formatDate = (date: Date) =>
+    date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+
+const privacyBadgeVariant = {
+    GLOBAL: null,
+    COMMUNITY: 'secondary',
+    PRIVATE: 'outline',
+} as const
+
+export const PostItem = ({ post, isOwnProfile }: Props) => {
+    const badgeVariant = privacyBadgeVariant[post.privacy]
+
+    // Truncate long posts
+    const contentPreview = post.content.length > 280
+        ? post.content.slice(0, 280) + '…'
+        : post.content
+
+    return (
+        <article className="py-4 space-y-2">
+            {/* Header: date + privacy badge (only on own profile) */}
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <span>{formatDate(post.createdAt)}</span>
+                {post.isEdited && <span className="text-xs">(edited)</span>}
+                {isOwnProfile && badgeVariant && (
+                    <Badge variant={badgeVariant} className="text-xs py-0">
+                        {post.privacy === 'COMMUNITY' ? 'Community' : 'Private'}
+                    </Badge>
+                )}
+            </div>
+
+            {post.title && (
+                <h2 className="font-semibold">{post.title}</h2>
+            )}
+
+            <p className="text-sm whitespace-pre-wrap">{contentPreview}</p>
+
+            {/* Tags */}
+            {post.tags.length > 0 && (
+                <div className="flex flex-wrap gap-1">
+                    {post.tags.map(tag => (
+                        <Badge key={tag.name} variant="secondary" className="text-xs">
+                            {tag.name}
+                        </Badge>
+                    ))}
+                </div>
+            )}
+
+            {/* Footer: votes + comments */}
+            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                <span className="flex items-center gap-1">
+                    <ThumbsUp size={14} />
+                    {post._count.votes}
+                </span>
+                <span className="flex items-center gap-1">
+                    <MessageSquare size={14} />
+                    {post._count.comments}
+                </span>
+            </div>
+        </article>
+    )
+}
