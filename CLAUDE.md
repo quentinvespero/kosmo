@@ -59,7 +59,7 @@ pnpm ui:add <component> # Add a shadcn/ui component
 ### Data Model Summary
 Core entities: `User`, `Post`, `Comment`, `Vote`, `Community`, `Feed`, `Tag`, `Draft`
 Junction tables: `PostCommunity`, `FeedCommunity`, `FeedUser`, `CommunityMember`
-Post privacy: `GLOBAL` | `COMMUNITY` | `PRIVATE`
+Post visibility: `isSubscribersOnly: Boolean` on `Post` — profile/community privacy controls the rest (see `doc/posts.md`)
 Vote targets: posts or comments (upvote/downvote)
 Communities become orphaned (not deleted) when their owner deletes their account
 
