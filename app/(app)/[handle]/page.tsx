@@ -14,7 +14,7 @@ const ProfilePage = async ({ params }: Props) => {
     // gather the handle from the url "/[handle]"
     const { handle } = await params
 
-    // fetching user profile data & current session
+    // fetching user profile data & current session in parallel
     const [profileUser, session] = await Promise.all([
         prisma.user.findUnique({
             where: { username: handle },
@@ -25,7 +25,8 @@ const ProfilePage = async ({ params }: Props) => {
                 bio: true,
                 image: true,
                 createdAt: true,
-                _count: { select: { posts: true } }
+                userPreferences: { select: { isPrivate: true } },
+                _count: { select: { posts: true, followers: true, following: true } }
             }
         }),
         auth.api.getSession({ headers: await headers() })
@@ -39,8 +40,29 @@ const ProfilePage = async ({ params }: Props) => {
     // check ownership of the profile by the currently connected user
     const isOwnProfile = session?.user.id === profileUser.id
 
+    // check if the profile is set to private or not
+    const isPrivate = profileUser.userPreferences?.isPrivate ?? false
+
+    // Determine viewer's follow status (only relevant for other people's profiles)
+    let followStatus: 'NONE' | 'PENDING' | 'ACCEPTED' = 'NONE'
+    if (!isOwnProfile && session) {
+        const follow = await prisma.follow.findUnique({
+            where: {
+                followerId_followingId: {
+                    followerId: session.user.id,
+                    followingId: profileUser.id
+                }
+            },
+            select: { status: true }
+        })
+        if (follow) followStatus = follow.status as 'PENDING' | 'ACCEPTED'
+    }
+
+    // Private profile: only the owner and accepted followers can see posts
+    const canViewPosts = isOwnProfile || !isPrivate || followStatus === 'ACCEPTED'
+
     // query posts
-    const posts = await prisma.post.findMany({
+    const posts = canViewPosts ? await prisma.post.findMany({
         where: {
             authorId: profileUser.id,
             // non-owners never see subscribers-only posts (full gating logic comes later)
@@ -57,12 +79,24 @@ const ProfilePage = async ({ params }: Props) => {
             tags: { select: { name: true } }
         },
         orderBy: { createdAt: 'desc' }
-    })
+    }) : []
 
     return (
         <div className="max-w-2xl mx-auto py-6 px-4 space-y-6">
-            <ProfileHeader user={{ ...profileUser, username: profileUser.username }} isOwnProfile={isOwnProfile} />
-            <PostList posts={posts} isOwnProfile={isOwnProfile} />
+            <ProfileHeader
+                user={{ ...profileUser, username: profileUser.username }}
+                isOwnProfile={isOwnProfile}
+                isPrivate={isPrivate}
+                // null = viewer not logged in → no follow button
+                followStatus={session && !isOwnProfile ? followStatus : null}
+            />
+            {canViewPosts ? (
+                <PostList posts={posts} isOwnProfile={isOwnProfile} />
+            ) : (
+                <p className="text-center text-sm text-muted-foreground py-12">
+                    This account is private. Follow to see their posts.
+                </p>
+            )}
         </div>
     )
 }
