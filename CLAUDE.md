@@ -63,6 +63,13 @@ Post visibility: `isSubscribersOnly: Boolean` on `Post` — profile/community pr
 Vote targets: posts or comments (upvote/downvote)
 Communities become orphaned (not deleted) when their owner deletes their account
 
+## Bug Reports
+
+When the user reports a bug:
+1. **Do not attempt to fix it immediately**
+2. First, write a test that reproduces the bug (it should fail)
+3. Then, launch subagents to attempt fixes — the fix is proven when the test passes
+
 ## Docs Maintenance
 When modifying a feature, always update the corresponding file in `doc/` to reflect the change.
 
