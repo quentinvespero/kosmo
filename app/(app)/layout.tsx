@@ -7,9 +7,8 @@ const AppLayout = async ({ children }: { children: React.ReactNode }) => {
         headers: await headers()
     })
 
-    if (!session) {
-        redirect('/signin')
-    }
+    if (!session) redirect('/signin')
+    if (!session.user.username) redirect('/onboarding')
 
     return <>{children}</>
 }

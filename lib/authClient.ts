@@ -1,6 +1,10 @@
 import { createAuthClient } from "better-auth/react"
-import { magicLinkClient } from "better-auth/client/plugins"
+import { inferAdditionalFields, magicLinkClient } from "better-auth/client/plugins"
+import type { auth } from "./auth"
 
 export const { signIn, signOut, useSession } = createAuthClient({
-    plugins: [magicLinkClient()]
+    plugins: [
+        magicLinkClient(),
+        inferAdditionalFields<typeof auth>() // types session.user.username on the client
+    ]
 })
