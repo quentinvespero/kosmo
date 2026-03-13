@@ -70,13 +70,13 @@ const ProfilePage = async ({ params }: Props) => {
         },
         select: {
             id: true,
-            title: true,
             content: true,
             createdAt: true,
             isSubscribersOnly: true,
             isEdited: true,
             _count: { select: { comments: true, votes: true } },
-            tags: { select: { name: true } }
+            tags: { select: { name: true } },
+            author: { select: { name: true, username: true } }
         },
         orderBy: { createdAt: 'desc' }
     }) : []

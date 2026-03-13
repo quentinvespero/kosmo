@@ -1,9 +1,10 @@
-import SignoutButton from "@/components/auth/signoutButton"
-import HomeContent from "@/components/home/HomeContent"
+import { PostComposer } from "@/components/home/PostComposer"
+import HomeFeed from "@/components/home/HomeFeed"
 import { auth } from "@/lib/auth"
 import prisma from "@/lib/prisma"
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
+import { Suspense } from "react"
 
 const Home = async () => {
     const session = await auth.api.getSession({ headers: await headers() })
@@ -12,17 +13,15 @@ const Home = async () => {
         select: { username: true }
     })
 
-    // if the logged user has no username set yet, he's redirected to the onboarding where he can set one
+    // in case the user has no username (handle) set yet, redirect to onboarding
     if (!user?.username) redirect('/onboarding')
 
-    // tests 020226
-    const users = await prisma.user.findMany()
-
     return (
-        <div className="flex flex-col items-center gap-5">
-            <h1>Home</h1>
-            <HomeContent users={users} />
-            <SignoutButton />
+        <div className="max-w-2xl mx-auto py-6 px-4 space-y-6">
+            <PostComposer />
+            <Suspense fallback={<p className="text-sm text-muted-foreground text-center py-8">Loading feed...</p>}>
+                <HomeFeed />
+            </Suspense>
         </div>
     )
 }

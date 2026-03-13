@@ -3,7 +3,6 @@ import { MessageSquare, ThumbsUp } from "lucide-react"
 
 type Post = {
     id: string
-    title: string | null
     content: string
     createdAt: Date
     isSubscribersOnly: boolean
@@ -15,12 +14,13 @@ type Post = {
 type Props = {
     post: Post
     isOwnProfile: boolean
+    author: { name: string; username: string | null }
 }
 
 const formatDate = (date: Date) =>
     date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 
-export const PostItem = ({ post, isOwnProfile }: Props) => {
+export const PostItem = ({ post, isOwnProfile, author }: Props) => {
     // Truncate long posts
     const contentPreview = post.content.length > 280
         ? post.content.slice(0, 280) + '…'
@@ -28,7 +28,15 @@ export const PostItem = ({ post, isOwnProfile }: Props) => {
 
     return (
         <article className="py-4 space-y-2">
-            {/* Header: date + subscribers-only badge (only on own profile) */}
+            {/* Author */}
+            <div className="text-sm font-medium">
+                <a href={`/${author.username ?? ''}`} className="hover:underline">
+                    {author.name}
+                </a>
+                <span className="text-muted-foreground"> @{author.username ?? '—'}</span>
+            </div>
+
+            {/* Date + subscribers-only badge (only on own profile) */}
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <span>{formatDate(post.createdAt)}</span>
                 {post.isEdited && <span className="text-xs">(edited)</span>}
@@ -38,10 +46,6 @@ export const PostItem = ({ post, isOwnProfile }: Props) => {
                     </Badge>
                 )}
             </div>
-
-            {post.title && (
-                <h2 className="font-semibold">{post.title}</h2>
-            )}
 
             <p className="text-sm whitespace-pre-wrap">{contentPreview}</p>
 
