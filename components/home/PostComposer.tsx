@@ -19,7 +19,7 @@ export const PostComposer = () => {
     })
 
     const content = form.watch('content')
-    const remaining = 2000 - (content?.length ?? 0)
+    const remaining = 10000 - (content?.length ?? 0)
 
     const onSubmit = (data: CreatePostInput) => {
         startTransition(async () => {
