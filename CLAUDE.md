@@ -44,12 +44,34 @@ pnpm ui:add <component> # Add a shadcn/ui component
 - Forms use `react-hook-form` + `zodResolver` + shadcn `Form`/`Field` components
 - Toasts via `sonner` — use `toast.loading`/`toast.success`/`toast.error` with an `id` to deduplicate
 
+### Detailed Docs
+- `doc/auth.md` — magic link auth flow
+- `doc/posts.md` — post lifecycle, privacy, communities relationship
+- `doc/comments.md` — threaded replies, nesting rules
+- `doc/votes.md` — upvote/downvote constraints
+- `doc/communities.md` — community membership, orphan rules
+- `doc/feeds.md` — custom timelines, aggregation logic
+- `doc/tags.md` — post categorization
+- `doc/drafts.md` — draft lifecycle (always private)
+- `doc/profile.md` — profile visibility, privacy settings
+- `doc/subscribers.md` — paid subscriptions, exclusive content (planned)
+
 ### Data Model Summary
 Core entities: `User`, `Post`, `Comment`, `Vote`, `Community`, `Feed`, `Tag`, `Draft`
 Junction tables: `PostCommunity`, `FeedCommunity`, `FeedUser`, `CommunityMember`
-Post privacy: `GLOBAL` | `COMMUNITY` | `PRIVATE`
+Post visibility: `isSubscribersOnly: Boolean` on `Post` — profile/community privacy controls the rest (see `doc/posts.md`)
 Vote targets: posts or comments (upvote/downvote)
 Communities become orphaned (not deleted) when their owner deletes their account
+
+## Bug Reports
+
+When the user reports a bug:
+1. **Do not attempt to fix it immediately**
+2. First, write a test that reproduces the bug (it should fail)
+3. Then, launch subagents to attempt fixes — the fix is proven when the test passes
+
+## Docs Maintenance
+When modifying a feature, always update the corresponding file in `doc/` to reflect the change.
 
 ## Code Style
 - TypeScript strict mode, 4-space indent, no trailing semicolons

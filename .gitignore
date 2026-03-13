@@ -42,3 +42,9 @@ next-env.d.ts
 
 # other
 generated/prisma
+
+# agent / llms
+.cursor/
+
+# personal docs
+doc/kosmo_vault/

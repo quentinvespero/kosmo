@@ -8,6 +8,15 @@ import prisma from "./prisma"
 const resend = new Resend(process.env.RESEND_API_KEY)
 
 export const auth = betterAuth({
+    user: {
+        // expose username in the session so layouts can check it without an extra DB query
+        additionalFields: {
+            username: {
+                type: "string",
+                required: false,
+            }
+        }
+    },
     session: {
         cookieCache: {
             enabled: true,
