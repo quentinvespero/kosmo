@@ -1,9 +1,15 @@
+'use client'
+
+import { useState } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import { Separator } from "@/components/ui/separator"
 import { FollowButton } from "./FollowButton"
-import Link from "next/link"
+import { updateProfile } from "@/lib/actions/settings"
+import { toast } from "sonner"
 
 type FollowStatus = 'NONE' | 'PENDING' | 'ACCEPTED'
 
@@ -34,18 +40,62 @@ const joinedDate = (date: Date) =>
     date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
 
 export const ProfileHeader = ({ user, isOwnProfile, isPrivate, followStatus }: Props) => {
+    const [editing, setEditing] = useState(false)
+    // local state so the UI reflects changes immediately after save
+    const [displayName, setDisplayName] = useState(user.name)
+    const [displayBio, setDisplayBio] = useState(user.bio ?? '')
+    const [saving, setSaving] = useState(false)
+
+    const handleSave = async () => {
+        setSaving(true)
+        const id = 'update-profile'
+        toast.loading('Saving...', { id })
+
+        const result = await updateProfile({
+            name: displayName,
+            bio: displayBio || undefined
+        })
+
+        setSaving(false)
+
+        if ('error' in result) {
+            toast.error('Something went wrong', { id })
+        } else {
+            toast.success('Profile updated', { id })
+            setEditing(false)
+        }
+    }
+
+    const handleCancel = () => {
+        // revert unsaved changes
+        setDisplayName(user.name)
+        setDisplayBio(user.bio ?? '')
+        setEditing(false)
+    }
+
     return (
         <div className="space-y-4">
             <div className="flex items-start justify-between">
                 <Avatar className="size-20">
-                    <AvatarImage src={user.image ?? undefined} alt={user.name} />
-                    <AvatarFallback className="text-2xl">{getInitials(user.name)}</AvatarFallback>
+                    <AvatarImage src={user.image ?? undefined} alt={displayName} />
+                    <AvatarFallback className="text-2xl">{getInitials(displayName)}</AvatarFallback>
                 </Avatar>
 
                 {isOwnProfile ? (
-                    <Button variant="outline" asChild>
-                        <Link href="/settings/profile">Edit profile</Link>
-                    </Button>
+                    editing ? (
+                        <div className="flex gap-2">
+                            <Button variant="outline" onClick={handleCancel} disabled={saving}>
+                                Cancel
+                            </Button>
+                            <Button onClick={handleSave} disabled={saving || !displayName.trim()}>
+                                Save
+                            </Button>
+                        </div>
+                    ) : (
+                        <Button variant="outline" onClick={() => setEditing(true)}>
+                            Edit profile
+                        </Button>
+                    )
                 ) : followStatus !== null ? (
                     <FollowButton
                         targetUserId={user.id}
@@ -56,16 +106,42 @@ export const ProfileHeader = ({ user, isOwnProfile, isPrivate, followStatus }: P
             </div>
 
             <div>
-                <div className="flex items-center gap-2">
-                    <h1 className="text-xl font-bold">{user.name}</h1>
-                    {isPrivate && (
-                        <Badge variant="secondary" className="text-xs">Private</Badge>
-                    )}
-                </div>
+                {editing ? (
+                    <Input
+                        value={displayName}
+                        onChange={e => setDisplayName(e.target.value)}
+                        placeholder="Your name"
+                        className="text-xl font-bold h-auto py-1"
+                        maxLength={50}
+                    />
+                ) : (
+                    <div className="flex items-center gap-2">
+                        <h1 className="text-xl font-bold">{displayName}</h1>
+                        {isPrivate && (
+                            <Badge variant="secondary" className="text-xs">Private</Badge>
+                        )}
+                    </div>
+                )}
                 <p className="text-muted-foreground">@{user.username}</p>
             </div>
 
-            {user.bio && <p className="text-sm">{user.bio}</p>}
+            {editing ? (
+                <div className="space-y-1">
+                    <Textarea
+                        value={displayBio}
+                        onChange={e => setDisplayBio(e.target.value)}
+                        placeholder="Tell the world about yourself"
+                        maxLength={160}
+                        rows={3}
+                        className="resize-none"
+                    />
+                    <p className="text-xs text-muted-foreground text-right">
+                        {displayBio.length}/160
+                    </p>
+                </div>
+            ) : (
+                displayBio && <p className="text-sm">{displayBio}</p>
+            )}
 
             <p className="text-sm text-muted-foreground">
                 Joined {joinedDate(user.createdAt)}
