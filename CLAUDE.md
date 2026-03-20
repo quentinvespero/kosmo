@@ -64,7 +64,6 @@ Vote targets: posts or comments (upvote/downvote)
 Communities become orphaned (not deleted) when their owner deletes their account
 
 ## Bug Reports
-
 When the user reports a bug:
 1. **Do not attempt to fix it immediately**
 2. First, write a test that reproduces the bug (it should fail)
