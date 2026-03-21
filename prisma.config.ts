@@ -7,6 +7,8 @@ export default defineConfig({
         path: './prisma/migrations'
     },
     datasource: {
-        url: env('DATABASE_URL'),
+        // Use the unpooled (direct) connection for CLI operations like migrations
+        // PgBouncer transaction mode doesn't support session-level features Prisma Migrate needs
+        url: env('DATABASE_URL_UNPOOLED'),
     },
 })

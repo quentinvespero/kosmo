@@ -45,7 +45,7 @@ export const auth = betterAuth({
                 }
 
                 const { error } = await resend.emails.send({
-                    from: "Kosmo <noreply@yourdomain.com>", // to update when I'll have the domain
+                    from: "Kosmo <hello@mail.kosmo.to>",
                     to: email,
                     subject: "Your Kosmo sign-in link",
                     html: `<p>Click the link below to sign in to Kosmo. It expires in 5 minutes.</p><a href="${url}">${url}</a>`
