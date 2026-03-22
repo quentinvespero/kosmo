@@ -45,21 +45,22 @@ pnpm ui:add <component> # Add a shadcn/ui component
 - Toasts via `sonner` — use `toast.loading`/`toast.success`/`toast.error` with an `id` to deduplicate
 
 ### Detailed Docs
-- `doc/auth.md` — magic link auth flow
-- `doc/posts.md` — post lifecycle, privacy, communities relationship
-- `doc/comments.md` — threaded replies, nesting rules
-- `doc/votes.md` — upvote/downvote constraints
-- `doc/communities.md` — community membership, orphan rules
-- `doc/feeds.md` — custom timelines, aggregation logic
-- `doc/tags.md` — post categorization
-- `doc/drafts.md` — draft lifecycle (always private)
-- `doc/profile.md` — profile visibility, privacy settings
-- `doc/subscribers.md` — paid subscriptions, exclusive content (planned)
+in the folder
+- `doc/kosmo_vault/docs/auth.md` — magic link auth flow
+- `doc/kosmo_vault/docs/posts.md` — post lifecycle, privacy, communities relationship
+- `doc/kosmo_vault/docs/comments.md` — threaded replies, nesting rules
+- `doc/kosmo_vault/docs/votes.md` — upvote/downvote constraints
+- `doc/kosmo_vault/docs/communities.md` — community membership, orphan rules
+- `doc/kosmo_vault/docs/feeds.md` — custom timelines, aggregation logic
+- `doc/kosmo_vault/docs/tags.md` — post categorization
+- `doc/kosmo_vault/docs/drafts.md` — draft lifecycle (always private)
+- `doc/kosmo_vault/docs/profile.md` — profile visibility, privacy settings
+- `doc/kosmo_vault/docs/subscribers.md` — paid subscriptions, exclusive content (planned)
 
 ### Data Model Summary
 Core entities: `User`, `Post`, `Comment`, `Vote`, `Community`, `Feed`, `Tag`, `Draft`
 Junction tables: `PostCommunity`, `FeedCommunity`, `FeedUser`, `CommunityMember`
-Post visibility: `isSubscribersOnly: Boolean` on `Post` — profile/community privacy controls the rest (see `doc/posts.md`)
+Post visibility: `isSubscribersOnly: Boolean` on `Post` — profile/community privacy controls the rest (see `doc/kosmo_vault/docs/posts.md`)
 Vote targets: posts or comments (upvote/downvote)
 Communities become orphaned (not deleted) when their owner deletes their account
 
@@ -70,7 +71,7 @@ When the user reports a bug:
 3. Then, launch subagents to attempt fixes — the fix is proven when the test passes
 
 ## Docs Maintenance
-When modifying a feature, always update the corresponding file in `doc/` to reflect the change.
+When modifying a feature, always update the corresponding file in `doc/kosmo_vault/docs/` to reflect the change.
 
 ## Code Style
 - TypeScript strict mode, 4-space indent, no trailing semicolons
