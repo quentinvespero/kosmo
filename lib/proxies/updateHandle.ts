@@ -17,14 +17,18 @@ export const completeOnboarding = async (data: { name: string, handle: string })
 
     const handle = result.data.handle.toLowerCase()
 
-    try {
-        await prisma.user.update({
-            where: { id: session.user.id },
-            data: { username: handle, name: result.data.name }
-        })
-    } catch {
+    // Pre-check for duplicate handle before updating
+    const existing = await prisma.user.findFirst({ where: { username: handle } })
+    if (existing) {
         return { error: 'This handle is already taken' }
     }
+
+    // Use auth.api.updateUser instead of prisma directly — this also refreshes the session
+    // cookie cache, so the subsequent redirect to /home won't loop back to /onboarding
+    await auth.api.updateUser({
+        headers: await headers(),
+        body: { name: result.data.name, username: handle }
+    })
 
     redirect('/home')
 }
