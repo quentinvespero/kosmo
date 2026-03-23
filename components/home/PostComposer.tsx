@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { toast } from "sonner"
-import { useTransition } from "react"
+import { useEffect, useTransition, useState } from "react"
 import { createPostSchema, CreatePostInput } from "@/lib/schemas/PostSchemas"
 import { createPost } from "@/lib/actions/post"
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button"
 
 export const PostComposer = () => {
     const [isPending, startTransition] = useTransition()
+    const [isFocused, setIsFocused] = useState(false)
 
     const form = useForm<CreatePostInput>({
         resolver: zodResolver(createPostSchema),
@@ -20,6 +21,27 @@ export const PostComposer = () => {
 
     const content = form.watch('content')
     const remaining = 10000 - (content?.length ?? 0)
+    // Show the shortcut hint only when the textarea is idle
+    const showShortcut = !isFocused && !content
+
+    // Global keyboard shortcut: "n" focuses the post composer
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key !== 'n') return
+            const target = e.target as HTMLElement
+            // Don't intercept if the user is already typing somewhere
+            if (
+                target.tagName === 'INPUT' ||
+                target.tagName === 'TEXTAREA' ||
+                target.isContentEditable
+            ) return
+            e.preventDefault()
+            form.setFocus('content')
+        }
+
+        window.addEventListener('keydown', handleKeyDown)
+        return () => window.removeEventListener('keydown', handleKeyDown)
+    }, [form])
 
     const onSubmit = (data: CreatePostInput) => {
         startTransition(async () => {
@@ -45,11 +67,24 @@ export const PostComposer = () => {
                         render={({ field }) => (
                             <FormItem>
                                 <FormControl>
-                                    <Textarea
-                                        placeholder="What's on your mind?"
-                                        className="border-0 shadow-none px-0 resize-none min-h-20 focus-visible:ring-0"
-                                        {...field}
-                                    />
+                                    <div className="relative">
+                                        <Textarea
+                                            placeholder="What's on your mind?"
+                                            className="border-0 shadow-none px-0 resize-none min-h-20 focus-visible:ring-0"
+                                            {...field}
+                                            onFocus={() => setIsFocused(true)}
+                                            onBlur={(e) => {
+                                                field.onBlur()
+                                                setIsFocused(false)
+                                            }}
+                                        />
+                                        {/* Keyboard shortcut hint — hidden while focused or when content exists */}
+                                        {showShortcut && (
+                                            <kbd className="pointer-events-none absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded border border-muted-foreground/30 font-mono text-[10px] text-muted-foreground/50">
+                                                n
+                                            </kbd>
+                                        )}
+                                    </div>
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
