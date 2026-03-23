@@ -8,6 +8,7 @@ import { signIn } from "@/lib/authClient"
 import { magicLinkSchema } from "@/lib/schemas/AuthSchemas"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import z from "zod"
@@ -17,6 +18,7 @@ type MagicLinkForm = z.infer<typeof magicLinkSchema>
 export const MagicLinkForm = () => {
 
     const router = useRouter()
+    const [isPending, setIsPending] = useState(false)
 
     const form = useForm<MagicLinkForm>({
         resolver: zodResolver(magicLinkSchema),
@@ -24,21 +26,29 @@ export const MagicLinkForm = () => {
     })
 
     const handleSubmit = async ({ email }: MagicLinkForm) => {
-        await signIn.magicLink(
-            { email, callbackURL: '/home', newUserCallbackURL: '/onboarding', errorCallbackURL: '/signin?error=link_invalid' },
-            {
-                onRequest: () => {
-                    toast.loading('sending magic link...', { id: 'magiclink' })
-                },
-                onSuccess: () => {
-                    toast.dismiss('magiclink')
-                    router.push(`/verify?email=${encodeURIComponent(email)}`)
-                },
-                onError: (ctx) => {
-                    toast.error(ctx.error.message || "something went wrong", { id: 'magiclink' })
+        setIsPending(true)
+        try {
+            await signIn.magicLink(
+                { email, callbackURL: '/home', newUserCallbackURL: '/onboarding', errorCallbackURL: '/signin?error=link_invalid' },
+                {
+                    onRequest: () => {
+                        toast.loading('sending magic link...', { id: 'magiclink' })
+                    },
+                    onSuccess: () => {
+                        toast.dismiss('magiclink')
+                        router.push(`/verify?email=${encodeURIComponent(email)}`)
+                        // don't reset isPending — the redirect will unmount this component
+                    },
+                    onError: (ctx: { error: { message: any } }) => {
+                        toast.error(ctx.error.message || "something went wrong", { id: 'magiclink' })
+                        setIsPending(false)
+                    }
                 }
-            }
-        )
+            )
+        } catch {
+            toast.error("something went wrong", { id: 'magiclink' })
+            setIsPending(false)
+        }
     }
 
     return (
@@ -68,8 +78,8 @@ export const MagicLinkForm = () => {
                             </FormItem>
                         )}
                     />
-                    <Button type='submit' disabled={form.formState.isSubmitting}>
-                        {form.formState.isSubmitting ? 'Sending...' : 'Send magic link'}
+                    <Button type='submit' disabled={form.formState.isSubmitting || isPending}>
+                        {form.formState.isSubmitting || isPending ? 'Sending...' : 'Send magic link'}
                     </Button>
                 </FieldGroup>
             </form>

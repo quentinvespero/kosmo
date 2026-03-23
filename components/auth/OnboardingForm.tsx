@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { completeOnboarding } from "@/lib/proxies/updateHandle"
 import { onboardingSchema } from "@/lib/schemas/AuthSchemas"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import z from "zod"
@@ -17,6 +18,7 @@ const HANDLE_MAX_CHARACTERS = 30
 type OnboardingForm = z.infer<typeof onboardingSchema>
 
 export const OnboardingForm = () => {
+    const [isPending, setIsPending] = useState(false)
     const form = useForm<OnboardingForm>({
         resolver: zodResolver(onboardingSchema),
         defaultValues: { name: '', handle: '' }
@@ -26,6 +28,7 @@ export const OnboardingForm = () => {
     const handleValue = form.watch('handle')
 
     const handleSubmit = async (data: OnboardingForm) => {
+        setIsPending(true)
         const result = await completeOnboarding(data)
         if (result?.error) {
             // "handle already taken" is a field-level error; anything else is unexpected
@@ -34,6 +37,8 @@ export const OnboardingForm = () => {
             } else {
                 toast.error(result.error)
             }
+            setIsPending(false)
+            // on success, don't reset — the server action redirects and unmounts this component
         }
     }
 
@@ -89,8 +94,8 @@ export const OnboardingForm = () => {
                             </FormItem>
                         )}
                     />
-                    <Button type='submit' disabled={form.formState.isSubmitting}>
-                        {form.formState.isSubmitting ? 'Saving...' : 'Continue'}
+                    <Button type='submit' disabled={form.formState.isSubmitting || isPending}>
+                        {form.formState.isSubmitting || isPending ? 'Saving...' : 'Continue'}
                     </Button>
                 </FieldGroup>
             </form>
