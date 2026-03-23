@@ -77,6 +77,13 @@ export const PostComposer = () => {
                                                 field.onBlur()
                                                 setIsFocused(false)
                                             }}
+                                            // Keyboard shortcut: Cmd+Enter (Mac) or Ctrl+Enter submits the post
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+                                                    e.preventDefault()
+                                                    form.handleSubmit(onSubmit)()
+                                                }
+                                            }}
                                         />
                                         {/* Keyboard shortcut hint — hidden while focused or when content exists */}
                                         {showShortcut && (
@@ -99,6 +106,9 @@ export const PostComposer = () => {
 
                         <Button type="submit" disabled={isPending || !content?.trim()}>
                             Post
+                            <kbd className="pointer-events-none flex h-5 items-center justify-center gap-1 rounded border border-current px-1 font-mono text-[10px] opacity-60">
+                                <span>⌘</span><span>Enter</span>
+                            </kbd>
                         </Button>
                     </div>
                 </form>
