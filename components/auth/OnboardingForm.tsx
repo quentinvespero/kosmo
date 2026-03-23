@@ -2,26 +2,43 @@
 
 import { Button } from "@/components/ui/button"
 import { FieldGroup } from "@/components/ui/field"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { completeOnboarding } from "@/lib/proxies/updateHandle"
 import { onboardingSchema } from "@/lib/schemas/AuthSchemas"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
+import { toast } from "sonner"
 import z from "zod"
+
+const NAME_MAX_CHARACTERS = 50
+const HANDLE_MAX_CHARACTERS = 30
 
 type OnboardingForm = z.infer<typeof onboardingSchema>
 
 export const OnboardingForm = () => {
+    const [isPending, setIsPending] = useState(false)
     const form = useForm<OnboardingForm>({
         resolver: zodResolver(onboardingSchema),
         defaultValues: { name: '', handle: '' }
     })
 
+    const nameValue = form.watch('name')
+    const handleValue = form.watch('handle')
+
     const handleSubmit = async (data: OnboardingForm) => {
+        setIsPending(true)
         const result = await completeOnboarding(data)
         if (result?.error) {
-            form.setError('handle', { message: result.error })
+            // "handle already taken" is a field-level error; anything else is unexpected
+            if (result.error === 'This handle is already taken') {
+                form.setError('handle', { message: result.error })
+            } else {
+                toast.error(result.error)
+            }
+            setIsPending(false)
+            // on success, don't reset — the server action redirects and unmounts this component
         }
     }
 
@@ -34,7 +51,12 @@ export const OnboardingForm = () => {
                         name='name'
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Display name</FormLabel>
+                                <div className="flex items-center justify-between">
+                                    <FormLabel>Display name</FormLabel>
+                                    <span className="text-xs text-muted-foreground">
+                                        {nameValue.length}/{NAME_MAX_CHARACTERS}
+                                    </span>
+                                </div>
                                 <FormControl>
                                     <Input placeholder='Your Name' {...field} />
                                 </FormControl>
@@ -47,7 +69,12 @@ export const OnboardingForm = () => {
                         name='handle'
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Handle</FormLabel>
+                                <div className="flex items-center justify-between">
+                                    <FormLabel>Handle</FormLabel>
+                                    <span className="text-xs text-muted-foreground">
+                                        {handleValue.length}/{HANDLE_MAX_CHARACTERS}
+                                    </span>
+                                </div>
                                 <FormControl>
                                     <div className="flex items-center gap-1">
                                         <span className="text-muted-foreground">@</span>
@@ -55,15 +82,20 @@ export const OnboardingForm = () => {
                                             placeholder='yourhandle'
                                             autoComplete='off'
                                             {...field}
+                                            // normalize to lowercase as the user types to match what gets saved
+                                            onChange={(e) => field.onChange(e.target.value.toLowerCase())}
                                         />
                                     </div>
                                 </FormControl>
+                                <FormDescription>
+                                    Letters, numbers, and underscores only. Must start with a letter or number.
+                                </FormDescription>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
-                    <Button type='submit' disabled={form.formState.isSubmitting}>
-                        {form.formState.isSubmitting ? 'Saving...' : 'Continue'}
+                    <Button type='submit' disabled={form.formState.isSubmitting || isPending}>
+                        {form.formState.isSubmitting || isPending ? 'Saving...' : 'Continue'}
                     </Button>
                 </FieldGroup>
             </form>

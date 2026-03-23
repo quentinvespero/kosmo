@@ -116,5 +116,5 @@ Use **Read/Write/Edit/Grep/Glob tools** directly when:
 
 1. Check if Obsidian is running before issuing CLI commands
 2. Always include `vault="kosmo_vault"` to avoid targeting the wrong vault
-3. For task/roadmap notes, look in `doc/kosmo_vault/project/`
+3. For task/roadmap notes, look in `doc/kosmo_vault/docs/`
 4. Use `format=json` when processing output programmatically
