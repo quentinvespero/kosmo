@@ -1,19 +1,24 @@
-## this project is a revamp of my React app called Kosmo, in NextJs
-- It aims to improve many aspects of the initial project, rewritting pretty much everything, moving to NextJs, and use libraries to handle things such as authentication and all
-- initial repots project : [kosmo front](https://github.com/quentinvespero/kosmo_front_web), [kosmo back](https://github.com/quentinvespero/kosmo_backend)
+# Kosmo
+
+**Production:** [kosmo.to](https://kosmo.to)
+
+A social network combining features from X/Twitter and Reddit — posts, communities, threaded comments, votes, custom feeds, and magic-link authentication.
+
+Built as a full rewrite of [kosmo_front](https://github.com/quentinvespero/kosmo_front_web) + [kosmo_back](https://github.com/quentinvespero/kosmo_backend), now as a single Next.js monolith.
+
+## Stack
+
+- **Next.js** (App Router, Turbopack)
+- **PostgreSQL** + **Prisma** (with `@prisma/adapter-pg`)
+- **better-auth** (magic link, rate limiting)
+- **shadcn/ui** + **Tailwind CSS**
 
 ## Getting Started
 
-First, run the dev server:
-
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
+pnpm dev        # dev server at http://localhost:3000
+pnpm db:dev_migration  # run migrations + regenerate Prisma client
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+> In dev, magic link URLs are printed to the console instead of being emailed.
