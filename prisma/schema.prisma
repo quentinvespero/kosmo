@@ -31,6 +31,7 @@ model User {
   drafts               Draft[]
   followers            Follow[]          @relation("UserFollowing") // people following this user
   following            Follow[]          @relation("UserFollowers") // people this user follows
+  feedbacks            Feedback[]
 
   @@unique([email])
   @@map("user")
@@ -307,6 +308,23 @@ model RateLimit {
 
   @@unique([key])
   @@map("rateLimit")
+}
+
+model Feedback {
+  id        String       @id @default(cuid())
+  userId    String
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      FeedbackType
+  content   String
+  createdAt DateTime     @default(now())
+
+  @@map("feedback")
+}
+
+enum FeedbackType {
+  BUG
+  FEATURE_REQUEST
+  GENERAL
 }
 
 enum VoteType {
