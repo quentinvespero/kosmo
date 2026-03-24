@@ -4,6 +4,7 @@ import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { ShortcutKey } from "@/components/ui/shortcut-key"
 import { User } from "lucide-react"
 
 export const ProfileLink = ({ username }: { username: string }) => {
@@ -33,9 +34,7 @@ export const ProfileLink = ({ username }: { username: string }) => {
             <Link href={`/${username}`}>
                 <User className="size-4" />
                 My profile
-                <kbd className="pointer-events-none flex h-5 w-5 items-center justify-center rounded border border-muted-foreground/30 font-mono text-[10px] text-muted-foreground/50">
-                    p
-                </kbd>
+                <ShortcutKey>P</ShortcutKey>
             </Link>
         </Button>
     )

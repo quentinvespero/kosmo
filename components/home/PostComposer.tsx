@@ -9,6 +9,7 @@ import { createPost } from "@/lib/actions/post"
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
+import { ShortcutKey } from "@/components/ui/shortcut-key"
 
 export const PostComposer = () => {
     const [isPending, startTransition] = useTransition()
@@ -87,9 +88,7 @@ export const PostComposer = () => {
                                         />
                                         {/* Keyboard shortcut hint — hidden while focused or when content exists */}
                                         {showShortcut && (
-                                            <kbd className="pointer-events-none absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded border border-muted-foreground/30 font-mono text-[10px] text-muted-foreground/50">
-                                                n
-                                            </kbd>
+                                            <ShortcutKey className="absolute right-2 top-2">N</ShortcutKey>
                                         )}
                                     </div>
                                 </FormControl>
@@ -106,9 +105,7 @@ export const PostComposer = () => {
 
                         <Button type="submit" disabled={isPending || !content?.trim()}>
                             Post
-                            <kbd className="pointer-events-none flex h-5 items-center justify-center gap-1 rounded border border-current px-1 font-mono text-[10px] opacity-60">
-                                <span>⌘</span><span>Enter</span>
-                            </kbd>
+                            <ShortcutKey variant="inline"><span>⌘</span><span>ENTER</span></ShortcutKey>
                         </Button>
                     </div>
                 </form>
