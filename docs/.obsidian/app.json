@@ -1,0 +1,42 @@
+{
+  "alwaysUpdateLinks": true,
+  "showLineNumber": false,
+  "propertiesInDocument": "visible",
+  "spellcheck": false,
+  "showUnsupportedFiles": true,
+  "mobileToolbarCommands": [
+    "editor:insert-wikilink",
+    "editor:unindent-list",
+    "editor:indent-list",
+    "editor:swap-line-down",
+    "editor:swap-line-up",
+    "editor:undo",
+    "editor:redo",
+    "editor:set-heading-5",
+    "editor:insert-link",
+    "editor:toggle-checklist-status",
+    "markdown:add-metadata-property",
+    "editor:paste",
+    "editor:toggle-code",
+    "editor:attach-file",
+    "editor:toggle-bold",
+    "editor:toggle-italics",
+    "editor:toggle-strikethrough",
+    "editor:toggle-highlight",
+    "editor:configure-toolbar"
+  ],
+  "readableLineLength": false,
+  "newFileLocation": "current",
+  "pdfExportSettings": {
+    "includeName": false,
+    "pageSize": "A4",
+    "landscape": false,
+    "margin": "0",
+    "downscalePercent": 100
+  },
+  "focusNewTab": false,
+  "showInlineTitle": true,
+  "strictLineBreaks": false,
+  "newLinkFormat": "shortest",
+  "attachmentFolderPath": "./"
+}

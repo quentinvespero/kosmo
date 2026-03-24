@@ -1,0 +1,10 @@
+{
+  "accentColor": "#9580bc",
+  "translucency": false,
+  "cssTheme": "",
+  "enabledCssSnippets": [
+    "style_perso"
+  ],
+  "showViewHeader": true,
+  "showRibbon": false
+}
