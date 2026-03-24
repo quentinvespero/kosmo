@@ -46,5 +46,5 @@ generated/prisma
 # agent / llms
 .cursor/
 
-# personal docs
-doc/kosmo_vault/
+# docs
+docs/.obsidian
