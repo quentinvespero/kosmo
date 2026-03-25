@@ -31,6 +31,7 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
+import { Switch } from "@/components/ui/switch"
 
 const FEEDBACK_TYPE_LABELS: Record<CreateFeedbackInput['type'], string> = {
     BUG: "Bug report",
@@ -44,11 +45,11 @@ export const FeedbackButton = () => {
 
     const form = useForm<CreateFeedbackInput>({
         resolver: zodResolver(createFeedbackSchema),
-        defaultValues: { content: '' },
+        defaultValues: { content: '', showUsername: true },
     })
 
     const content = form.watch('content')
-    const remaining = 1000 - (content?.length ?? 0)
+    const remaining = 1000 - content.length
 
     // Global keyboard shortcut: "f" opens the feedback dialog
     useEffect(() => {
@@ -84,7 +85,7 @@ export const FeedbackButton = () => {
     }
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog open={open} onOpenChange={(isOpen) => { setOpen(isOpen); if (!isOpen) form.reset() }}>
             <DialogTrigger asChild>
                 <Button variant="outline" size="sm">
                     Feedback
@@ -132,6 +133,7 @@ export const FeedbackButton = () => {
                                         <Textarea
                                             placeholder="Describe your feedback..."
                                             className="resize-none min-h-32"
+                                            maxLength={1000}
                                             {...field}
                                         />
                                     </FormControl>
@@ -140,12 +142,31 @@ export const FeedbackButton = () => {
                             )}
                         />
 
+                        {/* Show username toggle */}
+                        <FormField
+                            control={form.control}
+                            name="showUsername"
+                            render={({ field }) => (
+                                <FormItem className="flex items-center justify-between">
+                                    <FormLabel className="text-sm text-muted-foreground cursor-pointer">
+                                        Show my name on this feedback
+                                    </FormLabel>
+                                    <FormControl>
+                                        <Switch
+                                            checked={field.value}
+                                            onCheckedChange={field.onChange}
+                                        />
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
+
                         <div className="flex items-center justify-between">
                             {/* Character counter — only shown when content is non-empty */}
                             <span className={`text-xs ${remaining < 100 ? 'text-destructive' : 'text-muted-foreground'}`}>
-                                {content?.length > 0 ? `${remaining} remaining` : ''}
+                                {content.length > 0 ? `${remaining} remaining` : ''}
                             </span>
-                            <Button type="submit" disabled={isPending || !content?.trim()}>
+                            <Button type="submit" disabled={isPending || !content.trim()}>
                                 Send
                             </Button>
                         </div>

@@ -10,12 +10,13 @@ A "Feedback" button in the home page top bar opens a dialog form.
 
 ```prisma
 model Feedback {
-  id        String       @id @default(cuid())
-  userId    String
-  user      User         @relation(...)
-  type      FeedbackType
-  content   String
-  createdAt DateTime     @default(now())
+  id           String       @id @default(cuid())
+  userId       String
+  user         User         @relation(...)
+  type         FeedbackType
+  content      String
+  showUsername Boolean      @default(true) // whether the author's username is shown publicly
+  createdAt    DateTime     @default(now())
 }
 
 enum FeedbackType {
@@ -34,9 +35,11 @@ enum FeedbackType {
 ## Lifecycle
 
 1. User opens the dialog and selects a type + writes a message
-2. On submit, `submitFeedback` server action validates and inserts a row in the `feedback` table
-3. The dialog closes on success; a toast confirms submission
-4. No notification mechanism exists yet — feedback must be reviewed manually via the DB (e.g. Prisma Studio)
+2. User can toggle "Show my name on this feedback" (default: on); turning it off sets `showUsername: false`
+3. On submit, `submitFeedback` server action validates and inserts a row in the `feedback` table
+4. The author's upvote is automatically created (Reddit-style: new feedback starts at score 1)
+5. The dialog closes on success; a toast confirms submission
+6. No notification mechanism exists yet — feedback must be reviewed manually via the DB (e.g. Prisma Studio)
 
 ## Feedback List Page
 
@@ -44,9 +47,40 @@ Route: `/feedback` — accessible to all authenticated users.
 
 Displays feedbacks grouped by category via URL-based tabs (`?tab=BUG`, `?tab=FEATURE_REQUEST`, `?tab=GENERAL`). Defaults to `BUG` if no tab is specified.
 
-Each tab shows a count badge (total feedbacks for that type). Items are sorted newest first and display the submitting user's handle (linked to their profile) and submission date.
+Each tab shows a count badge (total feedbacks for that type). Items are sorted newest first and display the submitting user's handle (linked to their profile) and submission date — or "Anonymous" if `showUsername` is false.
 
 Key components:
 - `app/(app)/feedback/page.tsx` — Server Component, fetches data
 - `components/feedback/FeedbackTabs.tsx` — Client tab switcher (URL navigation)
 - `components/feedback/FeedbackItem.tsx` — Individual feedback row
+- `components/feedback/FeedbackVoteButtons.tsx` — Client Component handling vote UI
+
+## Voting
+
+Each feedback item can be upvoted or downvoted by any authenticated user.
+
+### Model
+
+```prisma
+model FeedbackVote {
+  id         String   @id @default(cuid())
+  type       VoteType // UP | DOWN
+  userId     String
+  feedbackId String
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, feedbackId]) // one vote per user per feedback
+}
+```
+
+### Score
+
+`score = upvotes − downvotes`, computed at read time from the `FeedbackVote` rows.
+
+### Toggle behavior
+
+- Clicking the active vote type → removes the vote (toggle off)
+- Clicking the opposite type → switches the vote
+- No vote → creates a new vote
+
+Vote changes are applied optimistically in the UI (`useOptimistic`) and confirmed via the `voteFeedback` server action.
