@@ -1,6 +1,6 @@
 'use client'
 
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 const TABS = [
@@ -19,9 +19,17 @@ interface Props {
 
 export const FeedbackTabs = ({ activeTab, counts }: Props) => {
     const router = useRouter()
+    const searchParams = useSearchParams()
+
+    const handleChange = (value: string) => {
+        // Preserve all existing params (e.g. ?sort=votes) and only update `tab`
+        const params = new URLSearchParams(searchParams.toString())
+        params.set("tab", value)
+        router.push(`?${params.toString()}`)
+    }
 
     return (
-        <Tabs value={activeTab} onValueChange={(v) => router.push(`?tab=${v}`)}>
+        <Tabs value={activeTab} onValueChange={handleChange}>
             <TabsList>
                 {TABS.map(({ value, label }) => (
                     <TabsTrigger key={value} value={value}>

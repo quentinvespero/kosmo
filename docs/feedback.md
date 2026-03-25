@@ -47,11 +47,25 @@ Route: `/feedback` — accessible to all authenticated users.
 
 Displays feedbacks grouped by category via URL-based tabs (`?tab=BUG`, `?tab=FEATURE_REQUEST`, `?tab=GENERAL`). Defaults to `BUG` if no tab is specified.
 
-Each tab shows a count badge (total feedbacks for that type). Items are sorted newest first and display the submitting user's handle (linked to their profile) and submission date — or "Anonymous" if `showUsername` is false.
+Each tab shows a count badge (total feedbacks for that type). Items display the submitting user's handle (linked to their profile) and submission date — or "Anonymous" if `showUsername` is false.
+
+### Sorting
+
+Items can be sorted via the `?sort=` URL param:
+
+| Value | Behavior | Default |
+|-------|----------|---------|
+| `votes` | Most voted first (score desc). Equal-score items fall back to newest first. | ✓ |
+| `date` | Newest first (`createdAt` desc). | |
+
+The sort state lives in the URL so links are shareable and the preference survives refresh. Both `?tab` and `?sort` params are preserved when switching between tabs or sort modes.
+
+Sorting is done in memory after fetching: Prisma cannot `orderBy` a computed value like `upvotes − downvotes`, so items are fetched with their votes, the score is computed per item, and the array is sorted server-side before rendering.
 
 Key components:
-- `app/(app)/feedback/page.tsx` — Server Component, fetches data
+- `app/(app)/feedback/page.tsx` — Server Component, fetches data and applies sort
 - `components/feedback/FeedbackTabs.tsx` — Client tab switcher (URL navigation)
+- `components/feedback/FeedbackSortSelector.tsx` — Client sort toggle (URL navigation)
 - `components/feedback/FeedbackItem.tsx` — Individual feedback row
 - `components/feedback/FeedbackVoteButtons.tsx` — Client Component handling vote UI
 
