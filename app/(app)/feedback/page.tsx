@@ -5,6 +5,7 @@ import { auth } from "@/lib/auth"
 import { FeedbackTabs } from "@/components/feedback/FeedbackTabs"
 import { FeedbackSortSelector } from "@/components/feedback/FeedbackSortSelector"
 import { FeedbackItem } from "@/components/feedback/FeedbackItem"
+import { FeedbackForm } from "@/components/feedback/FeedbackForm"
 import { Separator } from "@/components/ui/separator"
 import prisma from "@/lib/prisma"
 import { isValidTab, isValidSort, type TabValue, type SortValue } from "@/lib/feedback"
@@ -61,6 +62,8 @@ const FeedbackPage = async ({ searchParams }: { searchParams: Promise<Record<str
     return (
         <div className="max-w-2xl mx-auto py-6 px-4 space-y-6">
             <h1 className="text-2xl font-bold">Feedback</h1>
+            <FeedbackForm />
+            <Separator />
             <Suspense fallback={
                 <div className="h-10 w-fit rounded-md bg-muted flex items-center gap-1 p-1 animate-pulse">
                     {["w-16", "w-28", "w-16"].map((w, i) => (
