@@ -2,13 +2,12 @@
 
 import { useRouter, useSearchParams } from "next/navigation"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import type { SortValue } from "@/lib/feedback"
 
-const SORTS = [
+const SORTS: { value: SortValue; label: string }[] = [
     { value: "votes", label: "Most voted" },
     { value: "date",  label: "Newest" },
-] as const
-
-type SortValue = (typeof SORTS)[number]["value"]
+]
 
 interface Props {
     activeSort: SortValue

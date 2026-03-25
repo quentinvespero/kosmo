@@ -1,3 +1,4 @@
+import { Suspense } from "react"
 import { redirect } from "next/navigation"
 import { headers } from "next/headers"
 import { auth } from "@/lib/auth"
@@ -6,18 +7,7 @@ import { FeedbackSortSelector } from "@/components/feedback/FeedbackSortSelector
 import { FeedbackItem } from "@/components/feedback/FeedbackItem"
 import { Separator } from "@/components/ui/separator"
 import prisma from "@/lib/prisma"
-
-const VALID_TABS = ["BUG", "FEATURE_REQUEST", "GENERAL"] as const
-type TabValue = (typeof VALID_TABS)[number]
-
-const VALID_SORTS = ["votes", "date"] as const
-type SortValue = (typeof VALID_SORTS)[number]
-
-const isValidTab = (value: unknown): value is TabValue =>
-    VALID_TABS.includes(value as TabValue)
-
-const isValidSort = (value: unknown): value is SortValue =>
-    VALID_SORTS.includes(value as SortValue)
+import { isValidTab, isValidSort, type TabValue, type SortValue } from "@/lib/feedback"
 
 const FeedbackPage = async ({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) => {
     const session = await auth.api.getSession({ headers: await headers() })
@@ -71,10 +61,26 @@ const FeedbackPage = async ({ searchParams }: { searchParams: Promise<Record<str
     return (
         <div className="max-w-2xl mx-auto py-6 px-4 space-y-6">
             <h1 className="text-2xl font-bold">Feedback</h1>
-            <FeedbackTabs activeTab={activeTab} counts={counts} />
+            <Suspense fallback={
+                <div className="h-10 w-fit rounded-md bg-muted flex items-center gap-1 p-1 animate-pulse">
+                    {["w-16", "w-28", "w-16"].map((w, i) => (
+                        <div key={i} className={`${w} h-7 rounded-sm bg-muted-foreground/20`} />
+                    ))}
+                </div>
+            }>
+                <FeedbackTabs activeTab={activeTab} counts={counts} />
+            </Suspense>
             <Separator />
             <div className="flex justify-end">
-                <FeedbackSortSelector activeSort={activeSort} />
+                <Suspense fallback={
+                    <div className="h-10 w-fit rounded-md bg-muted flex items-center gap-1 p-1 animate-pulse">
+                        {["w-20", "w-16"].map((w, i) => (
+                            <div key={i} className={`${w} h-7 rounded-sm bg-muted-foreground/20`} />
+                        ))}
+                    </div>
+                }>
+                    <FeedbackSortSelector activeSort={activeSort} />
+                </Suspense>
             </div>
             {items.length === 0 ? (
                 <p className="text-sm text-muted-foreground text-center py-8">No feedbacks yet.</p>
