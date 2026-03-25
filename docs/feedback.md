@@ -97,4 +97,4 @@ model FeedbackVote {
 - Clicking the opposite type → switches the vote
 - No vote → creates a new vote
 
-Vote changes are applied optimistically in the UI (`useOptimistic`) and confirmed via the `voteFeedback` server action.
+Vote changes are applied immediately in the UI via local `useState` (in `components/VoteButtons.tsx`) and confirmed via the `voteFeedback` server action. On error, the state reverts and a toast is shown. `voteFeedback` does not call `revalidatePath` — votes are fully client-side; only `submitFeedback` revalidates the page (to show the new item).

@@ -75,6 +75,5 @@ export const voteFeedback = async (data: VoteFeedbackInput) => {
         return { error: 'Server error' as const }
     }
 
-    revalidatePath('/feedback')
     return { success: true as const }
 }
