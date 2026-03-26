@@ -24,6 +24,7 @@ model User {
   posts                Post[]
   comments             Comment[]
   votes                Vote[]
+  feedbackVotes        FeedbackVote[]
   ownedCommunities     Community[]
   ownedFeeds           Feed[]
   feedMembers          FeedUser[]
@@ -31,6 +32,7 @@ model User {
   drafts               Draft[]
   followers            Follow[]          @relation("UserFollowing") // people following this user
   following            Follow[]          @relation("UserFollowers") // people this user follows
+  feedbacks            Feedback[]
 
   @@unique([email])
   @@map("user")
@@ -307,6 +309,40 @@ model RateLimit {
 
   @@unique([key])
   @@map("rateLimit")
+}
+
+model Feedback {
+  id           String         @id @default(cuid())
+  userId       String
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type         FeedbackType
+  content      String
+  showUsername Boolean        @default(true) // whether the author's username is displayed publicly
+  createdAt    DateTime       @default(now())
+  votes        FeedbackVote[]
+
+  @@map("feedback")
+}
+
+model FeedbackVote {
+  id         String   @id @default(cuid())
+  type       VoteType
+  userId     String
+  feedbackId String
+  createdAt  DateTime @default(now())
+
+  // Relations
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  feedback Feedback @relation(fields: [feedbackId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, feedbackId])
+  @@map("feedback_votes")
+}
+
+enum FeedbackType {
+  BUG
+  FEATURE_REQUEST
+  GENERAL
 }
 
 enum VoteType {

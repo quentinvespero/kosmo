@@ -47,4 +47,7 @@ generated/prisma
 .cursor/
 
 # docs
-docs/.obsidian
+docs/.obsidian/*
+!docs/.obsidian/app.json
+!docs/.obsidian/appearance.json
+!docs/.obsidian/hotkeys.json

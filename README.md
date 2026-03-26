@@ -2,9 +2,9 @@
 
 **Production:** [kosmo.to](https://kosmo.to)
 
-A social network combining features from X/Twitter and Reddit — posts, communities, threaded comments, votes, custom feeds, and magic-link authentication.
+A social network combining features from X/Twitter and Reddit — upvote/downvote, communities, threaded comments, custom feeds.
 
-Built as a full rewrite of [kosmo_front](https://github.com/quentinvespero/kosmo_front_web) + [kosmo_back](https://github.com/quentinvespero/kosmo_backend), now as a single Next.js monolith.
+Built as a full rewrite of [kosmo_front](https://github.com/quentinvespero/kosmo_front_web) + [kosmo_back](https://github.com/quentinvespero/kosmo_backend), now as a single Next.js app.
 
 ## Stack
 

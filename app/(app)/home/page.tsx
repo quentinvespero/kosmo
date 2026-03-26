@@ -1,6 +1,7 @@
 import { PostComposer } from "@/components/home/PostComposer"
 import HomeFeed from "@/components/home/HomeFeed"
 import { ProfileLink } from "@/components/home/ProfileLink"
+import { FeedbackButton } from "@/components/home/FeedbackButton"
 import { auth } from "@/lib/auth"
 import { headers } from "next/headers"
 import { Suspense } from "react"
@@ -13,7 +14,8 @@ const Home = async () => {
     return (
         <div className="max-w-2xl mx-auto py-6 px-4 space-y-6">
             {/* Top bar */}
-            <div className="flex justify-end">
+            <div className="flex justify-end gap-2">
+                <FeedbackButton />
                 {username && <ProfileLink username={username} />}
             </div>
             <PostComposer />
