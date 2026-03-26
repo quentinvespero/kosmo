@@ -14,6 +14,11 @@ export const auth = betterAuth({
             username: {
                 type: "string",
                 required: false,
+            },
+            isTeamMember: {
+                type: "boolean",
+                required: false,
+                defaultValue: false,
             }
         }
     },

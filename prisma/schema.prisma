@@ -14,6 +14,7 @@ model User {
   image           String?
   username        String?          @unique
   bio             String?
+  isTeamMember    Boolean          @default(false)
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   userPreferences UserPreferences?
@@ -320,6 +321,7 @@ model Feedback {
   showUsername Boolean        @default(true) // whether the author's username is displayed publicly
   createdAt    DateTime       @default(now())
   votes        FeedbackVote[]
+  roadmapItem  RoadmapItem?
 
   @@map("feedback")
 }
@@ -366,4 +368,24 @@ enum CommunityRole {
   MEMBER
   MODERATOR
   ADMIN
+}
+
+enum RoadmapStatus {
+  ACTIVE
+  PLANNED
+  LAUNCHED
+}
+
+model RoadmapItem {
+  id          String        @id @default(cuid())
+  title       String
+  description String?
+  status      RoadmapStatus
+  feedbackId  String?       @unique // 1-to-1 optional link to a feedback submission
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  feedback Feedback? @relation(fields: [feedbackId], references: [id], onDelete: SetNull)
+
+  @@map("roadmap_items")
 }
