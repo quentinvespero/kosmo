@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Settings } from "lucide-react"
@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Separator } from "@/components/ui/separator"
 import { ShortcutKey } from "@/components/ui/shortcut-key"
+import { useKeyboardShortcut } from "@/hooks/useKeyboardShortcut"
 import { FollowButton } from "./FollowButton"
 import { updateProfile } from "@/lib/actions/settings"
 import { toast } from "sonner"
@@ -50,22 +51,7 @@ export const ProfileHeader = ({ user, isOwnProfile, isPrivate, followStatus }: P
     const [editing, setEditing] = useState(false)
 
     // Keyboard shortcut: "s" navigates to settings (own profile only)
-    useEffect(() => {
-        if (!isOwnProfile) return
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key !== 's') return
-            const target = e.target as HTMLElement
-            if (
-                target.tagName === 'INPUT' ||
-                target.tagName === 'TEXTAREA' ||
-                target.isContentEditable
-            ) return
-            e.preventDefault()
-            router.push('/settings')
-        }
-        window.addEventListener('keydown', handleKeyDown)
-        return () => window.removeEventListener('keydown', handleKeyDown)
-    }, [isOwnProfile, router])
+    useKeyboardShortcut('s', () => router.push('/settings'), { enabled: isOwnProfile })
     // local state so the UI reflects changes immediately after save
     const [displayName, setDisplayName] = useState(user.name)
     const [displayBio, setDisplayBio] = useState(user.bio ?? '')

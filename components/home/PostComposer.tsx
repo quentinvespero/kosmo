@@ -3,13 +3,14 @@
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { toast } from "sonner"
-import { useEffect, useTransition, useState } from "react"
+import { useTransition, useState } from "react"
 import { createPostSchema, CreatePostInput } from "@/lib/schemas/PostSchemas"
 import { createPost } from "@/lib/actions/post"
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { ShortcutKey } from "@/components/ui/shortcut-key"
+import { useKeyboardShortcut } from "@/hooks/useKeyboardShortcut"
 
 export const PostComposer = () => {
     const [isPending, startTransition] = useTransition()
@@ -26,23 +27,7 @@ export const PostComposer = () => {
     const showShortcut = !isFocused && !content
 
     // Global keyboard shortcut: "n" focuses the post composer
-    useEffect(() => {
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key !== 'n') return
-            const target = e.target as HTMLElement
-            // Don't intercept if the user is already typing somewhere
-            if (
-                target.tagName === 'INPUT' ||
-                target.tagName === 'TEXTAREA' ||
-                target.isContentEditable
-            ) return
-            e.preventDefault()
-            form.setFocus('content')
-        }
-
-        window.addEventListener('keydown', handleKeyDown)
-        return () => window.removeEventListener('keydown', handleKeyDown)
-    }, [form])
+    useKeyboardShortcut('n', () => form.setFocus('content'))
 
     const onSubmit = (data: CreatePostInput) => {
         startTransition(async () => {
