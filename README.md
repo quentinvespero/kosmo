@@ -1,6 +1,6 @@
 # Kosmo
 
-**Production:** [kosmo.to](https://kosmo.to)
+**Production:** [kosmo.to](https://kosmo.to) · **Roadmap:** [kosmo.to/roadmap](https://kosmo.to/roadmap)
 
 A social network combining features from X/Twitter and Reddit — upvote/downvote, communities, threaded comments, custom feeds.
 
