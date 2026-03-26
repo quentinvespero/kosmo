@@ -91,13 +91,15 @@ export const RoadmapItemDialog = ({
         defaultValues: isEditing
             ? {
                 title:       existingItem.title,
-                description: existingItem.description ?? undefined,
+                description: existingItem.description ?? "",
                 status:      existingItem.status,
                 feedbackId:  existingItem.feedbackId ?? NO_FEEDBACK,
               }
             : {
-                status:     defaultStatus,
-                feedbackId: NO_FEEDBACK,
+                title:       "",
+                description: "",
+                status:      defaultStatus,
+                feedbackId:  NO_FEEDBACK,
               },
     })
 
@@ -107,11 +109,11 @@ export const RoadmapItemDialog = ({
             isEditing
                 ? {
                     title:       existingItem.title,
-                    description: existingItem.description ?? undefined,
+                    description: existingItem.description ?? "",
                     status:      existingItem.status,
                     feedbackId:  existingItem.feedbackId ?? NO_FEEDBACK,
                   }
-                : { status: defaultStatus, feedbackId: NO_FEEDBACK }
+                : { title: "", description: "", status: defaultStatus, feedbackId: NO_FEEDBACK }
         )
     }
 
