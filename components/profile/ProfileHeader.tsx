@@ -1,12 +1,16 @@
 'use client'
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import Link from "next/link"
+import { Settings } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Separator } from "@/components/ui/separator"
+import { ShortcutKey } from "@/components/ui/shortcut-key"
 import { FollowButton } from "./FollowButton"
 import { updateProfile } from "@/lib/actions/settings"
 import { toast } from "sonner"
@@ -31,7 +35,9 @@ type Props = {
 
 // Generates initials from a display name (e.g. "John Doe" → "JD")
 const getInitials = (name: string) => {
-    const parts = name.trim().split(/\s+/)
+    const trimmed = name.trim()
+    if (!trimmed) return ''
+    const parts = trimmed.split(/\s+/)
     if (parts.length === 1) return parts[0][0].toUpperCase()
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
 }
@@ -40,7 +46,26 @@ const joinedDate = (date: Date) =>
     date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
 
 export const ProfileHeader = ({ user, isOwnProfile, isPrivate, followStatus }: Props) => {
+    const router = useRouter()
     const [editing, setEditing] = useState(false)
+
+    // Keyboard shortcut: "s" navigates to settings (own profile only)
+    useEffect(() => {
+        if (!isOwnProfile) return
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key !== 's') return
+            const target = e.target as HTMLElement
+            if (
+                target.tagName === 'INPUT' ||
+                target.tagName === 'TEXTAREA' ||
+                target.isContentEditable
+            ) return
+            e.preventDefault()
+            router.push('/settings')
+        }
+        window.addEventListener('keydown', handleKeyDown)
+        return () => window.removeEventListener('keydown', handleKeyDown)
+    }, [isOwnProfile, router])
     // local state so the UI reflects changes immediately after save
     const [displayName, setDisplayName] = useState(user.name)
     const [displayBio, setDisplayBio] = useState(user.bio ?? '')
@@ -92,9 +117,18 @@ export const ProfileHeader = ({ user, isOwnProfile, isPrivate, followStatus }: P
                             </Button>
                         </div>
                     ) : (
-                        <Button variant="outline" onClick={() => setEditing(true)}>
-                            Edit profile
-                        </Button>
+                        <div className="flex gap-2">
+                            <Button variant="outline" size="sm" onClick={() => setEditing(true)}>
+                                Edit profile
+                            </Button>
+                            <Button variant="outline" size="sm" asChild>
+                                <Link href="/settings">
+                                    <Settings className="size-4" />
+                                    Settings
+                                    <ShortcutKey>S</ShortcutKey>
+                                </Link>
+                            </Button>
+                        </div>
                     )
                 ) : followStatus !== null ? (
                     <FollowButton

@@ -1,5 +1,6 @@
 import { ProfileHeader } from "@/components/profile/ProfileHeader"
 import { PostList } from "@/components/profile/PostList"
+import { BackButton } from "@/components/ui/BackButton"
 import { auth } from "@/lib/auth"
 import prisma from "@/lib/prisma"
 import { headers } from "next/headers"
@@ -83,6 +84,7 @@ const ProfilePage = async ({ params }: Props) => {
 
     return (
         <div className="max-w-2xl mx-auto py-6 px-4 space-y-6">
+            <BackButton />
             <ProfileHeader
                 user={{ ...profileUser, username: profileUser.username }}
                 isOwnProfile={isOwnProfile}

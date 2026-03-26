@@ -2,6 +2,7 @@ import { Suspense } from "react"
 import { redirect } from "next/navigation"
 import { headers } from "next/headers"
 import { auth } from "@/lib/auth"
+import { BackButton } from "@/components/ui/BackButton"
 import { FeedbackTabs } from "@/components/feedback/FeedbackTabs"
 import { FeedbackSortSelector } from "@/components/feedback/FeedbackSortSelector"
 import { FeedbackItem } from "@/components/feedback/FeedbackItem"
@@ -61,6 +62,7 @@ const FeedbackPage = async ({ searchParams }: { searchParams: Promise<Record<str
 
     return (
         <div className="max-w-2xl mx-auto py-6 px-4 space-y-6">
+            <BackButton />
             <h1 className="text-2xl font-bold">Feedback</h1>
             <FeedbackFormSection />
             <Separator />
