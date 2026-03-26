@@ -1,4 +1,6 @@
 import Link from "next/link"
+import { RoadmapStatus } from "@prisma/client"
+import { STATUS_META } from "@/lib/roadmap"
 import { FeedbackVoteButtons } from "./FeedbackVoteButtons"
 
 interface Props {
@@ -10,13 +12,14 @@ interface Props {
     createdAt: Date
     score: number
     currentUserVote: "UP" | "DOWN" | null
+    roadmapItem: { id: string; title: string; status: RoadmapStatus } | null
 }
 
 // Format date as "Mar 20, 2026"
 const formatDate = (date: Date) =>
     date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
 
-export const FeedbackItem = ({ id, username, name, showUsername, content, createdAt, score, currentUserVote }: Props) => (
+export const FeedbackItem = ({ id, username, name, showUsername, content, createdAt, score, currentUserVote, roadmapItem }: Props) => (
     <div className="py-4 flex items-start justify-between gap-4">
         <div className="space-y-1 min-w-0">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -34,6 +37,16 @@ export const FeedbackItem = ({ id, username, name, showUsername, content, create
                 <span>{formatDate(createdAt)}</span>
             </div>
             <p className="text-sm whitespace-pre-wrap">{content}</p>
+            {roadmapItem && (
+                <Link
+                    href="/roadmap"
+                    className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors bg-muted hover:bg-muted/80 px-2 py-0.5 rounded-md"
+                >
+                    <span className="font-medium">{STATUS_META[roadmapItem.status].label}</span>
+                    <span>·</span>
+                    <span>{roadmapItem.title}</span>
+                </Link>
+            )}
         </div>
         <FeedbackVoteButtons feedbackId={id} score={score} currentUserVote={currentUserVote} />
     </div>
