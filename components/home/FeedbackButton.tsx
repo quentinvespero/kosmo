@@ -1,21 +1,15 @@
 'use client'
 
-import { useState, useEffect } from "react"
+import { useEffect } from "react"
+import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ShortcutKey } from "@/components/ui/shortcut-key"
-import {
-    Popover,
-    PopoverContent,
-    PopoverHeader,
-    PopoverTitle,
-    PopoverTrigger,
-} from "@/components/ui/popover"
-import { FeedbackForm } from "@/components/feedback/FeedbackForm"
 
 export const FeedbackButton = () => {
-    const [open, setOpen] = useState(false)
+    const router = useRouter()
 
-    // Global keyboard shortcut: "f" opens the feedback popover
+    // Global keyboard shortcut: "f" navigates to the feedback page
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key !== 'f') return
@@ -27,27 +21,19 @@ export const FeedbackButton = () => {
                 target.isContentEditable
             ) return
             e.preventDefault()
-            setOpen(true)
+            router.push('/feedback')
         }
 
         window.addEventListener('keydown', handleKeyDown)
         return () => window.removeEventListener('keydown', handleKeyDown)
-    }, [])
+    }, [router])
 
     return (
-        <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-                <Button variant="outline" size="sm">
-                    Feedback
-                    <ShortcutKey>F</ShortcutKey>
-                </Button>
-            </PopoverTrigger>
-            <PopoverContent align="end" className="w-96">
-                <PopoverHeader className="mb-4">
-                    <PopoverTitle className="font-semibold">Send feedback</PopoverTitle>
-                </PopoverHeader>
-                <FeedbackForm onSuccess={() => setOpen(false)} />
-            </PopoverContent>
-        </Popover>
+        <Button variant="outline" size="sm" asChild>
+            <Link href="/feedback">
+                Feedback
+                <ShortcutKey>F</ShortcutKey>
+            </Link>
+        </Button>
     )
 }
