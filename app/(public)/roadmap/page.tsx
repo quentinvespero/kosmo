@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth"
 import prisma from "@/lib/prisma"
 import { ROADMAP_STATUSES } from "@/lib/roadmap"
 import { RoadmapColumn } from "@/components/roadmap/RoadmapColumn"
+import { BackButton } from "@/components/ui/BackButton"
 import { RoadmapStatus } from "@prisma/client"
 
 export const metadata = {
@@ -44,6 +45,7 @@ export default async function RoadmapPage() {
     return (
         <main className="min-h-screen">
             <div className="max-w-5xl mx-auto px-4 py-12 space-y-8">
+                <BackButton />
                 {/* Header */}
                 <div className="space-y-1">
                     <h1 className="text-2xl font-bold tracking-tight">Roadmap</h1>
