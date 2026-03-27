@@ -9,7 +9,7 @@ interface VoteButtonsProps {
     score: number
     currentUserVote: "UP" | "DOWN" | null
     // onVote resolves after the server action completes; error field signals failure
-    onVote: (type: "UP" | "DOWN") => Promise<{ error?: string } | { success: true }>
+    onVote: (type: "UP" | "DOWN") => Promise<{ error: string } | { success: true }>
 }
 
 type VoteType = "UP" | "DOWN"

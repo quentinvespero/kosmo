@@ -40,5 +40,8 @@ A post's visibility is **never set on the post itself** — it is inherited from
 
 ## Status
 - Schema: done
-- UI: profile post list implemented (`PostItem`, `PostList`)
-- Post creation: not yet implemented
+- UI: profile post list implemented (`PostItem`, `PostList`); post cards are clickable links to detail page
+- Post creation: done (`PostComposer`, `createPost` server action)
+- Post detail page: done (`app/(app)/[handle]/[postId]/page.tsx`) — full content, voting, comment thread
+- Post voting: done (`PostVoteButtons`, `votePost` server action) — toggle/switch with optimistic UI
+- Edit/delete: not yet implemented

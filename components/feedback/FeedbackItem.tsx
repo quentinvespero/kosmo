@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { RoadmapStatus } from "@prisma/client"
+import { formatDate } from "@/lib/utils"
 import { STATUS_META } from "@/lib/roadmap"
 import { FeedbackVoteButtons } from "./FeedbackVoteButtons"
 
@@ -14,10 +15,6 @@ interface Props {
     currentUserVote: "UP" | "DOWN" | null
     roadmapItem: { id: string; title: string; status: RoadmapStatus } | null
 }
-
-// Format date as "Mar 20, 2026"
-const formatDate = (date: Date) =>
-    date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
 
 export const FeedbackItem = ({ id, username, name, showUsername, content, createdAt, score, currentUserVote, roadmapItem }: Props) => (
     <div className="py-4 flex items-start justify-between gap-4">

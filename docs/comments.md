@@ -1,7 +1,7 @@
 # Comments
 
 ## Overview
-Comments are attached to posts and support **threaded replies** (one level of nesting via `parentCommentId`).
+Comments are attached to posts and support **threaded replies** via `parentCommentId`. The data layer and UI both support arbitrary nesting depth — in practice the creation flow currently produces one level of replies.
 
 ## Fields
 | Field | Type | Notes |
@@ -21,4 +21,8 @@ Comments support upvote/downvote via the `Vote` model — see `votes.md`
 
 ## Status
 - Schema: done
-- UI: not yet implemented
+- UI: done — comment thread on post detail page (`CommentList`, `CommentItem`, `CommentComposer`)
+- Comment creation: done (`createComment` server action) — top-level and replies supported
+- Comment voting: done (`CommentVoteButtons`, `voteComment` server action)
+- Inline reply: done — each `CommentItem` has a Reply button that shows `CommentComposer` inline; auto-closes on successful submit
+- Edit/delete: not yet implemented

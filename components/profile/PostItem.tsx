@@ -1,5 +1,8 @@
+import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
+import { formatDate } from "@/lib/utils"
 import { MessageSquare, ThumbsUp } from "lucide-react"
+import { PostVoteButtons } from "@/components/post/PostVoteButtons"
 
 type Post = {
     id: string
@@ -15,31 +18,33 @@ type Props = {
     post: Post
     isOwnProfile: boolean
     author: { name: string; username: string | null }
+    voteData?: { score: number; currentUserVote: 'UP' | 'DOWN' | null }
 }
 
-const formatDate = (date: Date) =>
-    date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-
-export const PostItem = ({ post, isOwnProfile, author }: Props) => {
+export const PostItem = ({ post, isOwnProfile, author, voteData }: Props) => {
     // Truncate long posts
     const contentPreview = post.content.length > 280
         ? post.content.slice(0, 280) + '…'
         : post.content
 
     return (
-        <article className="py-4 space-y-2">
-            {/* Author */}
-            <div className="text-sm font-medium">
-                <a href={`/${author.username ?? ''}`} className="hover:underline">
+        <article className="relative py-4 px-3 -mx-3 space-y-2 transition-colors hover:bg-muted/50 cursor-pointer">
+            {/* Stretch link: clicking anywhere on the card navigates to the post detail */}
+            <Link
+                href={`/${author.username}/${post.id}`}
+                className="absolute inset-0"
+                aria-label={`View post by ${author.name}`}
+            />
+
+            {/* Author + date — elevated above the overlay so it remains independently clickable */}
+            <div className="flex items-center gap-2 text-sm flex-wrap">
+                <a href={`/${author.username ?? ''}`} className="relative z-10 font-medium hover:underline">
                     {author.name}
                 </a>
-                <span className="text-muted-foreground"> @{author.username ?? '—'}</span>
-            </div>
-
-            {/* Date + subscribers-only badge (only on own profile) */}
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <span>{formatDate(post.createdAt)}</span>
-                {post.isEdited && <span className="text-xs">(edited)</span>}
+                <span className="text-muted-foreground">@{author.username ?? '—'}</span>
+                <span className="text-muted-foreground">·</span>
+                <span className="text-muted-foreground">{formatDate(post.createdAt)}</span>
+                {post.isEdited && <span className="text-xs text-muted-foreground">(edited)</span>}
                 {isOwnProfile && post.isSubscribersOnly && (
                     <Badge variant="secondary" className="text-xs py-0">
                         Subscribers only
@@ -60,12 +65,20 @@ export const PostItem = ({ post, isOwnProfile, author }: Props) => {
                 </div>
             )}
 
-            {/* Footer: votes + comments */}
-            <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                <span className="flex items-center gap-1">
-                    <ThumbsUp size={14} />
-                    {post._count.votes}
-                </span>
+            {/* Footer: votes + comments — elevated above the stretch-link overlay */}
+            <div className="relative z-10 flex items-center gap-4 text-sm text-muted-foreground">
+                {voteData ? (
+                    <PostVoteButtons
+                        postId={post.id}
+                        score={voteData.score}
+                        currentUserVote={voteData.currentUserVote}
+                    />
+                ) : (
+                    <span className="flex items-center gap-1">
+                        <ThumbsUp size={14} />
+                        {post._count.votes}
+                    </span>
+                )}
                 <span className="flex items-center gap-1">
                     <MessageSquare size={14} />
                     {post._count.comments}
