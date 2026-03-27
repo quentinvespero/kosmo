@@ -18,4 +18,6 @@ Users can upvote or downvote posts and comments. A user can only cast one vote p
 
 ## Status
 - Schema: done
-- UI: not yet implemented
+- UI: done — `VoteButtons` (generic), `PostVoteButtons` (posts), `CommentVoteButtons` (comments)
+- Server actions: done — `votePost`, `voteComment` with toggle/switch logic and Serializable transactions
+- Voting on feedback: done (`voteFeedback` in `lib/actions/feedback.ts`)

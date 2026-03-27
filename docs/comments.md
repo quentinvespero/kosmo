@@ -21,4 +21,7 @@ Comments support upvote/downvote via the `Vote` model — see `votes.md`
 
 ## Status
 - Schema: done
-- UI: not yet implemented
+- UI: done — comment thread on post detail page (`CommentList`, `CommentItem`, `CommentComposer`)
+- Comment creation: done (`createComment` server action) — top-level and replies supported
+- Comment voting: done (`CommentVoteButtons`, `voteComment` server action)
+- Edit/delete: not yet implemented
