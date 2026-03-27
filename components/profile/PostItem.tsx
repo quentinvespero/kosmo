@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { MessageSquare, ThumbsUp } from "lucide-react"
 
@@ -27,10 +28,17 @@ export const PostItem = ({ post, isOwnProfile, author }: Props) => {
         : post.content
 
     return (
-        <article className="py-4 space-y-2">
-            {/* Author */}
+        <article className="relative py-4 space-y-2">
+            {/* Stretch link: clicking anywhere on the card navigates to the post detail */}
+            <Link
+                href={`/${author.username}/${post.id}`}
+                className="absolute inset-0"
+                aria-label={`View post by ${author.name}`}
+            />
+
+            {/* Author — elevated above the overlay so it remains independently clickable */}
             <div className="text-sm font-medium">
-                <a href={`/${author.username ?? ''}`} className="hover:underline">
+                <a href={`/${author.username ?? ''}`} className="relative z-10 hover:underline">
                     {author.name}
                 </a>
                 <span className="text-muted-foreground"> @{author.username ?? '—'}</span>
