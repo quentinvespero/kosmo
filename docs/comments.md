@@ -1,7 +1,7 @@
 # Comments
 
 ## Overview
-Comments are attached to posts and support **threaded replies** (one level of nesting via `parentCommentId`).
+Comments are attached to posts and support **threaded replies** via `parentCommentId`. The data layer and UI both support arbitrary nesting depth — in practice the creation flow currently produces one level of replies.
 
 ## Fields
 | Field | Type | Notes |

@@ -42,7 +42,7 @@ export const CommentItem = ({ id, content, createdAt, isEdited, author, score, c
             </div>
         </div>
 
-        {/* Replies (one level deep) */}
+        {/* Replies (recursive) */}
         {replies && replies.length > 0 && (
             <div className="divide-y">
                 {replies.map(reply => (
