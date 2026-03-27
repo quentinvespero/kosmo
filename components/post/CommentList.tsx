@@ -2,9 +2,10 @@ import { CommentItem, type CommentItemProps } from "./CommentItem"
 
 interface Props {
     comments: CommentItemProps[]
+    isAuthenticated: boolean
 }
 
-export const CommentList = ({ comments }: Props) => {
+export const CommentList = ({ comments, isAuthenticated }: Props) => {
     if (comments.length === 0) {
         return (
             <p className="text-center text-sm text-muted-foreground py-8">
@@ -16,7 +17,7 @@ export const CommentList = ({ comments }: Props) => {
     return (
         <div className="divide-y">
             {comments.map(comment => (
-                <CommentItem key={comment.id} {...comment} />
+                <CommentItem key={comment.id} {...comment} isAuthenticated={isAuthenticated} />
             ))}
         </div>
     )

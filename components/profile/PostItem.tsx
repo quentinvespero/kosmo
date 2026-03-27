@@ -2,6 +2,7 @@ import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { formatDate } from "@/lib/utils"
 import { MessageSquare, ThumbsUp } from "lucide-react"
+import { PostVoteButtons } from "@/components/post/PostVoteButtons"
 
 type Post = {
     id: string
@@ -17,16 +18,17 @@ type Props = {
     post: Post
     isOwnProfile: boolean
     author: { name: string; username: string | null }
+    voteData?: { score: number; currentUserVote: 'UP' | 'DOWN' | null }
 }
 
-export const PostItem = ({ post, isOwnProfile, author }: Props) => {
+export const PostItem = ({ post, isOwnProfile, author, voteData }: Props) => {
     // Truncate long posts
     const contentPreview = post.content.length > 280
         ? post.content.slice(0, 280) + '…'
         : post.content
 
     return (
-        <article className="relative py-4 space-y-2">
+        <article className="relative py-4 px-3 -mx-3 space-y-2 transition-colors hover:bg-muted/50 cursor-pointer">
             {/* Stretch link: clicking anywhere on the card navigates to the post detail */}
             <Link
                 href={`/${author.username}/${post.id}`}
@@ -66,12 +68,20 @@ export const PostItem = ({ post, isOwnProfile, author }: Props) => {
                 </div>
             )}
 
-            {/* Footer: votes + comments */}
-            <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                <span className="flex items-center gap-1">
-                    <ThumbsUp size={14} />
-                    {post._count.votes}
-                </span>
+            {/* Footer: votes + comments — elevated above the stretch-link overlay */}
+            <div className="relative z-10 flex items-center gap-4 text-sm text-muted-foreground">
+                {voteData ? (
+                    <PostVoteButtons
+                        postId={post.id}
+                        score={voteData.score}
+                        currentUserVote={voteData.currentUserVote}
+                    />
+                ) : (
+                    <span className="flex items-center gap-1">
+                        <ThumbsUp size={14} />
+                        {post._count.votes}
+                    </span>
+                )}
                 <span className="flex items-center gap-1">
                     <MessageSquare size={14} />
                     {post._count.comments}

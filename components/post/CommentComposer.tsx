@@ -13,9 +13,10 @@ import { Button } from "@/components/ui/button"
 interface Props {
     postId: string
     parentCommentId?: string
+    onSuccess?: () => void
 }
 
-export const CommentComposer = ({ postId, parentCommentId }: Props) => {
+export const CommentComposer = ({ postId, parentCommentId, onSuccess }: Props) => {
     const [isPending, startTransition] = useTransition()
 
     const form = useForm<CreateCommentInput>({
@@ -36,6 +37,7 @@ export const CommentComposer = ({ postId, parentCommentId }: Props) => {
             }
             toast.success('Comment posted', { id: toastId })
             form.reset({ postId, content: '', parentCommentId })
+            onSuccess?.()
         })
     }
 

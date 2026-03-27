@@ -147,9 +147,12 @@ const PostDetailPage = async ({ params }: Props) => {
 
     // Step G — build comment tree (supports arbitrary nesting depth)
     // First pass: create all nodes
+    const isAuthenticated = !!session
+
     const nodeMap = new Map<string, CommentItemProps>()
     allComments.forEach(c => nodeMap.set(c.id, {
         id: c.id,
+        postId,
         content: c.content,
         createdAt: c.createdAt,
         isEdited: c.isEdited,
@@ -237,7 +240,7 @@ const PostDetailPage = async ({ params }: Props) => {
 
                 <Separator />
 
-                <CommentList comments={commentProps} />
+                <CommentList comments={commentProps} isAuthenticated={isAuthenticated} />
             </div>
         </div>
     )
