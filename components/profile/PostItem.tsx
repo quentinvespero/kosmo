@@ -36,18 +36,15 @@ export const PostItem = ({ post, isOwnProfile, author, voteData }: Props) => {
                 aria-label={`View post by ${author.name}`}
             />
 
-            {/* Author — elevated above the overlay so it remains independently clickable */}
-            <div className="text-sm font-medium">
-                <a href={`/${author.username ?? ''}`} className="relative z-10 hover:underline">
+            {/* Author + date — elevated above the overlay so it remains independently clickable */}
+            <div className="flex items-center gap-2 text-sm flex-wrap">
+                <a href={`/${author.username ?? ''}`} className="relative z-10 font-medium hover:underline">
                     {author.name}
                 </a>
-                <span className="text-muted-foreground"> @{author.username ?? '—'}</span>
-            </div>
-
-            {/* Date + subscribers-only badge (only on own profile) */}
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <span>{formatDate(post.createdAt)}</span>
-                {post.isEdited && <span className="text-xs">(edited)</span>}
+                <span className="text-muted-foreground">@{author.username ?? '—'}</span>
+                <span className="text-muted-foreground">·</span>
+                <span className="text-muted-foreground">{formatDate(post.createdAt)}</span>
+                {post.isEdited && <span className="text-xs text-muted-foreground">(edited)</span>}
                 {isOwnProfile && post.isSubscribersOnly && (
                     <Badge variant="secondary" className="text-xs py-0">
                         Subscribers only
