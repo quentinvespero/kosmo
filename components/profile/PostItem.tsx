@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
+import { formatDate } from "@/lib/utils"
 import { MessageSquare, ThumbsUp } from "lucide-react"
 
 type Post = {
@@ -17,9 +18,6 @@ type Props = {
     isOwnProfile: boolean
     author: { name: string; username: string | null }
 }
-
-const formatDate = (date: Date) =>
-    date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 
 export const PostItem = ({ post, isOwnProfile, author }: Props) => {
     // Truncate long posts

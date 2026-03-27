@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { formatDate } from "@/lib/utils"
 import { CommentVoteButtons } from "./CommentVoteButtons"
 
 export type CommentItemProps = {
@@ -12,9 +13,6 @@ export type CommentItemProps = {
     replies?: CommentItemProps[]
     isReply?: boolean
 }
-
-const formatDate = (date: Date) =>
-    date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 
 export const CommentItem = ({ id, content, createdAt, isEdited, author, score, currentUserVote, replies, isReply }: CommentItemProps) => (
     <div className={isReply ? "ml-6 border-l pl-4" : ""}>
