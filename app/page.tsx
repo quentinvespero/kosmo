@@ -10,33 +10,36 @@ const LandingPage = async () => {
     if (session) redirect('/home')
 
     return (
-        <div className="min-h-dvh flex flex-col items-center justify-center px-4">
-            <div className="flex flex-col items-center text-center w-full max-w-sm">
+        <div className="min-h-dvh flex flex-col items-center px-4">
+            <div className="flex flex-col items-center text-center w-full max-w-sm flex-1 justify-center">
 
                 {/* Logo — light/dark swap, margin instead of flex gap to avoid doubling */}
                 <Image
                     src="/logo_light.svg"
                     alt="Kosmo"
-                    width={96}
-                    height={96}
+                    width={64}
+                    height={64}
                     className="dark:hidden mb-6"
                 />
                 <Image
                     src="/logo_dark.svg"
                     alt="Kosmo"
-                    width={96}
-                    height={96}
+                    width={64}
+                    height={64}
                     className="hidden dark:block mb-6"
                 />
 
                 {/* Headline + description */}
                 <div className="space-y-3">
-                    <h1 className="text-4xl font-bold tracking-tight">
-                        Where communities think out loud.
+                    <h1 className="text-2xl font-bold tracking-tight">
+                        Get into the Field.
                     </h1>
                     <p className="text-muted-foreground text-base leading-relaxed">
-                        Kosmo brings together the depth of Reddit and the pulse of X.
-                        Post, discuss, and discover — with people who actually care.
+                        Kosmo brings together some features from Reddit, with the instantaneity of X.
+                    </p>
+                    <p className="text-muted-foreground text-base leading-relaxed">
+                        It aims to be a quality-focused social network, providing a comfortable and enriching space.
+                        A space where your time would feel well-spent.
                     </p>
                 </div>
 
@@ -50,14 +53,16 @@ const LandingPage = async () => {
                     </Button>
                 </div>
 
-                {/* Roadmap — plain link, not a button; it's not a conversion action */}
+            </div>
+
+            {/* Roadmap — pinned to bottom of viewport */}
+            <div className="pb-8">
                 <Link
                     href="/roadmap"
-                    className="mt-4 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors bg-muted hover:bg-muted/70 px-6 py-[.4rem] rounded-full"
                 >
-                    See what we&apos;re building →
+                    See what we&apos;re building on the <span className="font-bold underline">roadmap</span> →
                 </Link>
-
             </div>
         </div>
     )
