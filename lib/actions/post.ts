@@ -26,7 +26,14 @@ export const createPost = async (data: unknown) => {
         data: {
             content: parsed.data.content,
             authorId: session.user.id,
-        }
+            tags: {
+                // Create the tag if it doesn't exist yet, otherwise connect to it
+                connectOrCreate: parsed.data.tags.map(name => ({
+                    where: { name },
+                    create: { name },
+                })),
+            },
+        },
     })
 
     // Auto-upvote: like Reddit, the author's post starts with their own upvote
