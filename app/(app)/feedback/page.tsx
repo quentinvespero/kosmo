@@ -2,6 +2,7 @@ import { Suspense } from "react"
 import { redirect } from "next/navigation"
 import { headers } from "next/headers"
 import { auth } from "@/lib/auth"
+import Link from "next/link"
 import { BackButton } from "@/components/ui/BackButton"
 import { FeedbackTabs } from "@/components/feedback/FeedbackTabs"
 import { FeedbackSortSelector } from "@/components/feedback/FeedbackSortSelector"
@@ -26,6 +27,7 @@ const FeedbackPage = async ({ searchParams }: { searchParams: Promise<Record<str
             include: {
                 user: { select: { username: true, name: true } },
                 votes: { select: { type: true, userId: true } },
+                roadmapItem: { select: { id: true, title: true, status: true } },
             },
             orderBy: { createdAt: "desc" },
         }),
@@ -50,6 +52,7 @@ const FeedbackPage = async ({ searchParams }: { searchParams: Promise<Record<str
         createdAt: f.createdAt,
         score: f.votes.filter(v => v.type === "UP").length - f.votes.filter(v => v.type === "DOWN").length,
         currentUserVote: (f.votes.find(v => v.userId === currentUserId)?.type ?? null) as "UP" | "DOWN" | null,
+        roadmapItem: f.roadmapItem,
     }))
 
     // Sort items based on the active sort mode.
@@ -63,7 +66,12 @@ const FeedbackPage = async ({ searchParams }: { searchParams: Promise<Record<str
     return (
         <div className="max-w-2xl mx-auto py-6 px-4 space-y-6">
             <BackButton />
-            <h1 className="text-2xl font-bold">Feedback</h1>
+            <div className="flex items-center justify-between">
+                <h1 className="text-2xl font-bold">Feedback</h1>
+                <Link href="/roadmap" className="text-sm text-muted-foreground hover:underline">
+                    Check the roadmap →
+                </Link>
+            </div>
             <FeedbackFormSection />
             <Separator />
             <Suspense fallback={

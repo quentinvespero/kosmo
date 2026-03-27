@@ -36,6 +36,9 @@ const LandingPage = async () => {
                     <Link href='/signin?intent=signup' className='font-bold p-5 rounded-md'>Get started</Link>
                 </Button>
             </div>
+            <Button variant="outline" asChild>
+                <Link href="/roadmap">See what we&apos;re building on the roadmap →</Link>
+            </Button>
         </div>
     )
 }

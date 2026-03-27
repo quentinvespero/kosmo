@@ -1,5 +1,4 @@
 import { RoadmapStatus, FeedbackType } from "@prisma/client"
-import { Badge } from "@/components/ui/badge"
 import { FEEDBACK_TYPE_LABELS } from "@/lib/roadmap"
 import { RoadmapDeleteButton } from "./RoadmapDeleteButton"
 import { RoadmapItemDialog, type AvailableFeedback } from "./RoadmapItemDialog"
@@ -54,13 +53,14 @@ export const RoadmapItemCard = ({
         )}
 
         {/* Linked feedback snippet */}
+        {feedback && <hr className="border-border" />}
         {feedback && (
-            <div className="mt-1 rounded-md bg-muted/50 px-3 py-2 space-y-1">
-                <Badge variant="secondary" className="text-xs">
+            <div className="flex items-center gap-1.5 min-w-0">
+                <span className={`text-xs font-medium px-3.5 py-[.1rem] rounded-full shrink-0 bg-neutral-700`}>
                     {FEEDBACK_TYPE_LABELS[feedback.type]}
-                </Badge>
-                <p className="text-xs text-muted-foreground line-clamp-2">
-                    {feedback.content}
+                </span>
+                <p className="text-xs text-muted-foreground truncate">
+                    "{feedback.content}"
                 </p>
             </div>
         )}
