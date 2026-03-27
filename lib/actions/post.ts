@@ -22,11 +22,16 @@ export const createPost = async (data: unknown) => {
     const parsed = createPostSchema.safeParse(data)
     if (!parsed.success) return { error: 'Invalid data' as const, issues: parsed.error.issues }
 
-    await prisma.post.create({
+    const post = await prisma.post.create({
         data: {
             content: parsed.data.content,
             authorId: session.user.id,
         }
+    })
+
+    // Auto-upvote: like Reddit, the author's post starts with their own upvote
+    await prisma.vote.create({
+        data: { postId: post.id, userId: session.user.id, type: 'UP' },
     })
 
     revalidatePath('/home')
@@ -103,13 +108,18 @@ export const createComment = async (data: CreateCommentInput) => {
         if (parent.postId !== postId) return { error: 'Invalid parent' as const }
     }
 
-    await prisma.comment.create({
+    const comment = await prisma.comment.create({
         data: {
             content,
             postId,
             authorId: session.user.id,
             parentCommentId: parentCommentId ?? null,
         },
+    })
+
+    // Auto-upvote: like Reddit, the author's comment starts with their own upvote
+    await prisma.vote.create({
+        data: { commentId: comment.id, userId: session.user.id, type: 'UP' },
     })
 
     revalidatePath(`/${post.author.username}/${postId}`)
