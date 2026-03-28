@@ -14,6 +14,7 @@ Tags are labels attached to posts for categorization and discovery.
 - Tags are created implicitly via `connectOrCreate` — no separate tag management needed
 
 ## Notes
+- Tags are **Reddit-style flairs** — they are selected at post creation time and **cannot be modified afterwards**
 - No dedicated tag management UI planned — tags emerge from post creation
 - `normalizeTag` utility in `lib/schemas/PostSchemas.ts` handles normalization on the client before form submission
 

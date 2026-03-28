@@ -48,3 +48,33 @@ export const voteCommentSchema = z.object({
 })
 
 export type VoteCommentInput = z.infer<typeof voteCommentSchema>
+
+export const editPostSchema = z.object({
+    postId: z.cuid(),
+    content: z.string()
+        .min(1, 'Post content cannot be empty')
+        .max(10000, 'Post content must be at most 10,000 characters'),
+})
+
+export type EditPostInput = z.infer<typeof editPostSchema>
+
+export const deletePostSchema = z.object({
+    postId: z.cuid(),
+})
+
+export type DeletePostInput = z.infer<typeof deletePostSchema>
+
+export const editCommentSchema = z.object({
+    commentId: z.cuid(),
+    content: z.string()
+        .min(1, 'Comment cannot be empty')
+        .max(2000, 'Comment must be at most 2,000 characters'),
+})
+
+export type EditCommentInput = z.infer<typeof editCommentSchema>
+
+export const deleteCommentSchema = z.object({
+    commentId: z.cuid(),
+})
+
+export type DeleteCommentInput = z.infer<typeof deleteCommentSchema>

@@ -3,6 +3,7 @@
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useTransition } from "react"
+import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { createCommentSchema, type CreateCommentInput } from "@/lib/schemas/PostSchemas"
 import { createComment } from "@/lib/actions/post"
@@ -17,6 +18,7 @@ interface Props {
 }
 
 export const CommentComposer = ({ postId, parentCommentId, onSuccess }: Props) => {
+    const router = useRouter()
     const [isPending, startTransition] = useTransition()
 
     const form = useForm<CreateCommentInput>({
@@ -37,6 +39,8 @@ export const CommentComposer = ({ postId, parentCommentId, onSuccess }: Props) =
             }
             toast.success('Comment posted', { id: toastId })
             form.reset({ postId, content: '', parentCommentId })
+            // Refresh Server Components so the new comment appears immediately
+            router.refresh()
             onSuccess?.()
         })
     }
@@ -53,6 +57,7 @@ export const CommentComposer = ({ postId, parentCommentId, onSuccess }: Props) =
                                 <Textarea
                                     placeholder="Add a comment..."
                                     className="resize-none min-h-16"
+                                    maxLength={2000}
                                     {...field}
                                 />
                             </FormControl>

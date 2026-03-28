@@ -44,4 +44,4 @@ A post's visibility is **never set on the post itself** — it is inherited from
 - Post creation: done (`PostComposer`, `createPost` server action)
 - Post detail page: done (`app/(app)/[handle]/[postId]/page.tsx`) — full content, voting, comment thread
 - Post voting: done (`PostVoteButtons`, `votePost` server action) — toggle/switch with optimistic UI
-- Edit/delete: not yet implemented
+- Edit/delete: done — author-only `...` menu (`PostActionsMenu`); edit opens inline on the detail page (`PostEditForm`, `PostDetailClient`) and only allows editing the content (tags are immutable after creation); delete shows a confirmation dialog and cascades to all comments/votes; no "edited" indicator is shown in the UI
