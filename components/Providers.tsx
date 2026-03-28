@@ -1,17 +1,16 @@
 'use client'
 
-import { AppProgressBar } from 'next-nprogress-bar'
+import NextTopLoader from 'nextjs-toploader'
 
 export const Providers = ({ children }: { children: React.ReactNode }) => {
     return (
         <>
-            {children}
-            <AppProgressBar
-                height="2px"
-                color="hsl(var(--primary))"
-                options={{ showSpinner: false }}
-                shallowRouting
+            <NextTopLoader
+                height={2}
+
+                showSpinner={false}
             />
+            {children}
         </>
     )
 }
