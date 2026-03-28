@@ -9,11 +9,12 @@ Tags are labels attached to posts for categorization and discovery.
 - A post can have multiple tags; a tag can appear on multiple posts (many-to-many)
 
 ## Constraints
-- Max 5 tags per post
+- Max 3 tags per post
 - Tag names: max 32 characters, normalized to lowercase with hyphens (no spaces, no special chars)
 - Tags are created implicitly via `connectOrCreate` — no separate tag management needed
 
 ## Notes
+- Tags are **Reddit-style flairs** — they are selected at post creation time and **cannot be modified afterwards**
 - No dedicated tag management UI planned — tags emerge from post creation
 - `normalizeTag` utility in `lib/schemas/PostSchemas.ts` handles normalization on the client before form submission
 

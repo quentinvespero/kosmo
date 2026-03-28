@@ -11,6 +11,10 @@ import {
     type CreateCommentInput,
     voteCommentSchema,
     type VoteCommentInput,
+    editPostSchema,
+    deletePostSchema,
+    editCommentSchema,
+    deleteCommentSchema,
 } from "@/lib/schemas/PostSchemas"
 import { headers } from "next/headers"
 import { revalidatePath } from "next/cache"
@@ -115,21 +119,119 @@ export const createComment = async (data: CreateCommentInput) => {
         if (parent.postId !== postId) return { error: 'Invalid parent' as const }
     }
 
-    const comment = await prisma.comment.create({
-        data: {
-            content,
-            postId,
-            authorId: session.user.id,
-            parentCommentId: parentCommentId ?? null,
-        },
-    })
-
-    // Auto-upvote: like Reddit, the author's comment starts with their own upvote
-    await prisma.vote.create({
-        data: { commentId: comment.id, userId: session.user.id, type: 'UP' },
+    // Create comment + auto-upvote atomically so a failed vote can't leave an orphaned comment
+    await prisma.$transaction(async (tx) => {
+        const comment = await tx.comment.create({
+            data: {
+                content,
+                postId,
+                authorId: session.user.id,
+                parentCommentId: parentCommentId ?? null,
+            },
+        })
+        // Auto-upvote: like Reddit, the author's comment starts with their own upvote
+        await tx.vote.create({
+            data: { commentId: comment.id, userId: session.user.id, type: 'UP' },
+        })
     })
 
     revalidatePath(`/${post.author.username}/${postId}`)
+    return { success: true as const }
+}
+
+export const editPost = async (data: unknown) => {
+    const session = await auth.api.getSession({ headers: await headers() })
+    if (!session) return { error: 'Unauthorized' as const }
+
+    const parsed = editPostSchema.safeParse(data)
+    if (!parsed.success) return { error: 'Invalid data' as const, issues: parsed.error.issues }
+
+    const { postId, content } = parsed.data
+
+    const post = await prisma.post.findUnique({
+        where: { id: postId },
+        select: { authorId: true, author: { select: { username: true } } },
+    })
+    if (!post) return { error: 'Not found' as const }
+    if (post.authorId !== session.user.id) return { error: 'Forbidden' as const }
+
+    await prisma.post.update({
+        where: { id: postId },
+        data: { content, isEdited: true },
+    })
+
+    revalidatePath(`/${post.author.username}/${postId}`)
+    revalidatePath(`/${post.author.username}`)
+    return { success: true as const }
+}
+
+export const deletePost = async (data: unknown) => {
+    const session = await auth.api.getSession({ headers: await headers() })
+    if (!session) return { error: 'Unauthorized' as const }
+
+    const parsed = deletePostSchema.safeParse(data)
+    if (!parsed.success) return { error: 'Invalid data' as const }
+
+    const { postId } = parsed.data
+
+    const post = await prisma.post.findUnique({
+        where: { id: postId },
+        select: { authorId: true, author: { select: { username: true } } },
+    })
+    if (!post) return { error: 'Not found' as const }
+    if (post.authorId !== session.user.id) return { error: 'Forbidden' as const }
+
+    await prisma.post.delete({ where: { id: postId } })
+
+    revalidatePath(`/${post.author.username}`)
+    revalidatePath('/home')
+    return { success: true as const }
+}
+
+export const editComment = async (data: unknown) => {
+    const session = await auth.api.getSession({ headers: await headers() })
+    if (!session) return { error: 'Unauthorized' as const }
+
+    const parsed = editCommentSchema.safeParse(data)
+    if (!parsed.success) return { error: 'Invalid data' as const, issues: parsed.error.issues }
+
+    const { commentId, content } = parsed.data
+
+    const comment = await prisma.comment.findUnique({
+        where: { id: commentId },
+        select: { authorId: true, postId: true, post: { select: { author: { select: { username: true } } } } },
+    })
+    if (!comment) return { error: 'Not found' as const }
+    if (comment.authorId !== session.user.id) return { error: 'Forbidden' as const }
+
+    await prisma.comment.update({
+        where: { id: commentId },
+        data: { content, isEdited: true },
+    })
+
+    revalidatePath(`/${comment.post.author.username}/${comment.postId}`)
+    return { success: true as const }
+}
+
+export const deleteComment = async (data: unknown) => {
+    const session = await auth.api.getSession({ headers: await headers() })
+    if (!session) return { error: 'Unauthorized' as const }
+
+    const parsed = deleteCommentSchema.safeParse(data)
+    if (!parsed.success) return { error: 'Invalid data' as const }
+
+    const { commentId } = parsed.data
+
+    const comment = await prisma.comment.findUnique({
+        where: { id: commentId },
+        select: { authorId: true, postId: true, post: { select: { author: { select: { username: true } } } } },
+    })
+    if (!comment) return { error: 'Not found' as const }
+    if (comment.authorId !== session.user.id) return { error: 'Forbidden' as const }
+
+    await prisma.comment.delete({ where: { id: commentId } })
+
+    revalidatePath(`/${comment.post.author.username}/${comment.postId}`)
     return { success: true as const }
 }
 

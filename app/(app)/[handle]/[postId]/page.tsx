@@ -1,16 +1,14 @@
 import { auth } from "@/lib/auth"
 import prisma from "@/lib/prisma"
-import { formatDate } from "@/lib/utils"
 import { headers } from "next/headers"
 import { notFound } from "next/navigation"
 import { cache } from "react"
 import type { Metadata } from "next"
 import { BackButton } from "@/components/ui/BackButton"
-import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { PostVoteButtons } from "@/components/post/PostVoteButtons"
 import { CommentComposer } from "@/components/post/CommentComposer"
 import { CommentList } from "@/components/post/CommentList"
+import { PostDetailClient } from "@/components/post/PostDetailClient"
 import type { CommentItemProps } from "@/components/post/CommentItem"
 
 type Props = {
@@ -26,7 +24,6 @@ const getPost = cache((postId: string) =>
             title: true,
             content: true,
             createdAt: true,
-            isEdited: true,
             isSubscribersOnly: true,
             author: {
                 select: {
@@ -117,6 +114,7 @@ const PostDetailPage = async ({ params }: Props) => {
                 createdAt: true,
                 isEdited: true,
                 parentCommentId: true,
+                authorId: true,
                 author: { select: { name: true, username: true } },
                 votes: { select: { type: true } },
             },
@@ -156,6 +154,7 @@ const PostDetailPage = async ({ params }: Props) => {
         content: c.content,
         createdAt: c.createdAt,
         isEdited: c.isEdited,
+        authorId: c.authorId,
         author: c.author,
         score: c.votes.filter(v => v.type === 'UP').length - c.votes.filter(v => v.type === 'DOWN').length,
         currentUserVote: voteMap.get(c.id) ?? null,
@@ -179,51 +178,13 @@ const PostDetailPage = async ({ params }: Props) => {
         <div className="max-w-2xl mx-auto py-6 px-4 space-y-6">
             <BackButton />
 
-            {/* Post */}
-            <article className="space-y-3">
-                {/* Author */}
-                <div className="text-sm font-medium">
-                    <a href={`/${post.author.username ?? ''}`} className="hover:underline">
-                        {post.author.name}
-                    </a>
-                    <span className="text-muted-foreground"> @{post.author.username ?? '—'}</span>
-                </div>
-
-                {/* Date + badges */}
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <span>{formatDate(post.createdAt)}</span>
-                    {post.isEdited && <span className="text-xs">(edited)</span>}
-                    {isOwnProfile && post.isSubscribersOnly && (
-                        <Badge variant="secondary" className="text-xs py-0">
-                            Subscribers only
-                        </Badge>
-                    )}
-                </div>
-
-                {/* Title (optional) */}
-                {post.title && <h1 className="text-lg font-semibold">{post.title}</h1>}
-
-                {/* Full content — no truncation */}
-                <p className="text-sm whitespace-pre-wrap">{post.content}</p>
-
-                {/* Tags */}
-                {post.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-1">
-                        {post.tags.map(tag => (
-                            <Badge key={tag.name} variant="secondary" className="text-xs">
-                                {tag.name}
-                            </Badge>
-                        ))}
-                    </div>
-                )}
-
-                {/* Vote buttons */}
-                <PostVoteButtons
-                    postId={post.id}
-                    score={postScore}
-                    currentUserVote={currentPostVote?.type ?? null}
-                />
-            </article>
+            <PostDetailClient
+                post={post}
+                isOwner={isOwnProfile}
+                isOwnProfile={isOwnProfile}
+                postScore={postScore}
+                currentUserVote={currentPostVote?.type ?? null}
+            />
 
             <Separator />
 
@@ -240,7 +201,11 @@ const PostDetailPage = async ({ params }: Props) => {
 
                 <Separator />
 
-                <CommentList comments={commentProps} isAuthenticated={isAuthenticated} />
+                <CommentList
+                    comments={commentProps}
+                    isAuthenticated={isAuthenticated}
+                    currentUserId={currentUserId ?? null}
+                />
             </div>
         </div>
     )

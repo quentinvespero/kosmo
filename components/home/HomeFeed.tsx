@@ -26,8 +26,8 @@ const HomeFeed = async () => {
             id: true,
             content: true,
             createdAt: true,
+            authorId: true,
             isSubscribersOnly: true,
-            isEdited: true,
             _count: { select: { comments: true, votes: true } },
             tags: { select: { name: true } },
             author: { select: { name: true, username: true } }
@@ -66,9 +66,11 @@ const HomeFeed = async () => {
                     key={post.id}
                     post={post}
                     isOwnProfile={false}
+                    isOwner={post.authorId === currentUserId}
                     author={post.author as { name: string; username: string }}
                     // Only pass vote data (interactive buttons) for authenticated users
                     voteData={currentUserId ? voteDataMap.get(post.id) : undefined}
+                    context="home"
                 />
             ))}
         </div>

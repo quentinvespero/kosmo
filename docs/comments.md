@@ -25,4 +25,4 @@ Comments support upvote/downvote via the `Vote` model — see `votes.md`
 - Comment creation: done (`createComment` server action) — top-level and replies supported
 - Comment voting: done (`CommentVoteButtons`, `voteComment` server action)
 - Inline reply: done — each `CommentItem` has a Reply button that shows `CommentComposer` inline; auto-closes on successful submit
-- Edit/delete: not yet implemented
+- Edit/delete: done — author-only `...` menu (`CommentActionsMenu`); edit replaces the comment text with an inline textarea; delete removes the comment immediately; no "edited" indicator is shown in the UI

@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { toast } from "sonner"
-import { useTransition, useState, useEffect, useRef, KeyboardEvent } from "react"
+import { useTransition, useState, useEffect, useRef, KeyboardEvent, MouseEvent } from "react"
 import { createPostSchema, CreatePostInput, normalizeTag } from "@/lib/schemas/PostSchemas"
 import { createPost } from "@/lib/actions/post"
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
@@ -35,10 +35,10 @@ export const PostComposer = () => {
     // Show the shortcut hint only when the textarea is idle
     const showShortcut = !isFocused && !content
 
-    // Keep the form's tags field in sync with local tag state
+    // Focus the tag input whenever it becomes visible
     useEffect(() => {
-        form.setValue('tags', tags)
-    }, [tags, form])
+        if (showTagInput) tagInputRef.current?.focus()
+    }, [showTagInput])
 
     // Global keyboard shortcut: "n" focuses the post composer
     useKeyboardShortcut('n', () => form.setFocus('content'))
@@ -47,15 +47,21 @@ export const PostComposer = () => {
 
     const tryAddTag = () => {
         const normalized = normalizeTag(tagInput)
-        if (!normalized || tags.includes(normalized) || tags.length >= 5) {
+        if (!normalized || tags.includes(normalized) || tags.length >= 3) {
             setTagInput('')
             return
         }
-        setTags(prev => [...prev, normalized])
+        const newTags = [...tags, normalized]
+        setTags(newTags)
+        form.setValue('tags', newTags)
         setTagInput('')
     }
 
-    const removeTag = (name: string) => setTags(prev => prev.filter(t => t !== name))
+    const removeTag = (name: string) => {
+        const newTags = tags.filter(t => t !== name)
+        setTags(newTags)
+        form.setValue('tags', newTags)
+    }
 
     const handleTagKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter' || e.key === ',') {
@@ -63,7 +69,9 @@ export const PostComposer = () => {
             tryAddTag()
         } else if (e.key === 'Backspace' && tagInput === '') {
             // Backspace on empty input removes the last tag (standard chip convention)
-            setTags(prev => prev.slice(0, -1))
+            const newTags = tags.slice(0, -1)
+            setTags(newTags)
+            form.setValue('tags', newTags)
         } else if (e.key === 'Escape') {
             setShowTagInput(false)
         }
@@ -72,21 +80,16 @@ export const PostComposer = () => {
     const handleTagInputBlur = () => {
         // Pre-compute whether tryAddTag will actually add something before calling it
         const normalized = normalizeTag(tagInput)
-        const willAdd = !!normalized && !tags.includes(normalized) && tags.length < 5
+        const willAdd = !!normalized && !tags.includes(normalized) && tags.length < 3
         if (tagInput.trim()) tryAddTag()
         // Collapse only if there are no existing tags and none will be added
         if (tags.length === 0 && !willAdd) setShowTagInput(false)
     }
 
-    const handleTagButtonClick = () => {
-        setShowTagInput(prev => {
-            const next = !prev
-            if (next) {
-                // Focus the input after it mounts
-                setTimeout(() => tagInputRef.current?.focus(), 0)
-            }
-            return next
-        })
+    const handleTagButtonMouseDown = (e: MouseEvent<HTMLButtonElement>) => {
+        // Prevent the mousedown from blurring the tag input before our toggle logic runs
+        e.preventDefault()
+        setShowTagInput(prev => !prev)
     }
 
     // Handle pasting a comma/space-separated list of tags
@@ -96,12 +99,16 @@ export const PostComposer = () => {
         if (!text.includes(',') && !text.includes(' ')) return
         e.preventDefault()
         const tokens = text.split(/[,\s]+/)
-        const remaining = 5 - tags.length
+        const remaining = 3 - tags.length
         const newTags = tokens
             .map(normalizeTag)
             .filter(t => t && !tags.includes(t))
             .slice(0, remaining)
-        if (newTags.length > 0) setTags(prev => [...prev, ...newTags])
+        if (newTags.length > 0) {
+            const updatedTags = [...tags, ...newTags]
+            setTags(updatedTags)
+            form.setValue('tags', updatedTags)
+        }
         setTagInput('')
     }
 
@@ -196,8 +203,8 @@ export const PostComposer = () => {
                                     onKeyDown={handleTagKeyDown}
                                     onBlur={handleTagInputBlur}
                                     onPaste={handleTagPaste}
-                                    placeholder={tags.length >= 5 ? 'Max 5 tags reached' : 'Add a tag… (Enter or , to confirm)'}
-                                    disabled={tags.length >= 5}
+                                    placeholder={tags.length >= 3 ? 'Max 3 tags reached' : 'Add a tag… (Enter or , to confirm)'}
+                                    disabled={tags.length >= 3}
                                     className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground disabled:opacity-50"
                                     aria-label="Add tag"
                                 />
@@ -215,7 +222,7 @@ export const PostComposer = () => {
                                 type="button"
                                 variant="ghost"
                                 size="icon-sm"
-                                onClick={handleTagButtonClick}
+                                onMouseDown={handleTagButtonMouseDown}
                                 aria-label="Add tags"
                                 aria-pressed={showTagInput}
                                 className={showTagInput || tags.length > 0 ? 'text-primary' : 'text-muted-foreground'}
