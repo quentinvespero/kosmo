@@ -144,6 +144,14 @@
   }
 }
 
+/* Override nextjs-toploader bar color with theme primary */
+#nprogress .bar {
+    background: var(--foreground) !important;
+}
+#nprogress .peg {
+    box-shadow: 0 0 10px var(--foreground), 0 0 5px var(--foreground) !important;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
