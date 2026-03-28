@@ -19,8 +19,8 @@ export const createPostSchema = z.object({
     content: z.string()
         .min(1, 'Post content cannot be empty')
         .max(10000, 'Post content must be at most 10,000 characters'),
-    // Max 5 tags, each normalized to lowercase with hyphens before reaching this schema
-    tags: z.array(tagNameSchema).max(5, 'Maximum 5 tags'),
+    // Max 3 tags, each normalized to lowercase with hyphens before reaching this schema
+    tags: z.array(tagNameSchema).max(3, 'Maximum 3 tags'),
 })
 
 export type CreatePostInput = z.infer<typeof createPostSchema>

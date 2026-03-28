@@ -9,7 +9,7 @@ Tags are labels attached to posts for categorization and discovery.
 - A post can have multiple tags; a tag can appear on multiple posts (many-to-many)
 
 ## Constraints
-- Max 5 tags per post
+- Max 3 tags per post
 - Tag names: max 32 characters, normalized to lowercase with hyphens (no spaces, no special chars)
 - Tags are created implicitly via `connectOrCreate` — no separate tag management needed
 
