@@ -65,7 +65,6 @@ const FeedbackPage = async ({ searchParams }: { searchParams: Promise<Record<str
 
     return (
         <div className="max-w-2xl mx-auto py-6 px-4 space-y-6">
-            <BackButton />
             <div className="flex items-center justify-between">
                 <h1 className="text-2xl font-bold">Feedback</h1>
                 <Link href="/roadmap" className="text-sm text-muted-foreground hover:underline">
