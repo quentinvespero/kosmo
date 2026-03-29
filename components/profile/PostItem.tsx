@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
-import { formatDate } from "@/lib/utils"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { formatDate, getInitials } from "@/lib/utils"
 import { MessageSquare, ThumbsUp } from "lucide-react"
 import { PostVoteButtons } from "@/components/post/PostVoteButtons"
 import { PostActionsMenu } from "@/components/post/PostActionsMenu"
@@ -19,7 +20,7 @@ type Props = {
     post: Post
     isOwnProfile: boolean
     isOwner: boolean
-    author: { name: string; username: string | null }
+    author: { name: string; username: string | null; image: string | null }
     voteData?: { score: number; currentUserVote: 'UP' | 'DOWN' | null }
     context?: 'home' | 'profile'
 }
@@ -31,7 +32,7 @@ export const PostItem = ({ post, isOwnProfile, isOwner, author, voteData, contex
         : post.content
 
     return (
-        <article className="relative py-4 px-3 -mx-3 space-y-2 transition-colors hover:bg-muted/50 cursor-pointer">
+        <article className="relative flex gap-3 py-4 px-4 transition-colors hover:bg-muted/50 cursor-pointer">
             {/* Stretch link: clicking anywhere on the card navigates to the post detail */}
             <Link
                 href={`/${author.username}/${post.id}`}
@@ -39,65 +40,85 @@ export const PostItem = ({ post, isOwnProfile, isOwner, author, voteData, contex
                 aria-label={`View post by ${author.name}`}
             />
 
-            {/* Author + date + actions — elevated above the overlay so they remain independently clickable */}
-            <div className="flex items-center gap-2 text-sm flex-wrap">
+            {/* Left column: avatar — elevated above the overlay so it remains clickable */}
+            <div className="shrink-0 pt-0.5">
                 {author.username ? (
-                    <a href={`/${author.username}`} className="relative z-10 font-medium hover:underline">
-                        {author.name}
+                    <a href={`/${author.username}`} className="relative z-10 block">
+                        <Avatar size="lg">
+                            <AvatarImage src={author.image ?? undefined} alt={author.name} />
+                            <AvatarFallback>{getInitials(author.name)}</AvatarFallback>
+                        </Avatar>
                     </a>
                 ) : (
-                    <span className="relative z-10 font-medium">{author.name}</span>
-                )}
-                <span className="text-muted-foreground">@{author.username ?? '—'}</span>
-                <span className="text-muted-foreground">·</span>
-                <span className="text-muted-foreground">{formatDate(post.createdAt)}</span>
-                {isOwnProfile && post.isSubscribersOnly && (
-                    <Badge variant="secondary" className="text-xs py-0">
-                        Subscribers only
-                    </Badge>
-                )}
-                {isOwner && (
-                    <div className="relative z-10 ml-auto">
-                        <PostActionsMenu
-                            postId={post.id}
-                            authorUsername={author.username ?? ''}
-                            context={context}
-                        />
-                    </div>
+                    <Avatar size="lg">
+                        <AvatarImage src={author.image ?? undefined} alt={author.name} />
+                        <AvatarFallback>{getInitials(author.name)}</AvatarFallback>
+                    </Avatar>
                 )}
             </div>
 
-            <p className="text-sm whitespace-pre-wrap">{contentPreview}</p>
-
-            {/* Tags */}
-            {post.tags.length > 0 && (
-                <div className="flex flex-wrap gap-1">
-                    {post.tags.map(tag => (
-                        <Badge key={tag.name} variant="secondary" className="text-xs">
-                            {tag.name}
+            {/* Right column: all content */}
+            <div className="flex-1 min-w-0 space-y-1.5">
+                {/* Author + date + actions — elevated above the overlay */}
+                <div className="flex items-center gap-1.5 text-sm flex-wrap">
+                    {author.username ? (
+                        <a href={`/${author.username}`} className="relative z-10 font-semibold hover:underline">
+                            {author.name}
+                        </a>
+                    ) : (
+                        <span className="font-semibold">{author.name}</span>
+                    )}
+                    <span className="text-muted-foreground">@{author.username ?? '—'}</span>
+                    <span className="text-muted-foreground">·</span>
+                    <span className="text-muted-foreground">{formatDate(post.createdAt)}</span>
+                    {isOwnProfile && post.isSubscribersOnly && (
+                        <Badge variant="secondary" className="text-xs py-0">
+                            Subscribers only
                         </Badge>
-                    ))}
+                    )}
+                    {isOwner && (
+                        <div className="relative z-10 ml-auto">
+                            <PostActionsMenu
+                                postId={post.id}
+                                authorUsername={author.username ?? ''}
+                                context={context}
+                            />
+                        </div>
+                    )}
                 </div>
-            )}
 
-            {/* Footer: votes + comments — elevated above the stretch-link overlay */}
-            <div className="relative z-10 inline-flex items-center gap-3 text-sm text-muted-foreground bg-muted/60 rounded-full px-3 py-1">
-                {voteData ? (
-                    <PostVoteButtons
-                        postId={post.id}
-                        score={voteData.score}
-                        currentUserVote={voteData.currentUserVote}
-                    />
-                ) : (
-                    <span className="flex items-center gap-1">
-                        <ThumbsUp size={14} />
-                        {post._count.votes}
-                    </span>
+                <p className="text-sm whitespace-pre-wrap break-words">{contentPreview}</p>
+
+                {/* Tags */}
+                {post.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1">
+                        {post.tags.map(tag => (
+                            <Badge key={tag.name} variant="secondary" className="text-xs">
+                                {tag.name}
+                            </Badge>
+                        ))}
+                    </div>
                 )}
-                <span className="flex items-center gap-1">
-                    <MessageSquare size={14} />
-                    {post._count.comments}
-                </span>
+
+                {/* Footer: votes + comments — elevated above the stretch-link overlay */}
+                <div className="relative z-10 inline-flex items-center gap-3 text-sm text-muted-foreground bg-muted/60 rounded-full px-3 py-[.2rem]">
+                    {voteData ? (
+                        <PostVoteButtons
+                            postId={post.id}
+                            score={voteData.score}
+                            currentUserVote={voteData.currentUserVote}
+                        />
+                    ) : (
+                        <span className="flex items-center gap-1">
+                            <ThumbsUp size={14} />
+                            {post._count.votes}
+                        </span>
+                    )}
+                    <span className="flex items-center gap-1">
+                        <MessageSquare size={14} />
+                        {post._count.comments}
+                    </span>
+                </div>
             </div>
         </article>
     )
