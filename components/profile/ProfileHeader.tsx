@@ -94,13 +94,6 @@ export const ProfileHeader = ({ user, isOwnProfile, isPrivate, followStatus }: P
                             <Button variant="outline" size="sm" onClick={() => setEditing(true)}>
                                 Edit profile
                             </Button>
-                            <Button variant="outline" size="sm" asChild>
-                                <Link href="/settings">
-                                    <Settings className="size-4" />
-                                    Settings
-                                    <ShortcutKey>S</ShortcutKey>
-                                </Link>
-                            </Button>
                         </div>
                     )
                 ) : followStatus !== null ? (
