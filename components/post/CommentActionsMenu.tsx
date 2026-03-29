@@ -71,7 +71,9 @@ export const CommentActionsMenu = ({ commentId, onEditClick }: Props) => {
                 <AlertDialogHeader>
                     <AlertDialogTitle>Delete comment?</AlertDialogTitle>
                     <AlertDialogDescription>
-                        This will permanently delete the comment and all its replies. This cannot be undone.
+                        Your comment will be removed. If others have replied to it, it will be kept as
+                        {" "}<span className="italic">"Comment removed."</span>{" "}
+                        to preserve the thread.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
