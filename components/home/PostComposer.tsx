@@ -13,7 +13,13 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { ShortcutKey } from "@/components/ui/shortcut-key"
 import { useKeyboardShortcut } from "@/hooks/useKeyboardShortcut"
-import { Tag as TagIcon, X, ImageIcon, Link, BarChart2 } from "lucide-react"
+import { Tag as TagIcon, X, ImageIcon, Link, BarChart2, Plus } from "lucide-react"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 export const PostComposer = () => {
     const [isPending, startTransition] = useTransition()
@@ -230,16 +236,43 @@ export const PostComposer = () => {
                                 <TagIcon size={15} />
                             </Button>
 
-                            {/* Coming-soon placeholders */}
-                            <Button type="button" variant="ghost" size="icon-sm" disabled title="Media — coming soon" className="text-muted-foreground opacity-50">
-                                <ImageIcon size={15} />
-                            </Button>
-                            <Button type="button" variant="ghost" size="icon-sm" disabled title="Add link — coming soon" className="text-muted-foreground opacity-50">
-                                <Link size={15} />
-                            </Button>
-                            <Button type="button" variant="ghost" size="icon-sm" disabled title="Poll — coming soon" className="text-muted-foreground opacity-50">
-                                <BarChart2 size={15} />
-                            </Button>
+                            {/* Coming-soon placeholders — shown individually on sm+ screens */}
+                            <div className="hidden sm:flex items-center gap-1">
+                                <Button type="button" variant="ghost" size="icon-sm" disabled title="Media — coming soon" className="text-muted-foreground opacity-50">
+                                    <ImageIcon size={15} />
+                                </Button>
+                                <Button type="button" variant="ghost" size="icon-sm" disabled title="Add link — coming soon" className="text-muted-foreground opacity-50">
+                                    <Link size={15} />
+                                </Button>
+                                <Button type="button" variant="ghost" size="icon-sm" disabled title="Poll — coming soon" className="text-muted-foreground opacity-50">
+                                    <BarChart2 size={15} />
+                                </Button>
+                            </div>
+
+                            {/* On mobile: collapse coming-soon icons into a single + button */}
+                            <div className="flex sm:hidden">
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button type="button" variant="ghost" size="icon-sm" className="text-muted-foreground" aria-label="More options">
+                                            <Plus size={15} />
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="start">
+                                        <DropdownMenuItem disabled>
+                                            <ImageIcon size={14} className="mr-2" />
+                                            Media — coming soon
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem disabled>
+                                            <Link size={14} className="mr-2" />
+                                            Link — coming soon
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem disabled>
+                                            <BarChart2 size={14} className="mr-2" />
+                                            Poll — coming soon
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </div>
                         </div>
 
                         <div className="flex items-center gap-3">
