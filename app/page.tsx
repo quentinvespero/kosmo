@@ -35,7 +35,7 @@ const LandingPage = async () => {
                         Get into the Field.
                     </h1>
                     <p className="text-muted-foreground text-base leading-relaxed">
-                        Kosmo brings together some features from Reddit, with the instantaneity of X.
+                        Kosmo brings together some features from Reddit, and X.
                     </p>
                     <p className="text-muted-foreground text-base leading-relaxed">
                         It aims to be a quality-focused social network, providing a comfortable and enriching space.

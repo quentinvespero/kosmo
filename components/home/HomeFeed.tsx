@@ -30,7 +30,7 @@ const HomeFeed = async () => {
             isSubscribersOnly: true,
             _count: { select: { comments: true, votes: true } },
             tags: { select: { name: true } },
-            author: { select: { name: true, username: true } }
+            author: { select: { name: true, username: true, image: true } }
         },
         orderBy: { createdAt: 'desc' },
         take: 50,
@@ -67,7 +67,7 @@ const HomeFeed = async () => {
                     post={post}
                     isOwnProfile={false}
                     isOwner={post.authorId === currentUserId}
-                    author={post.author as { name: string; username: string }}
+                    author={post.author as { name: string; username: string; image: string | null }}
                     // Only pass vote data (interactive buttons) for authenticated users
                     voteData={currentUserId ? voteDataMap.get(post.id) : undefined}
                     context="home"
