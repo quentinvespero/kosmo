@@ -73,8 +73,8 @@ const ProfilePage = async ({ params }: Props) => {
             id: true,
             content: true,
             createdAt: true,
+            authorId: true,
             isSubscribersOnly: true,
-            isEdited: true,
             _count: { select: { comments: true, votes: true } },
             tags: { select: { name: true } },
             author: { select: { name: true, username: true } }
@@ -93,7 +93,7 @@ const ProfilePage = async ({ params }: Props) => {
                 followStatus={session && !isOwnProfile ? followStatus : null}
             />
             {canViewPosts ? (
-                <PostList posts={posts} isOwnProfile={isOwnProfile} />
+                <PostList posts={posts} isOwnProfile={isOwnProfile} currentUserId={session?.user.id ?? null} />
             ) : (
                 <p className="text-center text-sm text-muted-foreground py-12">
                     This account is private. Follow to see their posts.
