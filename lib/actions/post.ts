@@ -199,9 +199,10 @@ export const editComment = async (data: unknown) => {
 
     const comment = await prisma.comment.findUnique({
         where: { id: commentId },
-        select: { authorId: true, postId: true, post: { select: { author: { select: { username: true } } } } },
+        select: { authorId: true, postId: true, isDeleted: true, post: { select: { author: { select: { username: true } } } } },
     })
     if (!comment) return { error: 'Not found' as const }
+    if (comment.isDeleted) return { error: 'Not found' as const }
     if (comment.authorId !== session.user.id) return { error: 'Forbidden' as const }
 
     await prisma.comment.update({
@@ -224,12 +225,30 @@ export const deleteComment = async (data: unknown) => {
 
     const comment = await prisma.comment.findUnique({
         where: { id: commentId },
-        select: { authorId: true, postId: true, post: { select: { author: { select: { username: true } } } } },
+        select: { authorId: true, postId: true, isDeleted: true, post: { select: { author: { select: { username: true } } } } },
     })
     if (!comment) return { error: 'Not found' as const }
     if (comment.authorId !== session.user.id) return { error: 'Forbidden' as const }
+    // Already soft-deleted — nothing to do
+    if (comment.isDeleted) return { success: true as const }
 
-    await prisma.comment.delete({ where: { id: commentId } })
+    // Atomic: delete only if no replies exist at this exact moment.
+    // A single SQL statement eliminates the race between checking and deleting.
+    const deleted = await prisma.$executeRaw`
+        DELETE FROM "comments"
+        WHERE id = ${commentId}
+        AND NOT EXISTS (
+            SELECT 1 FROM "comments" WHERE "parentCommentId" = ${commentId}
+        )
+    `
+
+    if (deleted === 0) {
+        // Replies exist (possibly just inserted concurrently) — soft-delete to preserve the thread
+        await prisma.comment.update({
+            where: { id: commentId },
+            data: { isDeleted: true, content: '' },
+        })
+    }
 
     revalidatePath(`/${comment.post.author.username}/${comment.postId}`)
     return { success: true as const }

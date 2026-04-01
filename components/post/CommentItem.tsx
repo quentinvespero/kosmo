@@ -19,6 +19,7 @@ export type CommentItemProps = {
     content: string
     createdAt: Date
     isEdited: boolean
+    isDeleted: boolean
     authorId: string
     author: { name: string; username: string | null }
     score: number
@@ -33,7 +34,7 @@ type Props = CommentItemProps & {
     currentUserId: string | null
 }
 
-export const CommentItem = ({ id, postId, content, createdAt, authorId, author, score, currentUserVote, replies, isReply, isAuthenticated, currentUserId }: Props) => {
+export const CommentItem = ({ id, postId, content, createdAt, authorId, author, score, currentUserVote, replies, isReply, isAuthenticated, currentUserId, isDeleted }: Props) => {
     const router = useRouter()
     const [showReply, setShowReply] = useState(false)
     const [isEditing, setIsEditing] = useState(false)
@@ -63,7 +64,9 @@ export const CommentItem = ({ id, postId, content, createdAt, authorId, author, 
                 {/* Author + date row */}
                 <div className="flex items-center justify-between gap-2 text-sm">
                     <div className="flex items-center gap-2">
-                        {author.username ? (
+                        {isDeleted ? (
+                            <span className="font-medium text-muted-foreground">[deleted]</span>
+                        ) : author.username ? (
                             <Link href={`/${author.username}`} className="font-medium hover:underline">
                                 @{author.username}
                             </Link>
@@ -73,7 +76,8 @@ export const CommentItem = ({ id, postId, content, createdAt, authorId, author, 
                         <span className="text-muted-foreground">—</span>
                         <span className="text-muted-foreground">{formatDate(createdAt)}</span>
                     </div>
-                    {isOwner && !isEditing && (
+                    {/* Actions menu hidden for deleted comments */}
+                    {isOwner && !isEditing && !isDeleted && (
                         <CommentActionsMenu
                             commentId={id}
                             onEditClick={() => {
@@ -84,7 +88,10 @@ export const CommentItem = ({ id, postId, content, createdAt, authorId, author, 
                     )}
                 </div>
 
-                {isEditing ? (
+                {isDeleted ? (
+                    /* Tombstone for soft-deleted comments */
+                    <p className="text-sm italic text-muted-foreground">Comment removed.</p>
+                ) : isEditing ? (
                     <div className="space-y-2">
                         <Textarea
                             value={editContent}
@@ -122,7 +129,7 @@ export const CommentItem = ({ id, postId, content, createdAt, authorId, author, 
                 )}
 
                 {/* Reply / Cancel toggle — only shown to authenticated users when not editing */}
-                {isAuthenticated && !isEditing && (
+                {isAuthenticated && !isEditing && !isDeleted && (
                     <div className="flex items-center gap-2">
                         <button
                             onClick={() => setShowReply(v => !v)}
