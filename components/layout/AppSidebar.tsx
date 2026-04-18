@@ -40,14 +40,14 @@ export const AppSidebar = ({ username, userName, userImage }: Props) => {
             {/* Logo */}
             <Link href="/home" className="mb-6 flex items-center gap-3 px-2 py-1 justify-center xl:justify-start">
                 <Image
-                    src="/logo_light.png"
+                    src="/logo_light.svg"
                     alt="Kosmo"
                     width={32}
                     height={32}
                     className="size-8 dark:hidden"
                 />
                 <Image
-                    src="/logo_dark.png"
+                    src="/logo_dark.svg"
                     alt="Kosmo"
                     width={32}
                     height={32}
