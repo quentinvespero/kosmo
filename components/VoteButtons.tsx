@@ -59,7 +59,7 @@ export const VoteButtons = ({ score, currentUserVote, onVote }: VoteButtonsProps
             <Button
                 variant="ghost"
                 size="icon"
-                className={`h-7 w-7 ${voteState.currentUserVote === "UP" ? "text-orange-500" : ""}`}
+                className={`h-7 w-7 ${voteState.currentUserVote === "UP" ? "text-vote-up" : ""}`}
                 onClick={() => handleVote("UP")}
                 disabled={isPending}
                 aria-label="Upvote"
@@ -72,7 +72,7 @@ export const VoteButtons = ({ score, currentUserVote, onVote }: VoteButtonsProps
             <Button
                 variant="ghost"
                 size="icon"
-                className={`h-7 w-7 ${voteState.currentUserVote === "DOWN" ? "text-blue-500" : ""}`}
+                className={`h-7 w-7 ${voteState.currentUserVote === "DOWN" ? "text-vote-down" : ""}`}
                 onClick={() => handleVote("DOWN")}
                 disabled={isPending}
                 aria-label="Downvote"
