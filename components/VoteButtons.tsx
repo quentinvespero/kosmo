@@ -15,9 +15,9 @@ interface VoteButtonsProps {
 type VoteType = "UP" | "DOWN"
 
 // Static strings so Tailwind's scanner always includes these classes in the CSS bundle
-const activeClass: Record<VoteType, string> = {
-    UP: "bg-orange-500 hover:bg-orange-500 text-white",
-    DOWN: "bg-blue-500 hover:bg-blue-500 text-white",
+const containerActiveClass: Record<VoteType, string> = {
+    UP: "bg-vote-up text-white",
+    DOWN: "bg-vote-down text-white",
 }
 
 const computeNewState = (
@@ -61,11 +61,17 @@ export const VoteButtons = ({ score, currentUserVote, onVote }: VoteButtonsProps
     }
 
     return (
-        <div className="flex items-center gap-1 shrink-0">
+        <div className={`
+            inline-flex items-center gap-1 shrink-0 rounded-full px-1 py-1 transition-all
+            ${voteState.currentUserVote
+                ? `${containerActiveClass[voteState.currentUserVote]} hover:brightness-110`
+                : "bg-muted/60"
+            }
+        `}>
             <Button
                 variant="ghost"
                 size="icon"
-                className={`h-7 w-7 rounded-full ${voteState.currentUserVote === "UP" ? "text-vote-up" : ""}`}
+                className={`h-5 w-5 rounded-full ${voteState.currentUserVote ? "hover:bg-white/20 hover:text-white" : ""} ${voteState.currentUserVote === 'UP' ? 'bg-neutral-600/40' : ''}`}
                 onClick={() => handleVote("UP")}
                 disabled={isPending}
                 aria-label="Upvote"
@@ -78,7 +84,7 @@ export const VoteButtons = ({ score, currentUserVote, onVote }: VoteButtonsProps
             <Button
                 variant="ghost"
                 size="icon"
-                className={`h-7 w-7 rounded-full ${voteState.currentUserVote === "DOWN" ? "text-vote-down" : ""}`}
+                className={`h-5 w-5 rounded-full ${voteState.currentUserVote ? "hover:bg-white/20 hover:text-white" : ""} ${voteState.currentUserVote === 'DOWN' ? 'bg-neutral-600/40' : ''}`}
                 onClick={() => handleVote("DOWN")}
                 disabled={isPending}
                 aria-label="Downvote"

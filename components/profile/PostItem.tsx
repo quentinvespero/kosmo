@@ -101,7 +101,7 @@ export const PostItem = ({ post, isOwnProfile, isOwner, author, voteData, contex
                 )}
 
                 {/* Footer: votes + comments — elevated above the stretch-link overlay */}
-                <div className="relative z-10 inline-flex items-center gap-3 text-sm text-muted-foreground bg-muted/60 rounded-full px-3 py-[.2rem]">
+                <div className="relative z-10 inline-flex items-center gap-2 text-sm text-muted-foreground">
                     {voteData ? (
                         <PostVoteButtons
                             postId={post.id}
@@ -109,12 +109,12 @@ export const PostItem = ({ post, isOwnProfile, isOwner, author, voteData, contex
                             currentUserVote={voteData.currentUserVote}
                         />
                     ) : (
-                        <span className="flex items-center gap-1">
+                        <span className="inline-flex items-center gap-1 h-8 px-3 bg-muted/60 rounded-full">
                             <ThumbsUp size={14} />
                             {post._count.votes}
                         </span>
                     )}
-                    <span className="flex items-center gap-1">
+                    <span className="inline-flex items-center gap-1 h-8 px-3 bg-muted/60 rounded-full">
                         <MessageSquare size={14} />
                         {post._count.comments}
                     </span>
