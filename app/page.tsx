@@ -10,6 +10,29 @@ const LandingPage = async () => {
     if (session) redirect('/home')
 
     return (
+        <>
+        <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+            <div
+                className="orb w-[600px] h-[600px]"
+                style={{
+                    top: "calc(45% - 300px)",
+                    left: "calc(35% - 300px)",
+                    background: "radial-gradient(circle, var(--orb-1), transparent 70%)",
+                    animationName: "orbFloat1",
+                    animationDuration: "18s",
+                }}
+            />
+            <div
+                className="orb w-[500px] h-[500px]"
+                style={{
+                    top: "calc(50% - 250px)",
+                    left: "calc(60% - 250px)",
+                    background: "radial-gradient(circle, var(--orb-2), transparent 70%)",
+                    animationName: "orbFloat2",
+                    animationDuration: "10s",
+                }}
+            />
+        </div>
         <div className="min-h-dvh flex flex-col items-center px-4">
             <div className="flex flex-col items-center text-center w-full max-w-sm flex-1 justify-center">
 
@@ -65,6 +88,7 @@ const LandingPage = async () => {
                 </Link>
             </div>
         </div>
+        </>
     )
 }
 

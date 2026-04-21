@@ -152,6 +152,44 @@
     box-shadow: 0 0 10px var(--foreground), 0 0 5px var(--foreground) !important;
 }
 
+/* Orb background colors — orange matches upvote, blue matches downvote */
+:root {
+    --orb-1: oklch(0.75 0.13 47 / 50%);
+    --orb-2: oklch(0.65 0.19 250 / 72%);
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --orb-1: oklch(0.65 0.18 47 / 62%);
+        --orb-2: oklch(0.55 0.24 250 / 82%);
+    }
+}
+
+@keyframes orbFloat1 {
+    0%   { transform: translate(0, 0) scale(1); opacity: 1; }
+    25%  { transform: translate(120px, -150px) scale(1.08); opacity: 0.35; }
+    50%  { transform: translate(-80px, 100px) scale(0.94); opacity: 0.85; }
+    75%  { transform: translate(60px, 60px) scale(1.04); opacity: 0.25; }
+    100% { transform: translate(0, 0) scale(1); opacity: 1; }
+}
+@keyframes orbFloat2 {
+    0%   { transform: translate(0, 0) scale(1); opacity: 0.9; }
+    30%  { transform: translate(-130px, 110px) scale(1.06); opacity: 0.3; }
+    60%  { transform: translate(90px, -80px) scale(0.95); opacity: 1; }
+    80%  { transform: translate(-50px, -60px) scale(1.03); opacity: 0.4; }
+    100% { transform: translate(0, 0) scale(1); opacity: 0.9; }
+}
+
+.orb {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(80px);
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+    .orb { animation: none !important; }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
