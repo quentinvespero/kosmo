@@ -14,6 +14,12 @@ interface VoteButtonsProps {
 
 type VoteType = "UP" | "DOWN"
 
+// Static strings so Tailwind's scanner always includes these classes in the CSS bundle
+const activeClass: Record<VoteType, string> = {
+    UP: "bg-orange-500 hover:bg-orange-500 text-white",
+    DOWN: "bg-blue-500 hover:bg-blue-500 text-white",
+}
+
 const computeNewState = (
     prev: { score: number; currentUserVote: VoteType | null },
     clicked: VoteType
@@ -59,7 +65,7 @@ export const VoteButtons = ({ score, currentUserVote, onVote }: VoteButtonsProps
             <Button
                 variant="ghost"
                 size="icon"
-                className={`h-7 w-7 ${voteState.currentUserVote === "UP" ? "text-orange-500" : ""}`}
+                className={`h-7 w-7 rounded-full ${voteState.currentUserVote === "UP" ? activeClass.UP : ""}`}
                 onClick={() => handleVote("UP")}
                 disabled={isPending}
                 aria-label="Upvote"
@@ -72,7 +78,7 @@ export const VoteButtons = ({ score, currentUserVote, onVote }: VoteButtonsProps
             <Button
                 variant="ghost"
                 size="icon"
-                className={`h-7 w-7 ${voteState.currentUserVote === "DOWN" ? "text-blue-500" : ""}`}
+                className={`h-7 w-7 rounded-full ${voteState.currentUserVote === "DOWN" ? activeClass.DOWN : ""}`}
                 onClick={() => handleVote("DOWN")}
                 disabled={isPending}
                 aria-label="Downvote"
