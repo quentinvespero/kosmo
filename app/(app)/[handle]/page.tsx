@@ -75,7 +75,7 @@ const ProfilePage = async ({ params }: Props) => {
             createdAt: true,
             authorId: true,
             isSubscribersOnly: true,
-            _count: { select: { comments: true, votes: true } },
+            _count: { select: { comments: true } },
             tags: { select: { name: true } },
             author: { select: { name: true, username: true, image: true } }
         },

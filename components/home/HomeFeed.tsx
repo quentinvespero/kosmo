@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth"
 import { headers } from "next/headers"
 import prisma from "@/lib/prisma"
-import { PostItem } from "@/components/profile/PostItem"
+import { PostItem } from "@/components/post/PostItem"
 
 // Temporary feed: shows recent public posts from public profiles.
 // Will be replaced by a proper followed-users feed once the follow system is complete.
@@ -28,7 +28,7 @@ const HomeFeed = async () => {
             createdAt: true,
             authorId: true,
             isSubscribersOnly: true,
-            _count: { select: { comments: true, votes: true } },
+            _count: { select: { comments: true } },
             tags: { select: { name: true } },
             author: { select: { name: true, username: true, image: true } }
         },

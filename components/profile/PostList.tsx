@@ -1,4 +1,4 @@
-import { PostItem } from "./PostItem"
+import { PostItem } from "@/components/post/PostItem"
 import prisma from "@/lib/prisma"
 
 type Post = {
@@ -7,7 +7,7 @@ type Post = {
     createdAt: Date
     authorId: string
     isSubscribersOnly: boolean
-    _count: { comments: number; votes: number }
+    _count: { comments: number }
     tags: { name: string }[]
     author: { name: string; username: string | null; image: string | null }
 }
