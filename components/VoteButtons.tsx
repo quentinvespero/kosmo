@@ -71,12 +71,12 @@ export const VoteButtons = ({ score, currentUserVote, onVote }: VoteButtonsProps
             <Button
                 variant="ghost"
                 size="icon"
-                className={`h-5 w-5 rounded-full ${voteState.currentUserVote ? "hover:bg-white/20 hover:text-white" : ""} ${voteState.currentUserVote === 'UP' ? 'bg-neutral-600/40' : ''}`}
+                className={`h-6 w-6 rounded-full ${voteState.currentUserVote ? "hover:bg-white/20 hover:text-white" : ""} ${voteState.currentUserVote === 'UP' ? 'bg-neutral-600/30' : ''}`}
                 onClick={() => handleVote("UP")}
                 disabled={isPending}
                 aria-label="Upvote"
             >
-                <ChevronUp className="h-4 w-4" />
+                <ChevronUp className="h-5 w-5" />
             </Button>
             <span className="text-sm font-medium tabular-nums w-6 text-center">
                 {voteState.score}
@@ -84,12 +84,12 @@ export const VoteButtons = ({ score, currentUserVote, onVote }: VoteButtonsProps
             <Button
                 variant="ghost"
                 size="icon"
-                className={`h-5 w-5 rounded-full ${voteState.currentUserVote ? "hover:bg-white/20 hover:text-white" : ""} ${voteState.currentUserVote === 'DOWN' ? 'bg-neutral-600/40' : ''}`}
+                className={`h-6 w-6 rounded-full ${voteState.currentUserVote ? "hover:bg-white/20 hover:text-white" : ""} ${voteState.currentUserVote === 'DOWN' ? 'bg-neutral-600/30' : ''}`}
                 onClick={() => handleVote("DOWN")}
                 disabled={isPending}
                 aria-label="Downvote"
             >
-                <ChevronDown className="h-4 w-4" />
+                <ChevronDown className="h-5 w-5" />
             </Button>
         </div>
     )

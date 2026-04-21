@@ -107,7 +107,7 @@ export const PostItem = ({ post, isOwnProfile, isOwner, author, voteData, contex
                         score={voteData!.score}
                         currentUserVote={voteData!.currentUserVote}
                     />
-                    <span className="inline-flex items-center gap-1 h-7 px-3 bg-muted/60 rounded-full">
+                    <span className="inline-flex items-center gap-1 h-8 px-3 bg-muted/60 rounded-full">
                         <MessageSquare size={14} />
                         {post._count.comments}
                     </span>
