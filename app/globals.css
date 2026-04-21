@@ -31,6 +31,8 @@
 /* @custom-variant dark (&:is(.dark *)); */
 
 @theme inline {
+  --color-vote-up: var(--vote-up);
+  --color-vote-down: var(--vote-down);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
@@ -74,6 +76,8 @@
 }
 
 :root {
+  --vote-up: oklch(54.668% 0.20527 6.037);
+  --vote-down: oklch(80.992% 0.09809 252.684);
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -150,6 +154,44 @@
 }
 #nprogress .peg {
     box-shadow: 0 0 10px var(--foreground), 0 0 5px var(--foreground) !important;
+}
+
+/* Orb colors derived from vote button colors — change --vote-up/--vote-down to update both */
+:root {
+    --orb-1: oklch(from var(--vote-up) l c h / 50%);
+    --orb-2: oklch(from var(--vote-down) l c h / 72%);
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --orb-1: oklch(from var(--vote-up) calc(l - 0.05) calc(c + 0.05) h / 62%);
+        --orb-2: oklch(from var(--vote-down) calc(l - 0.05) calc(c + 0.05) h / 82%);
+    }
+}
+
+@keyframes orbFloat1 {
+    0%   { transform: translate(0, 0) scale(1); opacity: 1; }
+    25%  { transform: translate(120px, -150px) scale(1.08); opacity: 0.35; }
+    50%  { transform: translate(-80px, 100px) scale(0.94); opacity: 0.85; }
+    75%  { transform: translate(60px, 60px) scale(1.04); opacity: 0.25; }
+    100% { transform: translate(0, 0) scale(1); opacity: 1; }
+}
+@keyframes orbFloat2 {
+    0%   { transform: translate(0, 0) scale(1); opacity: 0.9; }
+    30%  { transform: translate(-130px, 110px) scale(1.06); opacity: 0.3; }
+    60%  { transform: translate(90px, -80px) scale(0.95); opacity: 1; }
+    80%  { transform: translate(-50px, -60px) scale(1.03); opacity: 0.4; }
+    100% { transform: translate(0, 0) scale(1); opacity: 0.9; }
+}
+
+.orb {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(80px);
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+    .orb { animation: none !important; }
 }
 
 @layer base {
