@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Download } from "lucide-react"
 import { toast } from "sonner"
-import { exportUserData, EXPORT_COOLDOWN_MS } from "@/lib/actions/settings"
+import { EXPORT_COOLDOWN_MS } from "@/lib/constants"
 
 interface Props {
     lastExportedAt?: string | null
@@ -15,19 +15,21 @@ export const ExportDataButton = ({ lastExportedAt }: Props) => {
     const [exportedAt, setExportedAt] = useState(lastExportedAt)
     const [now, setNow] = useState(() => Date.now())
 
-    // Tick every minute while cooldown is active so the label stays accurate
     useEffect(() => {
         if (!exportedAt) return
         const endMs = new Date(exportedAt).getTime() + EXPORT_COOLDOWN_MS
-        if (endMs <= Date.now()) return
+        const msUntilEnd = endMs - Date.now()
+        if (msUntilEnd <= 0) return
 
-        const interval = setInterval(() => {
-            const current = Date.now()
-            setNow(current)
-            if (current >= endMs) clearInterval(interval)
-        }, 60_000)
+        // Update the countdown label every minute
+        const interval = setInterval(() => setNow(Date.now()), 60_000)
+        // Re-enable the button exactly when the cooldown expires
+        const timeout = setTimeout(() => setNow(Date.now()), msUntilEnd)
 
-        return () => clearInterval(interval)
+        return () => {
+            clearInterval(interval)
+            clearTimeout(timeout)
+        }
     }, [exportedAt])
 
     const { isOnCooldown, minutesLeft, formattedDate } = useMemo(() => {
@@ -36,7 +38,7 @@ export const ExportDataButton = ({ lastExportedAt }: Props) => {
         const msLeft = exportedAtMs + EXPORT_COOLDOWN_MS - now
         return {
             isOnCooldown: msLeft > 0,
-            minutesLeft: Math.max(1, Math.ceil(msLeft / 60000)),
+            minutesLeft: Math.ceil(msLeft / 60000),
             formattedDate: new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(exportedAt)),
         }
     }, [exportedAt, now])
@@ -47,21 +49,23 @@ export const ExportDataButton = ({ lastExportedAt }: Props) => {
         setLoading(true)
 
         try {
-            const result = await exportUserData()
+            const response = await fetch('/api/export-data')
 
-            if ('error' in result) {
-                toast.error(result.error, { id: toastId })
+            if (!response.ok) {
+                const body = await response.json()
+                if (response.status === 429 && body.lastExportedAt) setExportedAt(body.lastExportedAt)
+                toast.error(body.error ?? 'Failed to export data. Please try again.', { id: toastId })
                 return
             }
 
-            const json = JSON.stringify(result.data, null, 2)
-            const blob = new Blob([json], { type: 'application/json' })
+            const blob = await response.blob()
             const url = URL.createObjectURL(blob)
-            const date = new Date().toISOString().split('T')[0]
+            // Filename comes from the server's Content-Disposition header
+            const filename = response.headers.get('Content-Disposition')?.match(/filename="(.+)"/)?.[1] ?? 'kosmo-data-export.json'
 
             const a = document.createElement('a')
             a.href = url
-            a.download = `kosmo-data-export-${date}.json`
+            a.download = filename
             document.body.appendChild(a)
             a.click()
             document.body.removeChild(a)
