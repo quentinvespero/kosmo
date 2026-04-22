@@ -7,19 +7,20 @@ datasource db {
 }
 
 model User {
-  id              String           @id
-  name            String
-  email           String
-  emailVerified   Boolean          @default(false)
-  image           String?
-  username        String?          @unique
-  bio             String?
-  isTeamMember    Boolean          @default(false)
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  userPreferences UserPreferences?
-  sessions        Session[]
-  accounts        Account[]
+  id               String           @id
+  name             String
+  email            String
+  emailVerified    Boolean          @default(false)
+  image            String?
+  username         String?          @unique
+  bio              String?
+  isTeamMember     Boolean          @default(false)
+  lastDataExportAt DateTime?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  userPreferences  UserPreferences?
+  sessions         Session[]
+  accounts         Account[]
 
   // Relations
   posts                Post[]

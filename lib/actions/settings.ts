@@ -63,6 +63,27 @@ export const updateUsername = async (data: unknown) => {
     return { success: true as const }
 }
 
+export const deleteAccount = async () => {
+    const session = await auth.api.getSession({ headers: await headers() })
+    if (!session) return { error: 'Unauthorized' as const }
+
+    // Communities use onDelete: SetNull — isOrphan must be set explicitly before the user row is deleted.
+    // Both ops are atomic: if the delete fails, communities are not left orphaned.
+    try {
+        await prisma.$transaction([
+            prisma.community.updateMany({
+                where: { ownerId: session.user.id },
+                data: { isOrphan: true }
+            }),
+            prisma.user.delete({ where: { id: session.user.id } })
+        ])
+    } catch {
+        return { error: 'Failed to delete account' as const }
+    }
+
+    return { success: true as const }
+}
+
 export const updatePrivacy = async (data: unknown) => {
     const session = await auth.api.getSession({ headers: await headers() })
     if (!session) return { error: 'Unauthorized' as const }

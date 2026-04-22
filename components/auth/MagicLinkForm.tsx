@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { signIn } from "@/lib/authClient"
 import { magicLinkSchema } from "@/lib/schemas/AuthSchemas"
 import { zodResolver } from "@hookform/resolvers/zod"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
@@ -81,6 +82,21 @@ export const MagicLinkForm = () => {
                     <Button type='submit' disabled={form.formState.isSubmitting || isPending}>
                         {form.formState.isSubmitting || isPending ? 'Sending...' : 'Send magic link'}
                     </Button>
+                    <p className="text-xs text-muted-foreground text-center">
+                        By continuing, you agree to our{" "}
+                        <Link href="/terms" className="underline underline-offset-2 hover:text-foreground">
+                            Terms of Service
+                        </Link>{" "}
+                        and acknowledge our{" "}
+                        <Link href="/privacy" className="underline underline-offset-2 hover:text-foreground">
+                            Privacy Policy
+                        </Link>
+                        {" "}·{" "}
+                        <Link href="/legal" className="underline underline-offset-2 hover:text-foreground">
+                            Legal Notice
+                        </Link>
+                        .
+                    </p>
                 </FieldGroup>
             </form>
         </Form>
