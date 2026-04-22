@@ -281,7 +281,7 @@ export const PostComposer = () => {
                                 {content?.length > 0 ? `${remaining} remaining` : ''}
                             </span>
 
-                            <Button type="submit" size="sm" disabled={isPending || !content?.trim()}>
+                            <Button type="submit" size="sm" variant="secondary" disabled={isPending || !content?.trim()}>
                                 Post
                                 <ShortcutKey variant="inline"><span className="text-base">⌘</span><span>ENTER</span></ShortcutKey>
                             </Button>
