@@ -91,6 +91,10 @@ export const MagicLinkForm = () => {
                         <Link href="/privacy" className="underline underline-offset-2 hover:text-foreground">
                             Privacy Policy
                         </Link>
+                        {" "}·{" "}
+                        <Link href="/legal" className="underline underline-offset-2 hover:text-foreground">
+                            Legal Notice
+                        </Link>
                         .
                     </p>
                 </FieldGroup>

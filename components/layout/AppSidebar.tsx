@@ -84,6 +84,8 @@ export const AppSidebar = ({ username, userName, userImage }: Props) => {
                 <Link href="/privacy" className="hover:text-foreground transition-colors py-0.5">Privacy</Link>
                 <span aria-hidden>·</span>
                 <Link href="/terms" className="hover:text-foreground transition-colors py-0.5">Terms</Link>
+                <span aria-hidden>·</span>
+                <Link href="/legal" className="hover:text-foreground transition-colors py-0.5">Legal</Link>
             </div>
 
             {/* User identity */}
