@@ -18,6 +18,13 @@
 - `lib/authClient.ts` — client-side methods (`signIn`, `signOut`, `useSession`)
 - `lib/schemas/AuthSchemas.ts` — Zod validation schemas
 
+## Account Deletion
+- Users can delete their account from `/settings/account`
+- Requires typing `DELETE` in a confirmation dialog
+- Server action: `deleteAccount()` in `lib/actions/settings.ts`
+- Before deleting the user row, all owned communities are marked `isOrphan: true` (their `ownerId` is set to null by the DB cascade)
+- All other user data is removed automatically via `onDelete: Cascade`: sessions, posts, comments, votes, drafts, follows, community memberships, etc.
+
 ## Models
 - `User` — core identity
 - `Session` — active sessions
