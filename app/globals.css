@@ -186,7 +186,7 @@
 .orb {
     position: absolute;
     border-radius: 9999px;
-    filter: blur(80px);
+    filter: blur(100px);
     animation-timing-function: ease-in-out;
     animation-iteration-count: infinite;
 }
