@@ -14,6 +14,11 @@ export const ExportDataButton = ({ lastExportedAt }: Props) => {
     const [loading, setLoading] = useState(false)
     const [exportedAt, setExportedAt] = useState(lastExportedAt)
     const [now, setNow] = useState(() => Date.now())
+    const [hasMounted, setHasMounted] = useState(false)
+
+    useEffect(() => {
+        setHasMounted(true)
+    }, [])
 
     useEffect(() => {
         if (!exportedAt) return
@@ -92,7 +97,7 @@ export const ExportDataButton = ({ lastExportedAt }: Props) => {
                 <Download className="size-4 mr-2" />
                 {buttonLabel}
             </Button>
-            {formattedDate && (
+            {hasMounted && formattedDate && (
                 <p className="text-xs text-muted-foreground">Last exported: {formattedDate}</p>
             )}
         </div>
