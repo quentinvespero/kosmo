@@ -44,10 +44,7 @@ next-env.d.ts
 generated/prisma
 
 # agent / llms
-.cursor/
+.claude
 
-# docs
-docs/.obsidian/*
-!docs/.obsidian/app.json
-!docs/.obsidian/appearance.json
-!docs/.obsidian/hotkeys.json
+# docs - keep only the obsidian config files
+docs/
