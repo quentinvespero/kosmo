@@ -46,5 +46,8 @@ generated/prisma
 # agent / llms
 .claude
 
-# docs - keep only the obsidian config files
-docs/
+# docs
+docs/.obsidian/*
+!docs/.obsidian/app.json
+!docs/.obsidian/appearance.json
+!docs/.obsidian/hotkeys.json
