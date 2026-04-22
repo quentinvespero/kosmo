@@ -19,8 +19,8 @@ export const metadata: Metadata = {
     description: "A social network combining features from X/Twitter and Reddit.",
     icons: {
         icon: [
-            { url: "/logo_light.png", media: "(prefers-color-scheme: light)" },
-            { url: "/logo_dark.png", media: "(prefers-color-scheme: dark)" },
+            { url: "/favicon_light.png", media: "(prefers-color-scheme: light)" },
+            { url: "/favicon_dark.png", media: "(prefers-color-scheme: dark)" },
         ],
     },
 }

@@ -44,7 +44,7 @@ next-env.d.ts
 generated/prisma
 
 # agent / llms
-.cursor/
+.claude
 
 # docs
 docs/.obsidian/*

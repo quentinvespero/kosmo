@@ -2,7 +2,7 @@ import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { formatDate, getInitials } from "@/lib/utils"
-import { MessageSquare, ThumbsUp } from "lucide-react"
+import { MessageSquare } from "lucide-react"
 import { PostVoteButtons } from "@/components/post/PostVoteButtons"
 import { PostActionsMenu } from "@/components/post/PostActionsMenu"
 
@@ -12,7 +12,7 @@ type Post = {
     createdAt: Date
     authorId: string
     isSubscribersOnly: boolean
-    _count: { comments: number; votes: number }
+    _count: { comments: number }
     tags: { name: string }[]
 }
 
@@ -87,8 +87,6 @@ export const PostItem = ({ post, isOwnProfile, isOwner, author, voteData, contex
                     )}
                 </div>
 
-                <p className="text-sm whitespace-pre-wrap break-words">{contentPreview}</p>
-
                 {/* Tags */}
                 {post.tags.length > 0 && (
                     <div className="flex flex-wrap gap-1">
@@ -100,21 +98,16 @@ export const PostItem = ({ post, isOwnProfile, isOwner, author, voteData, contex
                     </div>
                 )}
 
+                <p className="text-sm whitespace-pre-wrap break-words">{contentPreview}</p>
+
                 {/* Footer: votes + comments — elevated above the stretch-link overlay */}
-                <div className="relative z-10 inline-flex items-center gap-3 text-sm text-muted-foreground bg-muted/60 rounded-full px-3 py-[.2rem]">
-                    {voteData ? (
-                        <PostVoteButtons
-                            postId={post.id}
-                            score={voteData.score}
-                            currentUserVote={voteData.currentUserVote}
-                        />
-                    ) : (
-                        <span className="flex items-center gap-1">
-                            <ThumbsUp size={14} />
-                            {post._count.votes}
-                        </span>
-                    )}
-                    <span className="flex items-center gap-1">
+                <div className="relative z-10 inline-flex items-center gap-2 text-sm text-muted-foreground">
+                    <PostVoteButtons
+                        postId={post.id}
+                        score={voteData!.score}
+                        currentUserVote={voteData!.currentUserVote}
+                    />
+                    <span className="inline-flex items-center gap-1 h-8 px-3 bg-muted/60 rounded-full">
                         <MessageSquare size={14} />
                         {post._count.comments}
                     </span>

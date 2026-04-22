@@ -14,6 +14,12 @@ interface VoteButtonsProps {
 
 type VoteType = "UP" | "DOWN"
 
+// Static strings so Tailwind's scanner always includes these classes in the CSS bundle
+const containerActiveClass: Record<VoteType, string> = {
+    UP: "bg-vote-up text-white",
+    DOWN: "bg-vote-down text-white",
+}
+
 const computeNewState = (
     prev: { score: number; currentUserVote: VoteType | null },
     clicked: VoteType
@@ -55,16 +61,22 @@ export const VoteButtons = ({ score, currentUserVote, onVote }: VoteButtonsProps
     }
 
     return (
-        <div className="flex items-center gap-1 shrink-0">
+        <div className={`
+            inline-flex items-center gap-1 shrink-0 rounded-full px-1 py-1 transition-all
+            ${voteState.currentUserVote
+                ? `${containerActiveClass[voteState.currentUserVote]} hover:brightness-110`
+                : "bg-muted/60"
+            }
+        `}>
             <Button
                 variant="ghost"
                 size="icon"
-                className={`h-7 w-7 ${voteState.currentUserVote === "UP" ? "text-orange-500" : ""}`}
+                className={`h-6 w-6 rounded-full ${voteState.currentUserVote ? "hover:bg-white/20 hover:text-white" : ""} ${voteState.currentUserVote === 'UP' ? 'bg-neutral-600/30' : ''}`}
                 onClick={() => handleVote("UP")}
                 disabled={isPending}
                 aria-label="Upvote"
             >
-                <ChevronUp className="h-4 w-4" />
+                <ChevronUp className="h-5 w-5" />
             </Button>
             <span className="text-sm font-medium tabular-nums w-6 text-center">
                 {voteState.score}
@@ -72,12 +84,12 @@ export const VoteButtons = ({ score, currentUserVote, onVote }: VoteButtonsProps
             <Button
                 variant="ghost"
                 size="icon"
-                className={`h-7 w-7 ${voteState.currentUserVote === "DOWN" ? "text-blue-500" : ""}`}
+                className={`h-6 w-6 rounded-full ${voteState.currentUserVote ? "hover:bg-white/20 hover:text-white" : ""} ${voteState.currentUserVote === 'DOWN' ? 'bg-neutral-600/30' : ''}`}
                 onClick={() => handleVote("DOWN")}
                 disabled={isPending}
                 aria-label="Downvote"
             >
-                <ChevronDown className="h-4 w-4" />
+                <ChevronDown className="h-5 w-5" />
             </Button>
         </div>
     )

@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useTransition } from "react"
+import { useTransition, type KeyboardEvent } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { createCommentSchema, type CreateCommentInput } from "@/lib/schemas/PostSchemas"
@@ -10,6 +10,7 @@ import { createComment } from "@/lib/actions/post"
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
+import { ShortcutKey } from "@/components/ui/shortcut-key"
 
 interface Props {
     postId: string
@@ -59,6 +60,12 @@ export const CommentComposer = ({ postId, parentCommentId, onSuccess }: Props) =
                                     className="resize-none min-h-16"
                                     maxLength={2000}
                                     {...field}
+                                    onKeyDown={(e: KeyboardEvent<HTMLTextAreaElement>) => {
+                                        if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+                                            e.preventDefault()
+                                            form.handleSubmit(onSubmit)()
+                                        }
+                                    }}
                                 />
                             </FormControl>
                             <FormMessage />
@@ -69,8 +76,9 @@ export const CommentComposer = ({ postId, parentCommentId, onSuccess }: Props) =
                     <span className={`text-xs ${remaining < 100 ? 'text-destructive' : 'text-muted-foreground'}`}>
                         {content?.length > 0 ? `${remaining} remaining` : ''}
                     </span>
-                    <Button type="submit" size="sm" disabled={isPending || !content?.trim()}>
+                    <Button type="submit" size="sm" variant="secondary" disabled={isPending || !content?.trim()}>
                         Post
+                        <ShortcutKey variant="inline"><span className="text-base">⌘</span><span>ENTER</span></ShortcutKey>
                     </Button>
                 </div>
             </form>
