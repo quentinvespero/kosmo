@@ -87,8 +87,6 @@ export const PostItem = ({ post, isOwnProfile, isOwner, author, voteData, contex
                     )}
                 </div>
 
-                <p className="text-sm whitespace-pre-wrap break-words">{contentPreview}</p>
-
                 {/* Tags */}
                 {post.tags.length > 0 && (
                     <div className="flex flex-wrap gap-1">
@@ -99,6 +97,8 @@ export const PostItem = ({ post, isOwnProfile, isOwner, author, voteData, contex
                         ))}
                     </div>
                 )}
+
+                <p className="text-sm whitespace-pre-wrap break-words">{contentPreview}</p>
 
                 {/* Footer: votes + comments — elevated above the stretch-link overlay */}
                 <div className="relative z-10 inline-flex items-center gap-2 text-sm text-muted-foreground">
