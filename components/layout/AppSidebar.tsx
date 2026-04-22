@@ -20,10 +20,10 @@ export const AppSidebar = ({ username, userName, userImage }: Props) => {
     const pathname = usePathname()
 
     const navItems = [
-        { label: 'Home',     href: '/home',        icon: Home,          shortcut: 'h' },
-        { label: 'Profile',  href: `/${username}`, icon: User,          shortcut: 'p' },
-        { label: 'Settings', href: '/settings',    icon: Settings,      shortcut: 's' },
-        { label: 'Feedback', href: '/feedback',    icon: MessageSquare, shortcut: 'f' },
+        { label: 'Home', href: '/home', icon: Home, shortcut: 'h' },
+        { label: 'Profile', href: `/${username}`, icon: User, shortcut: 'p' },
+        { label: 'Settings', href: '/settings', icon: Settings, shortcut: 's' },
+        { label: 'Feedback', href: '/feedback', icon: MessageSquare, shortcut: 'f' },
     ]
 
     // Global nav shortcuts
@@ -78,6 +78,13 @@ export const AppSidebar = ({ username, userName, userImage }: Props) => {
                     </Link>
                 ))}
             </nav>
+
+            {/* Legal links */}
+            <div className="hidden xl:flex flex-row self-center items-center gap-2 px-2 pb-1 text-xs text-muted-foreground">
+                <Link href="/privacy" className="hover:text-foreground transition-colors py-0.5">Privacy</Link>
+                <span aria-hidden>·</span>
+                <Link href="/terms" className="hover:text-foreground transition-colors py-0.5">Terms</Link>
+            </div>
 
             {/* User identity */}
             <div className="flex items-center gap-3 px-2 py-2 justify-center xl:justify-start">
