@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useState, useEffect } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { formatDate } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { PostVoteButtons } from "@/components/post/PostVoteButtons"
@@ -26,7 +26,14 @@ type Props = {
 
 export const PostDetailClient = ({ post, isOwner, isOwnProfile, postScore, currentUserVote }: Props) => {
     const router = useRouter()
-    const [isEditing, setIsEditing] = useState(false)
+    const searchParams = useSearchParams()
+    const [isEditing, setIsEditing] = useState(() => searchParams.get('edit') === 'true')
+
+    useEffect(() => {
+        if (searchParams.get('edit') === 'true') {
+            window.history.replaceState(null, '', `/${post.author.username}/${post.id}`)
+        }
+    }, [])
 
     return (
         <article className="space-y-3">
