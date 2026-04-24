@@ -2,7 +2,6 @@
 
 import { type MouseEventHandler } from "react"
 import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
 import { ShortcutKey } from "@/components/ui/shortcut-key"
 import {
     DropdownMenu,
@@ -51,10 +50,7 @@ export const ComposerToolbar = ({
     ].filter(Boolean) as { icon: React.ReactNode; label: string; title: string }[]
 
     return (
-        <>
-            <Separator />
-
-            <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1">
                     {/* Tag button — stays inline, never collapsed into the dropdown */}
                     {showTags && (
@@ -113,7 +109,6 @@ export const ComposerToolbar = ({
                         <ShortcutKey variant="inline"><span className="text-base">⌘</span><span>ENTER</span></ShortcutKey>
                     </Button>
                 </div>
-            </div>
-        </>
+        </div>
     )
 }

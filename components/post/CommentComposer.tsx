@@ -57,7 +57,7 @@ export const CommentComposer = ({ postId, parentCommentId, onSuccess }: Props) =
                                 <FormControl>
                                     <Textarea
                                         placeholder="Add a comment..."
-                                        className="border-0 shadow-none resize-none min-h-16 focus-visible:ring-0"
+                                        className="border-0 shadow-none resize-none min-h-16 focus-visible:ring-0 bg-input/30"
                                         maxLength={2000}
                                         {...field}
                                         onKeyDown={(e: KeyboardEvent<HTMLTextAreaElement>) => {

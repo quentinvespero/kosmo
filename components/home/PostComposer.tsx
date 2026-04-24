@@ -145,7 +145,7 @@ export const PostComposer = () => {
                                     <div className="relative">
                                         <Textarea
                                             placeholder="What's on your mind?"
-                                            className="border-0 shadow-none resize-none min-h-20 focus-visible:ring-0"
+                                            className="border-0 shadow-none resize-none min-h-20 focus-visible:ring-0 bg-input/30"
                                             {...field}
                                             onFocus={() => setIsFocused(true)}
                                             onBlur={(e) => {
