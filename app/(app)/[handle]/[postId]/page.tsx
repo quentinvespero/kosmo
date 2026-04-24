@@ -202,8 +202,6 @@ const PostDetailPage = async ({ params }: Props) => {
                     : <p className="text-sm text-muted-foreground">Sign in to comment.</p>
                 }
 
-                <Separator />
-
                 <CommentList
                     comments={commentProps}
                     isAuthenticated={isAuthenticated}
