@@ -59,13 +59,18 @@ export const PostDetailClient = ({ post, isOwner, isOwnProfile, postScore, curre
             </div>
 
             {/* Date + badges */}
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <div className="flex items-center flex-wrap gap-2 text-sm text-muted-foreground">
                 <span>{formatDate(post.createdAt)}</span>
                 {isOwnProfile && post.isSubscribersOnly && (
                     <Badge variant="secondary" className="text-xs py-0">
                         Subscribers only
                     </Badge>
                 )}
+                {post.tags.map(tag => (
+                    <Badge key={tag.name} variant="secondary" className="text-xs py-0">
+                        {tag.name}
+                    </Badge>
+                ))}
             </div>
 
             {isEditing ? (
@@ -80,16 +85,6 @@ export const PostDetailClient = ({ post, isOwner, isOwnProfile, postScore, curre
                     {post.title && <h1 className="text-lg font-semibold">{post.title}</h1>}
 
                     <p className="text-sm whitespace-pre-wrap">{post.content}</p>
-
-                    {post.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-1">
-                            {post.tags.map(tag => (
-                                <Badge key={tag.name} variant="secondary" className="text-xs">
-                                    {tag.name}
-                                </Badge>
-                            ))}
-                        </div>
-                    )}
 
                     <PostVoteButtons
                         postId={post.id}
