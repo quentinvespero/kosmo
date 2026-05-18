@@ -30,7 +30,7 @@ type Props = {
     // If provided, clicking Edit triggers this callback (inline edit on detail page).
     // If omitted, clicking Edit navigates to the post detail page.
     onEditClick?: () => void
-    // Controls context-specific behavior: 'home' hides Edit and stays on page after delete.
+    // Controls post-delete behavior: 'home' refreshes in place, 'profile' navigates back to profile.
     context?: 'home' | 'profile'
 }
 
@@ -42,7 +42,7 @@ export const PostActionsMenu = ({ postId, authorUsername, onEditClick, context =
         if (onEditClick) {
             onEditClick()
         } else {
-            router.push(`/${authorUsername}/${postId}`)
+            router.push(`/${authorUsername}/${postId}?edit=true`)
         }
     }
 
@@ -74,11 +74,9 @@ export const PostActionsMenu = ({ postId, authorUsername, onEditClick, context =
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                    {context !== 'home' && (
-                        <DropdownMenuItem onClick={handleEdit}>
-                            Edit
-                        </DropdownMenuItem>
-                    )}
+                    <DropdownMenuItem onClick={handleEdit}>
+                        Edit
+                    </DropdownMenuItem>
                     {/* Wrap delete in AlertDialogTrigger inside the dropdown */}
                     <AlertDialogTrigger asChild>
                         <DropdownMenuItem

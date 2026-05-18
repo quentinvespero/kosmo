@@ -8,18 +8,11 @@ import { createPostSchema, CreatePostInput, normalizeTag } from "@/lib/schemas/P
 import { createPost } from "@/lib/actions/post"
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
 import { Textarea } from "@/components/ui/textarea"
-import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
 import { ShortcutKey } from "@/components/ui/shortcut-key"
 import { useKeyboardShortcut } from "@/hooks/useKeyboardShortcut"
-import { Tag as TagIcon, X, ImageIcon, Link, BarChart2, Plus } from "lucide-react"
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { X } from "lucide-react"
+import { ComposerToolbar } from "@/components/composer/ComposerToolbar"
 
 export const PostComposer = () => {
     const [isPending, startTransition] = useTransition()
@@ -152,7 +145,7 @@ export const PostComposer = () => {
                                     <div className="relative">
                                         <Textarea
                                             placeholder="What's on your mind?"
-                                            className="border-0 shadow-none resize-none min-h-20 focus-visible:ring-0"
+                                            className="border-0 shadow-none resize-none min-h-20 focus-visible:ring-0 bg-input/30"
                                             {...field}
                                             onFocus={() => setIsFocused(true)}
                                             onBlur={(e) => {
@@ -218,75 +211,17 @@ export const PostComposer = () => {
                         </div>
                     )}
 
-                    <Separator />
-
-                    {/* Toolbar */}
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-1">
-                            {/* Tag button — highlighted when the tag panel is open or tags exist */}
-                            <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon-sm"
-                                onMouseDown={handleTagButtonMouseDown}
-                                aria-label="Add tags"
-                                aria-pressed={showTagInput}
-                                className={showTagInput || tags.length > 0 ? 'text-primary' : 'text-muted-foreground'}
-                            >
-                                <TagIcon size={15} />
-                            </Button>
-
-                            {/* Coming-soon placeholders — shown individually on sm+ screens */}
-                            <div className="hidden sm:flex items-center gap-1">
-                                <Button type="button" variant="ghost" size="icon-sm" disabled title="Media — coming soon" className="text-muted-foreground opacity-50">
-                                    <ImageIcon size={15} />
-                                </Button>
-                                <Button type="button" variant="ghost" size="icon-sm" disabled title="Add link — coming soon" className="text-muted-foreground opacity-50">
-                                    <Link size={15} />
-                                </Button>
-                                <Button type="button" variant="ghost" size="icon-sm" disabled title="Poll — coming soon" className="text-muted-foreground opacity-50">
-                                    <BarChart2 size={15} />
-                                </Button>
-                            </div>
-
-                            {/* On mobile: collapse coming-soon icons into a single + button */}
-                            <div className="flex sm:hidden">
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button type="button" variant="ghost" size="icon-sm" className="text-muted-foreground" aria-label="More options">
-                                            <Plus size={15} />
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="start">
-                                        <DropdownMenuItem disabled>
-                                            <ImageIcon size={14} className="mr-2" />
-                                            Media — coming soon
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem disabled>
-                                            <Link size={14} className="mr-2" />
-                                            Link — coming soon
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem disabled>
-                                            <BarChart2 size={14} className="mr-2" />
-                                            Poll — coming soon
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </div>
-                        </div>
-
-                        <div className="flex items-center gap-3">
-                            {/* Character counter — only shown when content is non-empty */}
-                            <span className={`text-xs ${remaining < 100 ? 'text-destructive' : 'text-muted-foreground'}`}>
-                                {content?.length > 0 ? `${remaining} remaining` : ''}
-                            </span>
-
-                            <Button type="submit" size="sm" variant="secondary" disabled={isPending || !content?.trim()}>
-                                Post
-                                <ShortcutKey variant="inline"><span className="text-base">⌘</span><span>ENTER</span></ShortcutKey>
-                            </Button>
-                        </div>
-                    </div>
+                    <ComposerToolbar
+                        showTags
+                        showImage
+                        showLink
+                        showPoll
+                        tagActive={showTagInput || tags.length > 0}
+                        onTagButtonMouseDown={handleTagButtonMouseDown}
+                        remaining={remaining}
+                        maxLength={10000}
+                        submitDisabled={isPending || !content?.trim()}
+                    />
                 </form>
             </Form>
         </div>

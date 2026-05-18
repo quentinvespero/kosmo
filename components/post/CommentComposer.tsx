@@ -9,8 +9,7 @@ import { createCommentSchema, type CreateCommentInput } from "@/lib/schemas/Post
 import { createComment } from "@/lib/actions/post"
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
 import { Textarea } from "@/components/ui/textarea"
-import { Button } from "@/components/ui/button"
-import { ShortcutKey } from "@/components/ui/shortcut-key"
+import { ComposerToolbar } from "@/components/composer/ComposerToolbar"
 
 interface Props {
     postId: string
@@ -47,41 +46,41 @@ export const CommentComposer = ({ postId, parentCommentId, onSuccess }: Props) =
     }
 
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-                <FormField
-                    control={form.control}
-                    name="content"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormControl>
-                                <Textarea
-                                    placeholder="Add a comment..."
-                                    className="resize-none min-h-16"
-                                    maxLength={2000}
-                                    {...field}
-                                    onKeyDown={(e: KeyboardEvent<HTMLTextAreaElement>) => {
-                                        if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
-                                            e.preventDefault()
-                                            form.handleSubmit(onSubmit)()
-                                        }
-                                    }}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <div className="flex items-center justify-between">
-                    <span className={`text-xs ${remaining < 100 ? 'text-destructive' : 'text-muted-foreground'}`}>
-                        {content?.length > 0 ? `${remaining} remaining` : ''}
-                    </span>
-                    <Button type="submit" size="sm" variant="secondary" disabled={isPending || !content?.trim()}>
-                        Post
-                        <ShortcutKey variant="inline"><span className="text-base">⌘</span><span>ENTER</span></ShortcutKey>
-                    </Button>
-                </div>
-            </form>
-        </Form>
+        <div className="border rounded-xl p-4">
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+                    <FormField
+                        control={form.control}
+                        name="content"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormControl>
+                                    <Textarea
+                                        placeholder="Add a comment..."
+                                        className="border-0 shadow-none resize-none min-h-16 focus-visible:ring-0 bg-input/30"
+                                        maxLength={2000}
+                                        {...field}
+                                        onKeyDown={(e: KeyboardEvent<HTMLTextAreaElement>) => {
+                                            if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+                                                e.preventDefault()
+                                                form.handleSubmit(onSubmit)()
+                                            }
+                                        }}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <ComposerToolbar
+                        showImage
+                        showLink
+                        remaining={remaining}
+                        maxLength={2000}
+                        submitDisabled={isPending || !content?.trim()}
+                    />
+                </form>
+            </Form>
+        </div>
     )
 }
