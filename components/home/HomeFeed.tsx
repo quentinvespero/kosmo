@@ -56,7 +56,7 @@ const HomeFeed = async () => {
     postVotes.forEach(v => {
         const entry = voteDataMap.get(v.postId!)!
         entry.score += v.type === 'UP' ? 1 : -1
-        if (v.userId === currentUserId) entry.currentUserVote = v.type as 'UP' | 'DOWN'
+        if (currentUserId && v.userId === currentUserId) entry.currentUserVote = v.type as 'UP' | 'DOWN'
     })
 
     return (
@@ -68,8 +68,8 @@ const HomeFeed = async () => {
                     isOwnProfile={false}
                     isOwner={post.authorId === currentUserId}
                     author={post.author as { name: string; username: string; image: string | null }}
-                    // Only pass vote data (interactive buttons) for authenticated users
-                    voteData={currentUserId ? voteDataMap.get(post.id) : undefined}
+                    voteData={voteDataMap.get(post.id)!} // safe: map is pre-populated from the same postIds array
+                    isAuthenticated={!!currentUserId}
                     context="home"
                 />
             ))}

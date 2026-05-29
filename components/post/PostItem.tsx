@@ -21,11 +21,12 @@ type Props = {
     isOwnProfile: boolean
     isOwner: boolean
     author: { name: string; username: string | null; image: string | null }
-    voteData?: { score: number; currentUserVote: 'UP' | 'DOWN' | null }
+    voteData: { score: number; currentUserVote: 'UP' | 'DOWN' | null }
+    isAuthenticated: boolean
     context?: 'home' | 'profile'
 }
 
-export const PostItem = ({ post, isOwnProfile, isOwner, author, voteData, context = 'profile' }: Props) => {
+export const PostItem = ({ post, isOwnProfile, isOwner, author, voteData, isAuthenticated, context = 'profile' }: Props) => {
     // Truncate long posts
     const contentPreview = post.content.length > 280
         ? post.content.slice(0, 280) + '…'
@@ -104,8 +105,9 @@ export const PostItem = ({ post, isOwnProfile, isOwner, author, voteData, contex
                 <div className="relative z-10 inline-flex items-center gap-2 text-sm text-muted-foreground">
                     <PostVoteButtons
                         postId={post.id}
-                        score={voteData!.score}
-                        currentUserVote={voteData!.currentUserVote}
+                        score={voteData.score}
+                        currentUserVote={voteData.currentUserVote}
+                        disabled={!isAuthenticated}
                     />
                     <span className="inline-flex items-center gap-1 h-8 px-3 bg-muted/60 rounded-full">
                         <MessageSquare size={14} />

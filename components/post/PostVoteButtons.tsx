@@ -7,12 +7,14 @@ interface Props {
     postId: string
     score: number
     currentUserVote: "UP" | "DOWN" | null
+    disabled?: boolean
 }
 
-export const PostVoteButtons = ({ postId, score, currentUserVote }: Props) => (
+export const PostVoteButtons = ({ postId, score, currentUserVote, disabled }: Props) => (
     <VoteButtons
         score={score}
         currentUserVote={currentUserVote}
         onVote={(type) => votePost({ postId, type })}
+        disabled={disabled}
     />
 )
