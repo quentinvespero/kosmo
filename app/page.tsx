@@ -44,6 +44,7 @@ const LandingPage = async () => {
                     height={64}
                     style={{ height: 'auto' }}
                     className="dark:hidden mb-6"
+                    priority
                 />
                 <Image
                     src="/logo_dark.svg"
@@ -52,6 +53,7 @@ const LandingPage = async () => {
                     height={64}
                     style={{ height: 'auto' }}
                     className="hidden dark:block mb-6"
+                    priority
                 />
 
                 {/* Headline + description */}
