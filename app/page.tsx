@@ -13,7 +13,7 @@ const LandingPage = async () => {
         <>
         <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10 bg-neutral-250 dark:bg-neutral-800">
             <div
-                className="orb w-[600px] h-[600px]"
+                className="orb w-108 h-108"
                 style={{
                     top: "calc(45% - 300px)",
                     left: "calc(35% - 300px)",
@@ -23,7 +23,7 @@ const LandingPage = async () => {
                 }}
             />
             <div
-                className="orb w-[500px] h-[500px]"
+                className="orb w-140 h-140"
                 style={{
                     top: "calc(50% - 250px)",
                     left: "calc(60% - 250px)",
@@ -42,6 +42,7 @@ const LandingPage = async () => {
                     alt="Kosmo"
                     width={64}
                     height={64}
+                    style={{ height: 'auto' }}
                     className="dark:hidden mb-6"
                 />
                 <Image
@@ -49,6 +50,7 @@ const LandingPage = async () => {
                     alt="Kosmo"
                     width={64}
                     height={64}
+                    style={{ height: 'auto' }}
                     className="hidden dark:block mb-6"
                 />
 
