@@ -19,7 +19,7 @@ const LandingPage = async () => {
                     left: "calc(35% - 300px)",
                     background: "radial-gradient(circle, var(--orb-1), transparent 200%)",
                     animationName: "orbFloat1",
-                    animationDuration: "18s",
+                    animationDuration: "27s",
                 }}
             />
             <div
@@ -29,7 +29,7 @@ const LandingPage = async () => {
                     left: "calc(60% - 250px)",
                     background: "radial-gradient(circle, var(--orb-2), transparent 200%)",
                     animationName: "orbFloat2",
-                    animationDuration: "10s",
+                    animationDuration: "24s",
                 }}
             />
         </div>
