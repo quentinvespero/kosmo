@@ -88,7 +88,7 @@ const LandingPage = async () => {
                     href="/roadmap"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors bg-muted hover:bg-muted/70 px-6 py-[.4rem] rounded-full"
                 >
-                    See what we&apos;re building on the <span className="font-bold underline">roadmap</span> →
+                    See the planned features on the <span className="font-bold underline">roadmap</span> →
                 </Link>
             </div>
         </div>
