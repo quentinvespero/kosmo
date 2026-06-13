@@ -45,6 +45,7 @@ generated/prisma
 
 # agent / llms
 .claude
+/worktree/
 
 # docs
 docs/.obsidian/*
