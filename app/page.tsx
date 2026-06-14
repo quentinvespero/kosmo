@@ -13,23 +13,23 @@ const LandingPage = async () => {
         <>
         <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10 bg-neutral-250 dark:bg-neutral-800">
             <div
-                className="orb w-[600px] h-[600px]"
+                className="orb w-108 h-108"
                 style={{
                     top: "calc(45% - 300px)",
                     left: "calc(35% - 300px)",
                     background: "radial-gradient(circle, var(--orb-1), transparent 200%)",
                     animationName: "orbFloat1",
-                    animationDuration: "18s",
+                    animationDuration: "27s",
                 }}
             />
             <div
-                className="orb w-[500px] h-[500px]"
+                className="orb w-140 h-140"
                 style={{
                     top: "calc(50% - 250px)",
                     left: "calc(60% - 250px)",
                     background: "radial-gradient(circle, var(--orb-2), transparent 200%)",
                     animationName: "orbFloat2",
-                    animationDuration: "10s",
+                    animationDuration: "24s",
                 }}
             />
         </div>
@@ -42,14 +42,18 @@ const LandingPage = async () => {
                     alt="Kosmo"
                     width={64}
                     height={64}
+                    style={{ height: 'auto' }}
                     className="dark:hidden mb-6"
+                    priority
                 />
                 <Image
                     src="/logo_dark.svg"
                     alt="Kosmo"
                     width={64}
                     height={64}
+                    style={{ height: 'auto' }}
                     className="hidden dark:block mb-6"
+                    priority
                 />
 
                 {/* Headline + description */}
@@ -84,7 +88,7 @@ const LandingPage = async () => {
                     href="/roadmap"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors bg-muted hover:bg-muted/70 px-6 py-[.4rem] rounded-full"
                 >
-                    See what we&apos;re building on the <span className="font-bold underline">roadmap</span> →
+                    See the planned features on the <span className="font-bold underline">roadmap</span> →
                 </Link>
             </div>
         </div>

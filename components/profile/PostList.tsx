@@ -27,21 +27,19 @@ export const PostList = async ({ posts, isOwnProfile, currentUserId }: Props) =>
         )
     }
 
-    // Fetch vote data for interactive buttons (only for authenticated users)
+    // Fetch vote data for all posts (score is public; currentUserVote only set when authenticated)
+    const postIds = posts.map(p => p.id)
+    const postVotes = await prisma.vote.findMany({
+        where: { postId: { in: postIds } },
+        select: { postId: true, type: true, userId: true },
+    })
     const voteDataMap = new Map<string, { score: number; currentUserVote: 'UP' | 'DOWN' | null }>()
-    if (currentUserId) {
-        const postIds = posts.map(p => p.id)
-        const postVotes = await prisma.vote.findMany({
-            where: { postId: { in: postIds } },
-            select: { postId: true, type: true, userId: true },
-        })
-        postIds.forEach(id => voteDataMap.set(id, { score: 0, currentUserVote: null }))
-        postVotes.forEach(v => {
-            const entry = voteDataMap.get(v.postId!)!
-            entry.score += v.type === 'UP' ? 1 : -1
-            if (v.userId === currentUserId) entry.currentUserVote = v.type as 'UP' | 'DOWN'
-        })
-    }
+    postIds.forEach(id => voteDataMap.set(id, { score: 0, currentUserVote: null }))
+    postVotes.forEach(v => {
+        const entry = voteDataMap.get(v.postId!)!
+        entry.score += v.type === 'UP' ? 1 : -1
+        if (currentUserId && v.userId === currentUserId) entry.currentUserVote = v.type as 'UP' | 'DOWN'
+    })
 
     return (
         <div className="divide-y">
@@ -52,7 +50,8 @@ export const PostList = async ({ posts, isOwnProfile, currentUserId }: Props) =>
                     isOwnProfile={isOwnProfile}
                     isOwner={post.authorId === currentUserId}
                     author={post.author}
-                    voteData={currentUserId ? voteDataMap.get(post.id) : undefined}
+                    voteData={voteDataMap.get(post.id)!} // safe: map is pre-populated from the same postIds array
+                    isAuthenticated={!!currentUserId}
                 />
             ))}
         </div>

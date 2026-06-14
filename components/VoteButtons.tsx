@@ -10,6 +10,7 @@ interface VoteButtonsProps {
     currentUserVote: "UP" | "DOWN" | null
     // onVote resolves after the server action completes; error field signals failure
     onVote: (type: "UP" | "DOWN") => Promise<{ error: string } | { success: true }>
+    disabled?: boolean
 }
 
 type VoteType = "UP" | "DOWN"
@@ -39,7 +40,7 @@ const computeNewState = (
     }
 }
 
-export const VoteButtons = ({ score, currentUserVote, onVote }: VoteButtonsProps) => {
+export const VoteButtons = ({ score, currentUserVote, onVote, disabled = false }: VoteButtonsProps) => {
     // Initialized from props on first mount only — not affected by RSC re-renders mid-transition,
     // which is what caused the useOptimistic flicker bug
     const [voteState, setVoteState] = useState({ score, currentUserVote })
@@ -73,7 +74,7 @@ export const VoteButtons = ({ score, currentUserVote, onVote }: VoteButtonsProps
                 size="icon"
                 className={`h-6 w-6 rounded-full ${voteState.currentUserVote ? "hover:bg-white/20 hover:text-white" : ""} ${voteState.currentUserVote === 'UP' ? 'bg-neutral-600/30' : ''}`}
                 onClick={() => handleVote("UP")}
-                disabled={isPending}
+                disabled={isPending || disabled}
                 aria-label="Upvote"
             >
                 <ChevronUp className="h-5 w-5" />
@@ -86,7 +87,7 @@ export const VoteButtons = ({ score, currentUserVote, onVote }: VoteButtonsProps
                 size="icon"
                 className={`h-6 w-6 rounded-full ${voteState.currentUserVote ? "hover:bg-white/20 hover:text-white" : ""} ${voteState.currentUserVote === 'DOWN' ? 'bg-neutral-600/30' : ''}`}
                 onClick={() => handleVote("DOWN")}
-                disabled={isPending}
+                disabled={isPending || disabled}
                 aria-label="Downvote"
             >
                 <ChevronDown className="h-5 w-5" />

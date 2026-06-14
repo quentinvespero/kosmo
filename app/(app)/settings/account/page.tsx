@@ -35,7 +35,7 @@ const AccountSettingsPage = async () => {
             <div className="space-y-2">
                 <h3 className="text-sm font-medium">Your data</h3>
                 <p className="text-sm text-muted-foreground">
-                    Download a copy of all your personal data (GDPR Art. 20 — right to data portability).
+                    Download a copy of all your personal data.
                     The export includes your profile, posts, comments, votes, drafts, and more.
                 </p>
                 <ExportDataButton lastExportedAt={userData?.lastDataExportAt?.toISOString() ?? null} />
