@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react"
 import { Button } from "@/components/ui/button"
 import { Download } from "lucide-react"
 import { toast } from "sonner"
@@ -14,11 +14,14 @@ export const ExportDataButton = ({ lastExportedAt }: Props) => {
     const [loading, setLoading] = useState(false)
     const [exportedAt, setExportedAt] = useState(lastExportedAt)
     const [now, setNow] = useState(() => Date.now())
-    const [hasMounted, setHasMounted] = useState(false)
-
-    useEffect(() => {
-        setHasMounted(true)
-    }, [])
+    // Client-only render guard: formattedDate uses the local timezone, so it
+    // would mismatch the server-rendered HTML. useSyncExternalStore is the
+    // canonical way to detect mount without a setState-in-effect.
+    const hasMounted = useSyncExternalStore(
+        () => () => {},   // no external subscription
+        () => true,       // client snapshot: mounted
+        () => false,      // server snapshot: not mounted
+    )
 
     useEffect(() => {
         if (!exportedAt) return
