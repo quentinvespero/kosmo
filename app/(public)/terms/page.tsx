@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { BackButton } from "@/components/ui/BackButton"
 
 export const metadata = {
@@ -54,9 +55,9 @@ export default function TermsOfServicePage() {
                     <p>
                         You may delete your account at any time from your account settings. Upon
                         deletion, your personal data will be removed as described in our{" "}
-                        <a href="/privacy" className="underline underline-offset-2">
+                        <Link href="/privacy" className="underline underline-offset-2">
                             Privacy Policy
-                        </a>
+                        </Link>
                         .
                     </p>
                 </Section>

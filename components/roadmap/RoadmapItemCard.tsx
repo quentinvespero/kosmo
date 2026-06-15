@@ -60,7 +60,7 @@ export const RoadmapItemCard = ({
                     {FEEDBACK_TYPE_LABELS[feedback.type]}
                 </span>
                 <p className="text-xs text-muted-foreground truncate">
-                    "{feedback.content}"
+                    &quot;{feedback.content}&quot;
                 </p>
             </div>
         )}
