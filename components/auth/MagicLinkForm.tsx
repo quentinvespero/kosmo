@@ -40,7 +40,7 @@ export const MagicLinkForm = () => {
                         router.push(`/verify?email=${encodeURIComponent(email)}`)
                         // don't reset isPending — the redirect will unmount this component
                     },
-                    onError: (ctx: { error: { message: any } }) => {
+                    onError: (ctx) => {
                         toast.error(ctx.error.message || "something went wrong", { id: 'magiclink' })
                         setIsPending(false)
                     }
