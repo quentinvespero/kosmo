@@ -31,6 +31,7 @@ export const canViewPost = async (postId: string, userId: string | null): Promis
     if (userId && userId === post.author.id) return true
 
     // Subscriber-only posts are owner-only until the subscription model exists
+    // TODO: replace with actual subscriber check once the subscription model is in place
     if (post.isSubscribersOnly) return false
 
     // Check whether post's author is private. Return True if not
