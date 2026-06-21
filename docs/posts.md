@@ -28,6 +28,10 @@ A post's visibility is **never set on the post itself** — it is inherited from
 
 > Community posts ignore `isSubscribersOnly` — community visibility takes precedence.
 
+**Enforcement:** profile-post visibility is centralized in `canViewPost(postId, userId)`
+(`lib/access.ts`), which mirrors the guards on the post detail page. It is reused by the vote
+actions so that voting can't bypass visibility (see `votes.md`).
+
 ## Communities
 - A post can belong to **multiple communities** via the `PostCommunity` junction table
 - A post with no community association is a **profile post**

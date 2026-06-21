@@ -16,6 +16,7 @@ import {
     editCommentSchema,
     deleteCommentSchema,
 } from "@/lib/schemas/PostSchemas"
+import { canViewPost } from "@/lib/access"
 import { headers } from "next/headers"
 import { revalidatePath } from "next/cache"
 
@@ -59,6 +60,10 @@ export const votePost = async (data: VotePostInput) => {
     const { postId, type } = parsed.data
     const userId = session.user.id
 
+    // Authorization: the user must be able to view the post to vote on it
+    // (blocks voting on private-profile or subscriber-only posts they can't access)
+    if (!(await canViewPost(postId, userId))) return { error: 'Forbidden' as const }
+
     // Fetch the post's author handle for cache revalidation
     const post = await prisma.post.findUnique({
         where: { id: postId },
@@ -101,6 +106,10 @@ export const createComment = async (data: CreateCommentInput) => {
     if (!parsed.success) return { error: 'Invalid data' as const, issues: parsed.error.issues }
 
     const { postId, content, parentCommentId } = parsed.data
+
+    // Authorization: the user must be able to view the post to comment on it
+    // (blocks commenting on private-profile or subscriber-only posts they can't access)
+    if (!(await canViewPost(postId, session.user.id))) return { error: 'Forbidden' as const }
 
     // Verify post exists and get the author's handle for revalidation
     const post = await prisma.post.findUnique({
@@ -267,9 +276,13 @@ export const voteComment = async (data: VoteCommentInput) => {
     // Fetch the comment's post author handle for cache revalidation
     const comment = await prisma.comment.findUnique({
         where: { id: commentId },
-        select: { postId: true, post: { select: { author: { select: { username: true } } } } },
+        select: { postId: true, isDeleted: true, post: { select: { author: { select: { username: true } } } } },
     })
     if (!comment) return { error: 'Not found' as const }
+    // Can't vote on a soft-deleted comment
+    if (comment.isDeleted) return { error: 'Not found' as const }
+    // Authorization: must be able to view the comment's post to vote on its comments
+    if (!(await canViewPost(comment.postId, userId))) return { error: 'Forbidden' as const }
 
     try {
         await prisma.$transaction(async (tx) => {
