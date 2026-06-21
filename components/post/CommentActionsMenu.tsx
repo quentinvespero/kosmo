@@ -72,7 +72,7 @@ export const CommentActionsMenu = ({ commentId, onEditClick }: Props) => {
                     <AlertDialogTitle>Delete comment?</AlertDialogTitle>
                     <AlertDialogDescription>
                         Your comment will be removed. If others have replied to it, it will be kept as
-                        {" "}<span className="italic">"Comment removed."</span>{" "}
+                        {" "}<span className="italic">&quot;Comment removed.&quot;</span>{" "}
                         to preserve the thread.
                     </AlertDialogDescription>
                 </AlertDialogHeader>

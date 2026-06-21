@@ -40,12 +40,16 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# editors
+.zed/
+
 # other
 generated/prisma
 
 # agent / llms
 .claude
 /worktree/
+.mcp.json
 
 # docs
 docs/.obsidian/*

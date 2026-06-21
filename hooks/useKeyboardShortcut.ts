@@ -41,7 +41,7 @@ const useKeyboardShortcut = (
 
         window.addEventListener('keydown', handleKeyDown)
         return () => window.removeEventListener('keydown', handleKeyDown)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+         
     }, [key, enabled]) // callback intentionally omitted — callbackRef stays current without re-registering
 }
 
