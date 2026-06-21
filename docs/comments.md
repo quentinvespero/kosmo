@@ -13,6 +13,9 @@ Comments are attached to posts and support **threaded replies** via `parentComme
 | `isEdited` | `Boolean` | Set to true on edit |
 | `isDeleted` | `Boolean` | Set to true on soft-delete (see below) |
 
+## Authorization (creation)
+`createComment` enforces, in order: authenticated session → valid input → **the user must be able to view the post** (`canViewPost`) → the post exists → if replying, the parent comment must belong to the same post. The view check blocks commenting on private-profile or subscriber-only posts the user can't access, mirroring the vote actions (see `votes.md`).
+
 ## Voting
 Comments support upvote/downvote via the `Vote` model — see `votes.md`
 
